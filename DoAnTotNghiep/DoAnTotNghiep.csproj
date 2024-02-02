@@ -4,4 +4,21 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="EditModel\" />
+    <Folder Include="Salary\" />
+    <Folder Include="Timekeeping\" />
+    <Folder Include="Staff\" />
+    <Folder Include="Profile\" />
+    <Folder Include="System\" />
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AntDesign" Version="0.17.4" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="FluentNHibernate" Version="3.3.0" />
+    <PackageReference Include="NHibernate" Version="5.5.0" />
+  </ItemGroup>
+
 </Project>
