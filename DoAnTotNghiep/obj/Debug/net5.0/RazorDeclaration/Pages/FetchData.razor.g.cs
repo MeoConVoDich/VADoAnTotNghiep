@@ -83,8 +83,15 @@ using DoAnTotNghiep.Shared;
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Pages\FetchData.razor"
-using DoAnTotNghiep.Data;
+#line 11 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using AntDesign;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 12 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.Components;
 
 #line default
 #line hidden
@@ -97,20 +104,6 @@ using DoAnTotNghiep.Data;
         {
         }
         #pragma warning restore 1998
-#nullable restore
-#line 39 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Pages\FetchData.razor"
-       
-    private WeatherForecast[] forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-    }
-
-#line default
-#line hidden
-#nullable disable
-        [global::Microsoft.AspNetCore.Components.InjectAttribute] private WeatherForecastService ForecastService { get; set; }
     }
 }
 #pragma warning restore 1591

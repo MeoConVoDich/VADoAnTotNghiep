@@ -42,11 +42,19 @@
           "dependencies": {
             "AntDesign": {
               "target": "Package",
-              "version": "[0.17.4, )"
+              "version": "[0.16.1, )"
             },
             "AutoMapper": {
               "target": "Package",
-              "version": "[12.0.1, )"
+              "version": "[10.1.1, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
+            "Blazored.SessionStorage": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             },
             "FluentNHibernate": {
               "target": "Package",
@@ -55,6 +63,14 @@
             "NHibernate": {
               "target": "Package",
               "version": "[5.5.0, )"
+            },
+            "NHibernate.Caches.CoreMemoryCache": {
+              "target": "Package",
+              "version": "[5.7.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
             }
           },
           "imports": [

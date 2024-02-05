@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Service
 {
-    public abstract class Service<T> : IService<T> where T : class
+    public abstract class Service<T>
     {
         protected ISession session;
         protected ITransaction transaction;

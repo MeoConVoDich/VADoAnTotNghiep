@@ -1,0 +1,20 @@
+﻿@if (Title != null)
+{
+    <label for="@Name">
+        @Title
+        @if (Required || HasRequired)
+        {
+            <font color="red">(*)</font>
+        }
+    </label>
+}
+else
+{
+    <label for="@Name">
+        @Display
+        @if (Required || HasRequired)
+        {
+            <font color="red">(*)</font>
+        }
+    </label>
+}

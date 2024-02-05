@@ -1,5 +1,15 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Security.Claims
+@using System.Threading
+@using Microsoft.Extensions.Configuration;
+@using System.Net;
+@using AutoMapper;
 
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject NotificationService Notice
+@inject IMapper Mapper
+@inject IJSRuntime JSRuntime;
+@inject IConfiguration Configuration
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -15,3 +25,211 @@
         </div>
     </div>
 </div>
+
+@code
+{
+
+    protected async override Task OnInitializedAsync()
+    {
+        //try
+        //{
+        //    Service.WindowSizeChanged += e => WindowSizeChanged(e);
+        //    uri = NavigationManager.BaseUri + "dang-nhap";
+        //    changePasswordModel = new ChangePasswordModel();
+        //    var user = (await authenticationStateTask).User;
+        //    if (user == null || !user.Identity.IsAuthenticated)
+        //    {
+        //        NavigationManager.NavigateTo(uri);
+        //    }
+        //    if (sessionData.User == null)
+        //    {
+        //        await LoadUserInfoAsync(user.Identity.Name);
+        //    }
+        //    Uri uriObject = new Uri(uri);
+        //    string subdomain = uriObject.Host.Split('.')[0];
+        //    IPAddress ipAddress = null;
+        //    bool isValidIp = System.Net.IPAddress.TryParse(uriObject.Host, out ipAddress);
+        //    if (subdomain != "test" && subdomain != "app" && subdomain != "localhost" && !isValidIp)
+        //    {
+        //        Logo = "/image/" + subdomain + "/logoCustomerIndex.png";
+        //        Background = "/image/" + subdomain + "/backgroundCustomer.jpg";
+        //    }
+        //}
+        //catch (Exception ex)
+        //{
+        //    Error.ProcessError(ex);
+        //}
+    }
+
+    //public string GetLayoutStyle()
+    //{
+    //    return $"background-image: url('{Background}');";
+    //}
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        WindowSizeChanged(await Service.GetDimensions());
+    //        browserServiceRef = DotNetObjectReference.Create<BrowserService>(Service);
+    //        await Service.BindBrowserDimensionChange(browserServiceRef);
+    //    }
+    //}
+
+    //async Task LoadUserInfoAsync(string userName)
+    //{
+    //    sessionData.User = await UserService.GetByUserNameAsync(new AppUserSearch { UserName = userName });
+    //    if (sessionData.User == null || !sessionData.User.IsActive || sessionData.User.CompanyId.IsNullOrEmpty())
+    //    {
+    //        NavigationManager.NavigateTo(uri);
+    //    }
+    //    else
+    //    {
+    //        Error.SessionData = sessionData;
+    //        sessionData.CompanyInfo = await CompanyInfoService.GetAsync(sessionData.User.CompanyId);
+    //        var staffResult = await StaffProfileService.GetStaffByUserNameAsync(new SearchStaffCondition()
+    //        {
+    //            CompanyId = sessionData.User.CompanyId,
+    //            UserName = sessionData.User.UserName
+    //        });
+    //        if (staffResult.Data?.Id.IsNotNullOrEmpty() == true)
+    //        {
+    //            sessionData.StaffProfile = staffResult.Data;
+    //        }
+    //    }
+    //}
+
+    //void OpenChangePasswordForm()
+    //{
+    //    changePasswordModel = new() { UserName = sessionData.User.UserName, Id = sessionData.User.Id };
+    //    changePasswordVisible = true;
+    //}
+
+    //async Task OnPasswordChangedAsync(ChangePasswordModel model)
+    //{
+    //    changePasswordVisible = false;
+    //    try
+    //    {
+    //        var result = await UserService.ChangePasswordAsync(model.Id, model.OldPassword, model.Password);
+    //        if (result.State)
+    //        {
+    //            CloseChangePassword();
+    //            Notice.NotiSuccess(AlertResource.ChangePasswordSuccessful);
+    //        }
+    //        else
+    //        {
+    //            Notice.NotiError(AlertResource.ChangePasswordFailed);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Error.ProcessError(ex);
+    //    }
+
+
+    //}
+
+    //void CloseChangePassword()
+    //{
+    //    changePasswordVisible = false;
+    //}
+
+    //async Task OpenDetailAsync()
+    //{
+    //    try
+    //    {
+    //        await appUserDetail.LoadEditModelAsync(sessionData.User);
+    //        appUserDetail.DisableField();
+    //        DetailVisible = true;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Error.ProcessError(ex);
+    //    }
+    //}
+
+    //async Task SaveDetailAsync(AppUserEditModel model)
+    //{
+    //    try
+    //    {
+    //        if (model.Id.IsNullOrEmpty())
+    //        {
+    //            Notice.NotiWarning("Dữ liệu không hợp lệ");
+    //            return;
+    //        }
+    //        var updateModel = Mapper.Map<AppUserData>(model);
+    //        var result = await UserService.UpdateAsync(updateModel);
+    //        if (result.State)
+    //        {
+    //            CloseDetail();
+    //            Notice.NotiSuccess(AlertResource.UpdateSuccessful);
+    //            await LoadUserInfoAsync(model.UserName);
+    //        }
+    //        else
+    //        {
+    //            Notice.NotiError(AlertResource.InvalidData);
+    //        }
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Error.ProcessError(ex);
+    //    }
+    //}
+
+    //void CloseDetail()
+    //{
+    //    try
+    //    {
+    //        DetailVisible = false;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Error.ProcessError(ex);
+    //    }
+    //}
+
+    //async Task OpenNewTab(MouseEventArgs e, string url = "")
+    //{
+    //    if (e.Button == 2)
+    //    {
+    //        await JSRuntime.InvokeVoidAsync("open", CancellationToken.None, url, "_blank");
+    //    }
+    //}
+
+    //void WindowSizeChanged(BrowserDimension dimension)
+    //{
+    //    sessionData.BrowserDimension = dimension;
+    //    StateHasChanged();
+    //}
+
+    //async Task OpenICareAsync()
+    //{
+    //    try
+    //    {
+
+    //        var request = new RestRequest("/api/User/get-token").AddJsonBody(new { UserName = sessionData.User.UserName, Password = sessionData.User.UserName });
+    //        request.Method = Method.Post;
+    //        request.Timeout = 15;
+    //        request.AddHeader("ApiKey", Configuration[GlobalVariants.HrmApiKey]);
+    //        var data = await RestClient.ExecuteAsync<ExcuteResult<string>>(request);
+    //        if (data.Data?.Code == ResultCode.SuccessResult)
+    //        {
+    //            icareInited = true;
+    //            tokenAuth = data.Data.Result?.ToString();
+    //            string url = string.Format(Configuration[GlobalVariants.ICareUrl], tokenAuth);
+    //            await JSRuntime.InvokeVoidAsync("open", CancellationToken.None, url, "_blank");
+    //        }
+    //        else
+    //        {
+    //            Notice.NotiError("Tài khoản chưa được cấu hình sử dụng dịch vụ ICare");
+    //            return;
+    //        }
+
+    //    }
+    //    catch (Exception)
+    //    {
+    //    }
+    //}
+
+}

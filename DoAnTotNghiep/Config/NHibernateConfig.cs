@@ -22,11 +22,11 @@ namespace DoAnTotNghiep.Config
     static class NHibernateConfig
     {
 
-        public static IServiceCollection BuildSessionFactory(this IServiceCollection services)
+        public static ISessionFactory BuildSessionFactory()
         {
             var cfg = new Configuration();
-            string connectionString = "Data Source=DESKTOP-F75INI6;Initial Catalog=VAHRM;Integrated Security=True";
 
+            string connectionString = "Data Source=DESKTOP-F75INI6;Initial Catalog=VAHRM;Integrated Security=True";
             cfg.DataBaseIntegration(db =>
             {
                 db.ConnectionString = connectionString;
@@ -35,16 +35,9 @@ namespace DoAnTotNghiep.Config
             });
             var mapper = new ModelMapper();
             mapper.AddMapping(typeof(UsersMap));
-            //mapper.AddMapping(typeof(TeacherMapping));
-            //mapper.AddMapping(typeof(RoomClasssMapping));
             HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
             cfg.AddMapping(domainMapping);
-
-            var sessionFactory = cfg.BuildSessionFactory();
-            services.AddSingleton<ISessionFactory>(sessionFactory);
-            services.AddScoped<ISession>(provider => provider.GetRequiredService<ISessionFactory>().OpenSession());
-
-            return services;
+            return cfg.BuildSessionFactory();
         }
     }
 }

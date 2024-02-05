@@ -1,11 +1,20 @@
+using AntDesign;
+using AutoMapper;
+using Blazored.SessionStorage;
+using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Data;
+using DoAnTotNghiep.Domain;
+using DoAnTotNghiep.IService;
+using DoAnTotNghiep.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +35,15 @@ namespace DoAnTotNghiep
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAntDesign();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<IService, Service>();
+            services.AddAutoMapperConfig();
+            services.AddSingleton<UsersService>();
+            services.AddSingleton<ISessionFactory>(NHibernateConfig.BuildSessionFactory());
+            services.AddBlazoredSessionStorage();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddScoped<NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +64,9 @@ namespace DoAnTotNghiep
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

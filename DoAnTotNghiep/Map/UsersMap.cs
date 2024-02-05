@@ -1,5 +1,6 @@
 ﻿using DoAnTotNghiep.Domain;
 using FluentNHibernate.Mapping;
+using NHibernate.Mapping.ByCode.Conformist;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Map
 {
-    public class UsersMap : ClassMap<Users>
+    public class UsersMap : ClassMapping<Users>
     {
 		public UsersMap()
-		{
-			Table("Users");
-			LazyLoad();
-			Id(x => x.Id).GeneratedBy.Assigned().Column("Id");
-			Map(x => x.UserName).Column("UserName").Not.Nullable();
-			Map(x => x.Password).Column("Password").Not.Nullable();
-			Map(x => x.IsAdmin).Column("IsAdmin");
-			Map(x => x.Permission).Column("Permission");
-			Map(x => x.PermissionGroup).Column("PermissionGroup");
-		}
+        {
+            Table("Users");
+
+            Id(x => x.Id, map => map.Column("Id"));
+            Property(x => x.UserName);
+            Property(x => x.Password);
+            Property(x => x.IsAdmin);
+            Property(x => x.Permission);
+            Property(x => x.PermissionGroup);
+        }
 	}
 }

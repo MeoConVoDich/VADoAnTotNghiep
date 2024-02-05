@@ -1,13 +1,11 @@
 ﻿@page "/fetchdata"
 
-@using DoAnTotNghiep.Data
-@inject WeatherForecastService ForecastService
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (forecasts == null)
+@if (ListUsers == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -23,24 +21,16 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var forecast in ListUsers)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@forecast.Id</td>
+                    <td>@forecast.IsAdmin</td>
+                    <td>@forecast.Password</td>
+                    <td>@forecast.UserName</td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
-@code {
-    private WeatherForecast[] forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-    }
-}
