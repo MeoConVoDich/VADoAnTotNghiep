@@ -16,6 +16,7 @@ namespace DoAnTotNghiep.Config
         {
             _sessionStorageService = sessionStorageService;
         }
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var tenDangNhap = await _sessionStorageService.GetItemAsync<String>("tenDangNhap");

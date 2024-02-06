@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DoAnTotNghiep.Config;
 
 namespace DoAnTotNghiep.Pages
 {
@@ -27,8 +28,9 @@ namespace DoAnTotNghiep.Pages
             var tk = await UsersService.GetUsersAsync(login.UserName, login.Password);
             if (tk != null)
             {
-                NavigationManager.NavigateTo("/index");
+                ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthienticated(login.UserName);
                 await sessionStorage.SetItemAsync("tenDangNhap", tk.UserName);
+                NavigationManager.NavigateTo("/fetchdata");
                 return await Task.FromResult(true);
             }
             else

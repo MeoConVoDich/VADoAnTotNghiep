@@ -131,6 +131,13 @@ using AutoMapper;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 6 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\MainLayout.razor"
+using DoAnTotNghiep.Config;
+
+#line default
+#line hidden
+#nullable disable
     public partial class MainLayout : LayoutComponentBase
     {
         #pragma warning disable 1998
@@ -139,39 +146,36 @@ using AutoMapper;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 30 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\MainLayout.razor"
+#line 39 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\MainLayout.razor"
  
 
     protected async override Task OnInitializedAsync()
     {
-        //try
-        //{
-        //    Service.WindowSizeChanged += e => WindowSizeChanged(e);
-        //    uri = NavigationManager.BaseUri + "dang-nhap";
-        //    changePasswordModel = new ChangePasswordModel();
-        //    var user = (await authenticationStateTask).User;
-        //    if (user == null || !user.Identity.IsAuthenticated)
-        //    {
-        //        NavigationManager.NavigateTo(uri);
-        //    }
-        //    if (sessionData.User == null)
-        //    {
-        //        await LoadUserInfoAsync(user.Identity.Name);
-        //    }
-        //    Uri uriObject = new Uri(uri);
-        //    string subdomain = uriObject.Host.Split('.')[0];
-        //    IPAddress ipAddress = null;
-        //    bool isValidIp = System.Net.IPAddress.TryParse(uriObject.Host, out ipAddress);
-        //    if (subdomain != "test" && subdomain != "app" && subdomain != "localhost" && !isValidIp)
-        //    {
-        //        Logo = "/image/" + subdomain + "/logoCustomerIndex.png";
-        //        Background = "/image/" + subdomain + "/backgroundCustomer.jpg";
-        //    }
-        //}
-        //catch (Exception ex)
-        //{
-        //    Error.ProcessError(ex);
-        //}
+        try
+        {
+            var authenticationState = await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).GetAuthenticationStateAsync();
+            if (authenticationState.User.Identity.IsAuthenticated)
+            {
+
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/");
+            }
+
+        }
+        catch (Exception ex)
+        {
+            await Notice.Open(new NotificationConfig()
+            {
+                Message = "Thông báo",
+                Description = ex.Message
+            });
+        }
+    }
+    public void Logout()
+    {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
     }
 
     //public string GetLayoutStyle()
@@ -349,10 +353,11 @@ using AutoMapper;
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NotificationService Notice { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IConfiguration Configuration { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IJSRuntime JSRuntime { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IMapper Mapper { get; set; }
-        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NotificationService Notice { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
     }
 }

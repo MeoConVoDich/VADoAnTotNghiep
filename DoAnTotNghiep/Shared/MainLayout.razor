@@ -3,13 +3,16 @@
 @using Microsoft.Extensions.Configuration;
 @using System.Net;
 @using AutoMapper;
+@using DoAnTotNghiep.Config;
 
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject NotificationService Notice
 @inject IMapper Mapper
-@inject IJSRuntime JSRuntime;
+@inject IJSRuntime JSRuntime
 @inject IConfiguration Configuration
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NotificationService Notice
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -17,7 +20,14 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <a href="/" @onclick="(() => Logout())">Logout</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/">Login</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <div class="content px-4">
@@ -25,40 +35,36 @@
         </div>
     </div>
 </div>
-
 @code
 {
 
     protected async override Task OnInitializedAsync()
     {
-        //try
-        //{
-        //    Service.WindowSizeChanged += e => WindowSizeChanged(e);
-        //    uri = NavigationManager.BaseUri + "dang-nhap";
-        //    changePasswordModel = new ChangePasswordModel();
-        //    var user = (await authenticationStateTask).User;
-        //    if (user == null || !user.Identity.IsAuthenticated)
-        //    {
-        //        NavigationManager.NavigateTo(uri);
-        //    }
-        //    if (sessionData.User == null)
-        //    {
-        //        await LoadUserInfoAsync(user.Identity.Name);
-        //    }
-        //    Uri uriObject = new Uri(uri);
-        //    string subdomain = uriObject.Host.Split('.')[0];
-        //    IPAddress ipAddress = null;
-        //    bool isValidIp = System.Net.IPAddress.TryParse(uriObject.Host, out ipAddress);
-        //    if (subdomain != "test" && subdomain != "app" && subdomain != "localhost" && !isValidIp)
-        //    {
-        //        Logo = "/image/" + subdomain + "/logoCustomerIndex.png";
-        //        Background = "/image/" + subdomain + "/backgroundCustomer.jpg";
-        //    }
-        //}
-        //catch (Exception ex)
-        //{
-        //    Error.ProcessError(ex);
-        //}
+        try
+        {
+            var authenticationState = await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).GetAuthenticationStateAsync();
+            if (authenticationState.User.Identity.IsAuthenticated)
+            {
+
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/");
+            }
+
+        }
+        catch (Exception ex)
+        {
+            await Notice.Open(new NotificationConfig()
+            {
+                Message = "Thông báo",
+                Description = ex.Message
+            });
+        }
+    }
+    public void Logout()
+    {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
     }
 
     //public string GetLayoutStyle()
