@@ -13,5 +13,7 @@ namespace DoAnTotNghiep.Domain
         public virtual bool IsAdmin { get; set; }
         public virtual string Permission { get; set; }
         public virtual string PermissionGroup { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Code { get; set; }
     }
 }

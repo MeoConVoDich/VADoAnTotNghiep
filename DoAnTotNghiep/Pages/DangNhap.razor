@@ -9,19 +9,23 @@
 <br />
 <EditForm Model="login" OnValidSubmit="() => LoginAsync()">
     <DataAnnotationsValidator />
-    <AntDesign.Row Gutter="8">
-        <AntDesign.Col Span="24">
+    <AntDesign.Row Gutter="8" Justify="center" Style="margin-top: 150px">
+        <AntDesign.Col Span="6">
             <LabelFor For="() => login.UserName"></LabelFor>
             <Input @bind-Value="login.UserName" />
             <ValidationMessage For="() => login.UserName"></ValidationMessage>
         </AntDesign.Col>
-        <AntDesign.Col Span="24">
+    </AntDesign.Row>
+    <AntDesign.Row Gutter="8" Justify="center" Style="margin-top: 20px">
+        <AntDesign.Col Span="6">
             <LabelFor For="() => login.Password"></LabelFor>
             <Input @bind-Value="login.Password" />
             <ValidationMessage For="() => login.Password"></ValidationMessage>
         </AntDesign.Col>
     </AntDesign.Row>
-    <AntDesign.Col Span="2" Class="flex-start-end">
-        <Button HtmlType="submit" Type="@AntDesign.ButtonType.Primary">Đăng nhập</Button>
-    </AntDesign.Col>
+    <AntDesign.Row Gutter="8" Justify="center" Style="margin-top: 30px">
+        <AntDesign.Col Span="2" Class="flex-start-end">
+            <Button HtmlType="submit" Type="@AntDesign.ButtonType.Primary">Đăng nhập</Button>
+        </AntDesign.Col>
+    </AntDesign.Row>
 </EditForm>

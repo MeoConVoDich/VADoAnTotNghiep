@@ -6,6 +6,8 @@ using DoAnTotNghiep.Data;
 using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.IService;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
+using Hrm.Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -43,7 +45,10 @@ namespace DoAnTotNghiep
             services.AddSingleton<ISessionFactory>(NHibernateConfig.BuildSessionFactory());
             services.AddBlazoredSessionStorage();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddScoped<ISelectItem, SelectItem>();
             services.AddScoped<NotificationService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<PermissionClaim>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

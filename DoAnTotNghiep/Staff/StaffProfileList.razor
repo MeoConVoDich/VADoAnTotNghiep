@@ -1,0 +1,113 @@
+﻿@page "/thong-tin-nhan-su/ho-so-nhan-vien"
+@if (PermissionClaim.STAFFPROFILE_VIEW)
+{
+    <PageHeader Class="site-page-header" Title=@("Hồ sơ nhân viên")>
+        <PageHeaderExtra>
+            <Breadcrumb>
+                <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+                <BreadcrumbItem>Thông tin nhân sự</BreadcrumbItem>
+                <BreadcrumbItem>Hồ sơ nhân viên</BreadcrumbItem>
+            </Breadcrumb>
+        </PageHeaderExtra>
+    </PageHeader>
+
+    <div class="site-content" style="padding-top: 4px;">
+        <Row Gutter="8">
+            <AntDesign.Col Span="22">
+                <Space Size=@(("8", "8")) Wrap>
+                    @if (PermissionClaim.STAFFPROFILE_ADD)
+                    {
+                        <SpaceItem><Button Icon="plus" OnClick="AddNewAsync" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
+                    }
+                    @if (PermissionClaim.STAFFPROFILE_DELETE)
+                    {
+                        @if (selectedRows?.Any() == true)
+                        {
+                            <SpaceItem>
+                                <Popconfirm Placement="@Placement.BottomRight"
+                                            OnConfirm="() => DeleteAsync()"
+                                            OkText="Đồng ý"
+                                            CancelText="Hủy">
+                                    <ChildContent>
+                                        <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                                    </ChildContent>
+                                    <TitleTemplate>
+                                        Bạn có chắc chắn muốn xóa:
+                                        @if (selectedRows.Count() == 1)
+                                        {
+                                            <strong> @selectedRows?.FirstOrDefault().Name</strong>
+                                            <span>?</span>
+                                        }
+                                        else
+                                        {
+                                            <strong> @selectedRows.Count()</strong> <span>nhân viên?</span>
+                                        }
+
+                                    </TitleTemplate>
+                                </Popconfirm>
+                            </SpaceItem>
+                        }
+                    }
+                </Space>
+            </AntDesign.Col>
+        </Row>
+        <Row Gutter="8">
+            <AntDesign.Col Span="24">
+                <Table @ref="table" TItem="ViewModel.UsersViewModel" DataSource="@UsersViewModels"
+                       Class="table-striped" ScrollX="100%" Bordered ScrollBarWidth="10px"
+                       Total="usersFilterModel.Page.Total"
+                       Loading="loading"
+                       PageIndex="usersFilterModel.Page.PageIndex"
+                       PageSize="usersFilterModel.Page.PageSize"
+                       OnRowClick="OnRowClick"
+                       SelectedRows="selectedRows">
+                    <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+                    <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
+                    <Column @bind-Field="@context.Code" Ellipsis Width="150" Fixed="left"></Column>
+                    <Column @bind-Field="@context.Name" Ellipsis Width="200" Fixed="left"></Column>
+                    <Column @bind-Field="@context.Gender" Ellipsis="true" Width="150"></Column>
+                    <Column @bind-Field="@context.DateOfBirth" Width="150" Format="dd/MM/yyyy"></Column>
+                    <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
+                        <ChildContent>
+                            <Row Justify="center">
+                                <Space>
+                                    <SpaceItem>
+                                        <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
+                                            <Icon Type="eye" Theme="fill" OnClick="() => ViewDetailAsync(context)" Class="btn-icon-edit" StopPropagation />
+                                        </Tooltip>
+                                    </SpaceItem>
+                                    @if (PermissionClaim.STAFFPROFILE_EDIT)
+                                    {
+                                        <SpaceItem>
+                                            <Tooltip Placement="@Placement.Top" Title="Sửa">
+                                                <Icon Type="edit" Theme="fill" OnClick="() => OpenDetailAsync(context)" Class="btn-icon-edit" StopPropagation />
+                                            </Tooltip>
+                                        </SpaceItem>
+                                    }
+                                    @if (PermissionClaim.STAFFPROFILE_DELETE)
+                                    {
+                                        <SpaceItem>
+                                            <Tooltip Placement="@Placement.Top" Title="Xóa">
+                                                <Popconfirm Placement="@Placement.LeftBottom"
+                                                            OnConfirm="() => DeleteAsync(context)"
+                                                            OkText="Đồng ý"
+                                                            CancelText="Huỷ">
+                                                    <ChildContent>
+                                                        <Icon Type="delete" Theme="fill" Class="btn-icon-delete"></Icon>
+                                                    </ChildContent>
+                                                    <TitleTemplate>
+                                                        Bạn có chắc chắn muốn xóa?
+                                                    </TitleTemplate>
+                                                </Popconfirm>
+                                            </Tooltip>
+                                        </SpaceItem>
+                                    }
+                                </Space>
+                            </Row>
+                        </ChildContent>
+                    </ActionColumn>
+                </Table>
+            </AntDesign.Col>
+        </Row>
+    </div>
+}

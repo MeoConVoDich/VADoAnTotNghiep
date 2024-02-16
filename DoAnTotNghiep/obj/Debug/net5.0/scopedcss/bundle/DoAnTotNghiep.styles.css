@@ -10,7 +10,7 @@
 }
 
 .sidebar[b-wfoac75yhr] {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-color: #001529;
 }
 
 .top-row[b-wfoac75yhr] {
@@ -52,7 +52,6 @@
     }
 
     .sidebar[b-wfoac75yhr] {
-        width: 250px;
         height: 100vh;
         position: sticky;
         top: 0;
@@ -68,6 +67,15 @@
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
+}
+
+.menu[b-wfoac75yhr] {
+    background-color: #001529;
+    border-bottom: 1px solid #d6d5d5;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 /* _content/DoAnTotNghiep/Shared/NavMenu.razor.rz.scp.css */
 .navbar-toggler[b-q2hmxw0bcq] {

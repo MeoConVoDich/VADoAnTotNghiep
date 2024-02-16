@@ -1,37 +1,90 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">DoAnTotNghiep</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿@inject NavigationManager NavigationManager
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
 
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+<div class="top-row pl-4 navbar navbar-dark">
+    <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
+        @if (collapsed)
+        {
+            <Icon Type="menu-unfold" Theme="outline"></Icon>
+        }
+        else
+        {
+            <Icon Type="menu-fold" Theme="outline"></Icon>
+        }
+    </Button>
+    @if (!collapsed)
     {
-        collapseNavMenu = !collapseNavMenu;
+        <span style="color: white; margin-top: -10px;">
+            SoftDream HRM
+        </span>
+    }
+</div>
+<Menu Theme="MenuTheme.Dark"
+      Mode=MenuMode.Inline
+      InlineCollapsed=collapsed>
+    <MenuItem Key="1">
+        <IconTemplate>
+            <Icon Type="setting" Theme="outline" />
+        </IconTemplate>
+        <ChildContent>
+            <Button Type="@ButtonType.Text" Style="color: white" OnClick="@(() => Go("/cham-cong/tong-quan"))">Hệ thống</Button>
+        </ChildContent>
+    </MenuItem>
+    <MenuItem Key="2">
+        <IconTemplate>
+            <Icon Type="team" Theme="outline" />
+        </IconTemplate>
+        <ChildContent>
+            <Button Type="@ButtonType.Text" Style="color: white" OnClick="@(() => Go("/ca-nhan/ho-so-ca-nhan"))">Cá nhân</Button>
+        </ChildContent>
+    </MenuItem>
+    <MenuItem Key="3">
+        <IconTemplate>
+            <Icon Type="solution" Theme="outline" />
+        </IconTemplate>
+        <ChildContent>
+            <Button Type="@ButtonType.Text" Style="color: white" OnClick="@(() => Go("/thong-tin-nhan-su/ho-so-nhan-vien"))">Quản ký nhân sự</Button>
+        </ChildContent>
+    </MenuItem>
+    <MenuItem Key="4">
+        <IconTemplate>
+            <Icon Type="qrcode" Theme="outline" />
+        </IconTemplate>
+        <ChildContent>
+            <Button Type="@ButtonType.Text" Style="color: white" OnClick="@(() => Go("/cham-cong/tong-quan"))">Quản lý chấm công</Button>
+        </ChildContent>
+    </MenuItem>
+    <MenuItem Key="5">
+        <IconTemplate>
+            <Icon Type="dollar" Theme="outline" />
+        </IconTemplate>
+        <ChildContent>
+            <Button Type="@ButtonType.Text" Style="color: white" OnClick="@(() => Go("/cham-cong/tong-quan"))">Quản lý lương</Button>
+        </ChildContent>
+    </MenuItem>
+</Menu>
+@code {
+
+    bool collapsed = false;
+    void ToggleCollapsed()
+    {
+        collapsed = !collapsed;
+    }
+    RenderFragment TaiKhoan =
+    @<span>
+        <Icon Type="user" Theme="outline" />
+        <span>Tài khoản</span>
+    </span>;
+
+    void Go(string url)
+    {
+        try
+        {
+            NavigationManager.NavigateTo(url);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 }

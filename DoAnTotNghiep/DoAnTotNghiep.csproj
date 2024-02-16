@@ -7,10 +7,8 @@
   <ItemGroup>
     <Folder Include="Salary\" />
     <Folder Include="Timekeeping\" />
-    <Folder Include="Staff\" />
     <Folder Include="Profile\" />
     <Folder Include="System\" />
-    <Folder Include="ViewModel\" />
   </ItemGroup>
 
   <ItemGroup>

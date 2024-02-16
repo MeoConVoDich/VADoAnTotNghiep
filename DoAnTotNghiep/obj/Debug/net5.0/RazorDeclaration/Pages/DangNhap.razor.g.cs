@@ -98,7 +98,7 @@ using DoAnTotNghiep.Components;
 #nullable disable
     [Microsoft.AspNetCore.Components.LayoutAttribute(typeof(LoginLayout))]
     [Microsoft.AspNetCore.Components.RouteAttribute("/")]
-    public partial class Login : Microsoft.AspNetCore.Components.ComponentBase
+    public partial class DangNhap : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)

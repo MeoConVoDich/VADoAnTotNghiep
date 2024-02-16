@@ -104,20 +104,43 @@ using DoAnTotNghiep.Components;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 28 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\NavMenu.razor"
+#line 66 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\NavMenu.razor"
        
-    private bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+    bool collapsed = false;
+    void ToggleCollapsed()
     {
-        collapseNavMenu = !collapseNavMenu;
+        collapsed = !collapsed;
+    }
+    RenderFragment TaiKhoan =
+    
+
+#line default
+#line hidden
+#nullable disable
+        (__builder2) => {
+            __builder2.AddMarkupContent(0, "<span b-q2hmxw0bcq>\r\n        <Icon Type=\"user\" Theme=\"outline\" b-q2hmxw0bcq></Icon>\r\n        <span b-q2hmxw0bcq>Tài khoản</span>\r\n    </span>");
+        }
+#nullable restore
+#line 77 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\NavMenu.razor"
+           ;
+
+    void Go(string url)
+    {
+        try
+        {
+            NavigationManager.NavigateTo(url);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
     }
 }
 #pragma warning restore 1591

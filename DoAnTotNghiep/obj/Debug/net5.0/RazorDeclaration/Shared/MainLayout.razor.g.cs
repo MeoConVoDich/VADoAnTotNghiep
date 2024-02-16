@@ -146,7 +146,7 @@ using DoAnTotNghiep.Config;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 39 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\MainLayout.razor"
+#line 62 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\MainLayout.razor"
  
 
     protected async override Task OnInitializedAsync()

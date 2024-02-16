@@ -19,11 +19,11 @@ namespace DoAnTotNghiep.Config
             #region Đăng ký các mapping giữa Data class và DB class
             var assembly = Assembly.GetAssembly(typeof(AppMappingProfile));
             var classes = assembly.ExportedTypes
-               .Where(a => a.Namespace.Equals("Hrm.Web.Share.Domain") && !a.Name.EndsWith("Data"));
+               .Where(a => a.Namespace.Equals("DoAnTotNghiep.Domain"));
             foreach (Type type in classes)
             {
                 CreateMap(type, type).ReverseMap();
-                var dataClass = assembly.ExportedTypes.FirstOrDefault(c => c.Name == type.Name + "Data");
+                var dataClass = assembly.ExportedTypes.FirstOrDefault(c => c.Name == type.Name);
                 if (dataClass != null)
                 {
                     CreateMap(type, dataClass).ReverseMap();
