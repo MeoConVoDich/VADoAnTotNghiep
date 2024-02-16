@@ -9,6 +9,7 @@ using DoAnTotNghiep.Service;
 using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
+using NHibernate.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,11 @@ namespace DoAnTotNghiep.Staff
                 var page = await UsersService.GetPageWithFilterAsync(search);
                 ListUsers = page.Item1 ?? new List<Users>();
                 UsersViewModels = Mapper.Map<List<UsersViewModel>>(ListUsers ?? new List<Users>());
+                int stt = usersFilterModel.Page.PageSize * (usersFilterModel.Page.PageIndex - 1) + 1;
+                UsersViewModels.ForEach(c =>
+                {
+                    c.Stt = stt++;
+                });
                 usersFilterModel.Page.Total = page.Item2;
             }
             catch (Exception ex)

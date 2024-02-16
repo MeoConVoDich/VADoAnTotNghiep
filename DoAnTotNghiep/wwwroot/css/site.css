@@ -52,3 +52,24 @@ a, .btn-link {
 .main_menu {
     padding-left: 25px;
 }
+
+.action-column-center {
+    text-align: center !important;
+}
+
+.btn-icon-edit {
+    border: 2px solid #1890ff;
+    background-color: #1890ff;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn-icon-delete {
+    border: 2px solid #ff4d4f;
+    background-color: #ff4d4f;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 2px;
+}

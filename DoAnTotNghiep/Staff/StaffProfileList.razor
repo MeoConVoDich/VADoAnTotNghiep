@@ -61,7 +61,7 @@
                        PageIndex="usersFilterModel.Page.PageIndex"
                        PageSize="usersFilterModel.Page.PageSize"
                        OnRowClick="OnRowClick"
-                       SelectedRows="selectedRows">
+                       @bind-SelectedRows="selectedRows">
                     <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
                     <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
                     <Column @bind-Field="@context.Code" Ellipsis Width="150" Fixed="left"></Column>
