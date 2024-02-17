@@ -27,6 +27,9 @@ namespace DoAnTotNghiep.Map
             Property(x => x.Email);
             Property(x => x.Address);
             Property(x => x.Salary);
+            Property(x => x.Avatar);
+            Property(x => x.Code);
+            Property(x => x.Name);
         }
 	}
 }

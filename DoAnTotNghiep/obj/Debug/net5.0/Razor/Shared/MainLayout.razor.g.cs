@@ -94,6 +94,13 @@ using DoAnTotNghiep.Components;
 #line hidden
 #nullable disable
 #nullable restore
+#line 14 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.EditModel;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 1 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\MainLayout.razor"
 using System.Security.Claims;
 

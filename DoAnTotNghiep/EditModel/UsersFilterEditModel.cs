@@ -16,5 +16,7 @@ namespace DoAnTotNghiep.EditModel
         public virtual string Name { get; set; }
         [Display(Name = "Tên đăng nhập")]
         public virtual string UserName { get; set; }
+        public string CodeOrName { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using DoAnTotNghiep.Config;
+﻿using DoAnTotNghiep.Components;
+using DoAnTotNghiep.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +19,7 @@ namespace DoAnTotNghiep.EditModel
         public string Password { get; set; }
     }
 
-    public class UsersEditModel
+    public class UsersEditModel : EditBaseModel
     {
         public string Id { get; set; }
 
@@ -60,6 +61,19 @@ namespace DoAnTotNghiep.EditModel
         public string Address { get; set; }
 
         [Display(Name = "Lương")]
-        public int Salary { get; set; }
+        public int? Salary { get; set; }
+        public string Password { get; set; }
+        public bool IsAdmin { get; set; }
+        public string Permission { get; set; }
+        public string PermissionGroup { get; set; }
+
+        public Property<UsersEditModel> Property { get; set; } = new Property<UsersEditModel>();
+
+        public UsersEditModel(bool isEdit = true)
+        {
+            DataSource[Property.NameProperty(c => c.Gender)] = Enum.GetValues(typeof(Gender)).Cast<Gender>()
+                .Where(c => c != Gender.All).OrderBy(c => c)
+                .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
+        }
     }
 }

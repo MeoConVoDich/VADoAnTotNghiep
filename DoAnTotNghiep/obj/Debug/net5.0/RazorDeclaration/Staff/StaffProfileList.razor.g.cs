@@ -96,6 +96,20 @@ using DoAnTotNghiep.Components;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 14 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.EditModel;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 2 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Staff\StaffProfileList.razor"
+using DoAnTotNghiep.Config;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/thong-tin-nhan-su/ho-so-nhan-vien")]
     public partial class StaffProfileList : Microsoft.AspNetCore.Components.ComponentBase
     {

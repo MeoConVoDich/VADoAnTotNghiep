@@ -1,13 +1,13 @@
 using AntDesign;
 using AutoMapper;
 using Blazored.SessionStorage;
+using DoAnTotNghiep.Components;
 using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Data;
 using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.IService;
 using DoAnTotNghiep.Service;
 using DoAnTotNghiep.Shared;
-using Hrm.Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -48,7 +48,8 @@ namespace DoAnTotNghiep
             services.AddScoped<ISelectItem, SelectItem>();
             services.AddScoped<NotificationService>();
             services.AddHttpContextAccessor();
-            services.AddScoped<PermissionClaim>();
+            services.AddSingleton<PermissionClaim>();
+            services.AddScoped<CustomNotificationManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hrm.Core.Data
+namespace DoAnTotNghiep.Config
 {
     public interface ISelectItem
     {

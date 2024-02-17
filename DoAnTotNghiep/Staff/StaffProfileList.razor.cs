@@ -1,6 +1,7 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
 using AutoMapper;
+using DoAnTotNghiep.Components;
 using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
@@ -21,7 +22,7 @@ namespace DoAnTotNghiep.Staff
     {
         [Inject] IMapper Mapper { get; set; }
         [Inject] PermissionClaim PermissionClaim { get; set; }
-        [Inject] NotificationService Notice { get; set; }
+        [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] UsersService UsersService { get; set; }
 
         List<Users> ListUsers = new List<Users>();
@@ -30,12 +31,14 @@ namespace DoAnTotNghiep.Staff
         Table<UsersViewModel> table;
         UsersFilterEditModel usersFilterModel = new UsersFilterEditModel();
         List<string> selectedRowIds = new List<string>();
+        StaffProfileDetail staffProfileDetail;
         bool loading;
+        bool detailVisible;
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                usersFilterModel.Page = new Domain.Page() { PageIndex = 1, PageSize = 20 };
+                usersFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
                 await LoadDataAsync();
             }
             catch (Exception ex)
@@ -96,11 +99,13 @@ namespace DoAnTotNghiep.Staff
             }
         }
 
-        async Task AddNewAsync()
+        void AddNew()
         {
             try
             {
-
+                Users users = new Users();
+                staffProfileDetail.LoadEditModel(users);
+                detailVisible = true;
             }
             catch (Exception ex)
             {
@@ -122,35 +127,21 @@ namespace DoAnTotNghiep.Staff
                 {
                     if (selectedRows.Any() != true)
                     {
-                        await Notice.Open(new NotificationConfig()
-                        {
-                            NotificationType = NotificationType.Warning,
-                            Message = "Thông báo",
-                            Description = "Không có nhân viên được chọn!"
-                        });
+                        Notice.NotiError("Không có nhân viên được chọn!");
                         return;
                     }
                     var deleteList = ListUsers.Where(c => selectedRowIds.Contains(c.Id)).ToList();
-                     result = await UsersService.DeleteListAsync(deleteList);
+                    result = await UsersService.DeleteListAsync(deleteList);
                 }
                 if (result)
                 {
-                    await Notice.Open(new NotificationConfig()
-                    {
-                        NotificationType = NotificationType.Success,
-                        Message = "Thông báo",
-                        Description = "Xoá dữ liệu thành công!"
-                    });
+                    Notice.NotiSuccess("Xoá dữ liệu thành công!");
                     await LoadDataAsync();
+                   
                 }
                 else
                 {
-                    await Notice.Open(new NotificationConfig()
-                    {
-                        NotificationType = NotificationType.Error,
-                        Message = "Thông báo",
-                        Description = "Xoá dữ liệu thất bại!"
-                    });
+                    Notice.NotiError("Xoá dữ liệu thất bại!");
                 }
             }
             catch (Exception ex)
@@ -161,10 +152,61 @@ namespace DoAnTotNghiep.Staff
         }
 
 
-        async Task ViewDetailAsync(UsersViewModel model)
+        void ViewDetail(UsersViewModel model)
         {
             try
             {
+                detailVisible = true;
+                var data = ListUsers.FirstOrDefault(c => c.Id == model.Id);
+                staffProfileDetail.LoadEditModel(data, true);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void OpenDetail(UsersViewModel model)
+        {
+            try
+            {
+                detailVisible = true;
+                var data = ListUsers.FirstOrDefault(c => c.Id == model.Id);
+                staffProfileDetail.LoadEditModel(data);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void CloseDetail()
+        {
+            detailVisible = false;
+        }
+
+        async Task SaveDetailAsync()
+        {
+            try
+            {
+                detailVisible = false;
+                await SearchAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        async Task PageIndexChangeAsync(PaginationEventArgs e)
+        {
+            try
+            {
+                if (e.Page > 0)
+                {
+                    usersFilterModel.Page.PageIndex = e.Page;
+                }
+                await SearchAsync();
 
             }
             catch (Exception ex)
@@ -173,11 +215,27 @@ namespace DoAnTotNghiep.Staff
             }
         }
 
-        async Task OpenDetailAsync(UsersViewModel model)
+        async Task PageSizeChangeAsync(PaginationEventArgs e)
         {
             try
             {
+                usersFilterModel.Page.PageIndex = 1;
+                usersFilterModel.Page.PageSize = e.PageSize;
+                await SearchAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
+        async Task SearchAsync()
+        {
+            try
+            {
+                usersFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                await LoadDataAsync();
+                StateHasChanged();
             }
             catch (Exception ex)
             {

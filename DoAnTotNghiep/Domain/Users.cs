@@ -23,6 +23,7 @@ namespace DoAnTotNghiep.Domain
         public virtual string PhoneHouseholder { get; set; }
         public virtual string Email { get; set; }
         public virtual string Address { get; set; }
-        public virtual int Salary { get; set; }
+        public virtual int? Salary { get; set; }
+        public virtual string Avatar { get; set; }
     }
 }

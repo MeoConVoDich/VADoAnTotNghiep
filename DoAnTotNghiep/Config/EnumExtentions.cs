@@ -18,4 +18,11 @@ namespace DoAnTotNghiep.Config
         [Display(Name = "Tất cả")]
         All = 3,
     }
+
+    public enum StaffProfileViewMode
+    {
+        Manager,
+        Staff
+    }
+
 }

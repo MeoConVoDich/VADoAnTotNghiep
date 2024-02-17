@@ -93,6 +93,20 @@ using DoAnTotNghiep.Components;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 13 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.Config;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 14 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.EditModel;
+
+#line default
+#line hidden
+#nullable disable
     public partial class SurveyPrompt : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998

@@ -1,0 +1,36 @@
+﻿@typeparam TValue
+@inherits InputBase<TValue>
+
+@if (isLabel)
+{
+    if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label class="form-control-label" for="@Id">
+            @Label
+            @if (Required)
+            {
+                <font color="red">(*)</font>
+            }
+        </label>
+    }
+    else
+    {
+        <LabelFor FieldIdentifier="FieldIdentifier" HasRequired="Required"></LabelFor>
+    }
+}
+<input id="@Id" @bind="@CurrentValue" class="ant-input @Class @Mask"
+       integer-digits="@IntergerDigits" digits="@Digits" max="@Max" placeholder="@PlaceHolder" disabled="@Disable" minus="@Minus"
+       style="@Style" />
+
+@*@if (Disable)
+    {
+    }
+    else
+    {
+        <input id="@Id" @bind="@CurrentValue" class="ant-input @Class @Mask" integer-digits="@IntergerDigits" digits="@Digits" max="@Max" placeholder="@PlaceHolder"/>
+    }*@
+
+<div class="form-control-validation">
+    <CustomValidationMessage Field="FieldIdentifier" TValue="string" />
+</div>
+

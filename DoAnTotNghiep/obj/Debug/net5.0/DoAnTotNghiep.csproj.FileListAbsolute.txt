@@ -155,3 +155,7 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDec
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Shared\StaffInfoMenu.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Staff\StaffProfileList.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Staff\StaffProfileList.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Components\TextFieldWithMask.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Staff\StaffProfileDetail.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Components\TextFieldWithMask.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Staff\StaffProfileDetail.razor.g.cs

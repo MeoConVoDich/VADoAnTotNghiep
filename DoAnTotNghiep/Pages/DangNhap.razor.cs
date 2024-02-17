@@ -46,9 +46,16 @@ namespace DoAnTotNghiep.Pages
                     }
                     else
                     {
-                        var permissioGroups = JsonSerializer.Deserialize<List<string>>(tk.PermissionGroup);
-                        var claimUsers = JsonSerializer.Deserialize<List<string>>(tk.Permission);
-
+                        List<string> claimUsers = new List<string>();
+                        List<string> permissioGroups = new List<string>();
+                        if (tk.PermissionGroup.IsNotNullOrEmpty())
+                        {
+                            permissioGroups = JsonSerializer.Deserialize<List<string>>(tk.PermissionGroup);
+                        }
+                        if (tk.Permission.IsNotNullOrEmpty())
+                        {
+                            claimUsers = JsonSerializer.Deserialize<List<string>>(tk.Permission);
+                        }
                         claims.AddRange(claimUsers);
                     }
                     PermissionClaim.Claims(claims);

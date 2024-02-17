@@ -18,6 +18,7 @@ ALTER TABLE Users ADD PhoneHouseholder VARCHAR(255);
 ALTER TABLE Users ADD Email VARCHAR(255);
 ALTER TABLE Users ADD Address NVARCHAR(255);
 ALTER TABLE Users ADD Salary int;
+ALTER TABLE Users ADD Avatar VARCHAR(255);
 
 
 CREATE TABLE PermissionGroup

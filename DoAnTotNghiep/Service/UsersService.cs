@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DoAnTotNghiep.Components;
 using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.IService;
@@ -8,6 +9,7 @@ using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Service
@@ -29,15 +31,48 @@ namespace DoAnTotNghiep.Service
             {
                 query = query.Where(c => c.Name.Contains(model.Name));
             }
-            if (model.Code.IsNotNullOrEmpty())
+            if (model.CodeOrName.IsNotNullOrEmpty())
             {
-                query = query.Where(c => c.Name.Contains(model.Code));
-            }
-            if (model.UserName.IsNotNullOrEmpty())
-            {
-                query = query.Where(c => c.UserName.Contains(model.UserName));
+                query = query.Where(c => c.Name.Contains(model.CodeOrName) || c.Code.Contains(model.CodeOrName));
             }
 
+            if (model.CheckExist.HasValue && model.CheckExist == true)
+            {
+                List<Expression<Func<Users, bool>>> compareExpressions = new List<Expression<Func<Users, bool>>>();
+                if (model.IdentityNumber.IsNotNullOrEmpty() )
+                {
+                    compareExpressions.Add(c => c.IdentityNumber == model.IdentityNumber);
+                }
+                if (model.Code.IsNotNullOrEmpty())
+                {
+                    compareExpressions.Add(c => c.Code == model.Code);
+                }
+                if (model.UserName.IsNotNullOrEmpty())
+                {
+                    compareExpressions.Add(c => c.UserName == model.UserName);
+                }
+                var condition = PredicateBuilder.Create<Users>(x => false);
+                if (compareExpressions.Count > 0)
+                {
+                    foreach (var item in compareExpressions)
+                    {
+                        condition = condition.Or(item);
+                    }
+                    query = query.Where(condition);
+                }
+                query = query.Take(2);
+            }
+            else
+            {
+                if (model.Code.IsNotNullOrEmpty())
+                {
+                    query = query.Where(c => c.Name.Contains(model.Code));
+                }
+                if (model.UserName.IsNotNullOrEmpty())
+                {
+                    query = query.Where(c => c.UserName.Contains(model.UserName));
+                }
+            }
             return query;
         }
 
@@ -117,7 +152,52 @@ namespace DoAnTotNghiep.Service
                 {
                     try
                     {
-                        await session.DeleteAsync(users);
+                        foreach (var item in users)
+                        {
+                            await session.DeleteAsync(item);
+                        }
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdateAsync(Users model)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        await session.UpdateAsync(model);
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> AddAsync(Users model)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        await session.SaveAsync(model);
                         transaction.Commit();
                         return true;
                     }

@@ -1,0 +1,147 @@
+﻿<EditForm Model="editModel">
+    <DataAnnotationsValidator />
+    <InputWatcher @ref="inputWatcher"></InputWatcher>
+
+    <Row Gutter="8">
+        <AntDesign.Col Span="6">
+            <Row Gutter="8" Justify="center">
+                <div style="position: relative;">
+                    @if (@editModel.Avatar.IsNotNullOrEmpty())
+                    {
+                        <Image Width="160px"
+                               Src="@editModel.Avatar" PreviewSrc="@editModel.Avatar"
+                               Fallback="image\image_default.png" />
+                    }
+                    else
+                    {
+                        <Image Width="160px"
+                               Src="image\image_default.png" PreviewSrc="image\image_default.png"></Image>
+                    }
+                    
+                    <label for="importAvartar1" style="position: absolute; bottom: -11px; right: 0;">
+                        <Icon Type="Camera" Theme="outline" Style="background-color: #A9A9A9; font-size: 18px;color:white" />
+                    </label>
+                    <InputFile id="importAvartar1" hidden OnChange="@ImportAvatarAsync" accept=".jpg,.png,.jpeg" />
+                </div>
+            </Row>
+        </AntDesign.Col>
+        <AntDesign.Col Span="18">
+            @if (StaffProfileViewMode == StaffProfileViewMode.Manager)
+            {
+                <Row Gutter="8" Justify="end">
+                    <Space Size="@("small")" Style="margin-right: 10px">
+                        @if (editModel.ReadOnly)
+                        {
+                            <SpaceItem>
+                                <Button Type="@ButtonType.Primary" OnClick="Edit" Class="btn-edit">Sửa</Button>
+                            </SpaceItem>
+                        }
+                        <SpaceItem>
+                            @if (!editModel.ReadOnly)
+                            {
+                                <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7" Class="btn-add-new">Lưu</Button>
+                            }
+                        </SpaceItem>
+                        <SpaceItem>
+                            @if (!editModel.ReadOnly)
+                            {
+                                <Popconfirm OnConfirm="() => CancelClickAsync()"
+                                            OkText="Đồng ý"
+                                            CancelText="Hủy">
+                                    <ChildContent>
+                                        <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                                    </ChildContent>
+                                    <TitleTemplate>
+                                        Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                                    </TitleTemplate>
+                                </Popconfirm>
+                            }
+                        </SpaceItem>
+                    </Space>
+                </Row>
+            }
+            <Row Gutter="8">
+                <AntDesign.Col Span="8">
+                    <LabelFor For="() => editModel.Code"></LabelFor>
+                    <Input @bind-Value="editModel.Code" Disabled="editModel.ReadOnly"
+                           AllowClear="!editModel.ReadOnly" DebounceMilliseconds="1000" StopPropagation />
+                    <ValidationMessage For="() => editModel.Code"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="8">
+                    <LabelFor For="() => editModel.Name"></LabelFor>
+                    <Input @bind-Value="editModel.Name" Disabled="editModel.ReadOnly"
+                           AllowClear="!editModel.ReadOnly" DebounceMilliseconds="1000" StopPropagation />
+                    <ValidationMessage For="() => editModel.Name"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="8">
+                    <TextFieldWithMask Mask="decimal-mask" TValue="int?" IntergerDigits="18" Digits="3" Class="text-left"
+                                       @bind-Value="editModel.Salary" Disable="editModel.ReadOnly"></TextFieldWithMask>
+                </AntDesign.Col>
+            </Row>
+        </AntDesign.Col>
+    </Row>
+    <Row Gutter="8">
+        <div class="wrap_content" id="detail-staff-profile-job-info">
+            <h3>Thông tin nhân viên</h3>
+            <AntDesign.Col Span="24">
+                <Row Gutter="8">
+                    <AntDesign.Col Span="8">
+                        <LabelFor For="() => editModel.IdentityNumber" Title="Giới tính"></LabelFor>
+                        <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
+                                Value="@editModel?.Gender.ToString()" EnableSearch
+                                OnSelectedItemChanged="e => editModel.SetValue(editModel.Property.NameProperty(c => c.Gender), e)">
+                            <SelectOptions>
+                                @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.Gender)])
+                                {
+                                    <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                }
+                            </SelectOptions>
+                        </Select>
+                        <ValidationMessage For="() => editModel.Gender"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="8">
+                        <LabelFor For="() => editModel.IdentityNumber" Title="Ngày sinh"></LabelFor>
+                        <DatePicker  Class="input" @bind-Value="editModel.DateOfBirth"
+                                    Format="dd/MM/yyyy" Style="display:block" Disabled="editModel.ReadOnly"/>
+                        <ValidationMessage For="() => editModel.DateOfBirth"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="8">
+                        <LabelFor For="() => editModel.IdentityNumber"></LabelFor>
+                        <Input @bind-Value="editModel.IdentityNumber"
+                               Disabled="editModel.ReadOnly"
+                               AllowClear="!editModel.ReadOnly" DebounceMilliseconds="1000" StopPropagation />
+                        <ValidationMessage For="() => editModel.IdentityNumber"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="8">
+                        <LabelFor For="() => editModel.PhoneHouseholder"></LabelFor>
+                        <Input @bind-Value="editModel.PhoneHouseholder"
+                               Disabled="editModel.ReadOnly "
+                               AllowClear="!editModel.ReadOnly" DebounceMilliseconds="1000" StopPropagation />
+                        <ValidationMessage For="() => editModel.PhoneHouseholder"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="8">
+                        <LabelFor For="() => editModel.Email"></LabelFor>
+                        <Input @bind-Value="editModel.Email"
+                               Disabled="editModel.ReadOnly "
+                               AllowClear="!editModel.ReadOnly" DebounceMilliseconds="1000" StopPropagation />
+                        <ValidationMessage For="() => editModel.Email"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="8">
+                        <LabelFor For="() => editModel.Address"></LabelFor>
+                        <Input @bind-Value="editModel.Address"
+                               Disabled="editModel.ReadOnly "
+                               AllowClear="!editModel.ReadOnly" DebounceMilliseconds="1000" StopPropagation />
+                        <ValidationMessage For="() => editModel.Address"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="8">
+                        <LabelFor For="() => editModel.UserName"></LabelFor>
+                        <Input @bind-Value="editModel.UserName"
+                               Disabled="editModel.ReadOnly || hasUserName"
+                               AllowClear="!editModel.ReadOnly || !hasUserName" DebounceMilliseconds="1000" StopPropagation />
+                        <ValidationMessage For="() => editModel.UserName"></ValidationMessage>
+                    </AntDesign.Col>
+                </Row>
+            </AntDesign.Col>
+        </div>
+    </Row>
+</EditForm>

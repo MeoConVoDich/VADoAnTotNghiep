@@ -13,12 +13,12 @@
     </PageHeader>
 
     <div class="site-content" style="padding-top: 4px;">
-        <Row Gutter="8">
-            <AntDesign.Col Span="22">
+        <EditForm Model="usersFilterModel" OnSubmit="e => SearchAsync()">
+            <Row Gutter="8">
                 <Space Size=@(("8", "8")) Wrap>
                     @if (PermissionClaim.STAFFPROFILE_ADD)
                     {
-                        <SpaceItem><Button Icon="plus" OnClick="AddNewAsync" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
+                        <SpaceItem><Button Icon="plus" OnClick="AddNew" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
                     }
                     @if (PermissionClaim.STAFFPROFILE_DELETE)
                     {
@@ -50,38 +50,54 @@
                         }
                     }
                 </Space>
-            </AntDesign.Col>
-        </Row>
+                <AntDesign.Col Span="4">
+                    <Input TValue="string" Value="usersFilterModel.Code"
+                           ValueChanged="e => usersFilterModel.Change(nameof(usersFilterModel.CodeOrName), e)"
+                           Placeholder="Nhập họ tên, mã nhân viên" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="2" Class="flex-start-end">
+                    <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                </AntDesign.Col>
+            </Row>
+        </EditForm>
         <Row Gutter="8">
             <AntDesign.Col Span="24">
                 <Table @ref="table" TItem="ViewModel.UsersViewModel" DataSource="@UsersViewModels"
-                       Class="table-striped" ScrollX="100%" Bordered ScrollBarWidth="10px"
-                       Total="usersFilterModel.Page.Total"
+                       ScrollBarWidth="10px"
+                       Total="usersFilterModel.Page.Total" ScrollY="500px" ScrollX="1500"
                        Loading="loading"
                        PageIndex="usersFilterModel.Page.PageIndex"
                        PageSize="usersFilterModel.Page.PageSize"
+                       OnPageIndexChange="PageIndexChangeAsync"
+                       OnPageSizeChange="PageSizeChangeAsync"
                        OnRowClick="OnRowClick"
                        @bind-SelectedRows="selectedRows">
                     <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
-                    <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
+                    <Column @bind-Field="@context.Stt" Width="100" Fixed="left"></Column>
                     <Column @bind-Field="@context.Code" Ellipsis Width="150" Fixed="left"></Column>
                     <Column @bind-Field="@context.Name" Ellipsis Width="200" Fixed="left"></Column>
                     <Column @bind-Field="@context.Gender" Ellipsis="true" Width="150">@context.Gender.GetDescription()</Column>
                     <Column @bind-Field="@context.DateOfBirth" Width="150" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.IdentityNumber" Width="150"></Column>
+                    <Column @bind-Field="@context.PhoneHouseholder" Width="150"></Column>
+                    <Column @bind-Field="@context.Email" Width="150"></Column>
+                    <Column @bind-Field="@context.Address" Width="150"></Column>
+                    <Column @bind-Field="@context.Salary" Width="150"></Column>
+                    <Column @bind-Field="@context.UserName" Width="150"></Column>
                     <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
                         <ChildContent>
                             <Row Justify="center">
                                 <Space>
                                     <SpaceItem>
                                         <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
-                                            <Icon Type="eye" Theme="fill" OnClick="() => ViewDetailAsync(context)" Class="btn-icon-edit" StopPropagation />
+                                            <Icon Type="eye" Theme="fill" OnClick="() => ViewDetail(context)" Class="btn-icon-edit" StopPropagation />
                                         </Tooltip>
                                     </SpaceItem>
                                     @if (PermissionClaim.STAFFPROFILE_EDIT)
                                     {
                                         <SpaceItem>
                                             <Tooltip Placement="@Placement.Top" Title="Sửa">
-                                                <Icon Type="edit" Theme="fill" OnClick="() => OpenDetailAsync(context)" Class="btn-icon-edit" StopPropagation />
+                                                <Icon Type="edit" Theme="fill" OnClick="() => OpenDetail(context)" Class="btn-icon-edit" StopPropagation />
                                             </Tooltip>
                                         </SpaceItem>
                                     }
@@ -111,4 +127,14 @@
             </AntDesign.Col>
         </Row>
     </div>
+    <CascadingValue Value="StaffProfileViewMode.Manager" IsFixed>
+        <Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
+                Width="1200"
+                Placement="right" BodyStyle="padding-top:0px"
+                Title="@("Thông tin nhân viên")" OnClose="CloseDetail">
+            <Template>
+                <StaffProfileDetail @ref="staffProfileDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync" />
+            </Template>
+        </Drawer>
+    </CascadingValue>
 }
