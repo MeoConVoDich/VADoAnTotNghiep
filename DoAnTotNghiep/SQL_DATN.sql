@@ -28,3 +28,21 @@ CREATE TABLE PermissionGroup
 	NameGroup VARCHAR(256),
 	Permission VARCHAR(max),
 );
+
+CREATE TABLE BonusDiscipline
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	UsersId VARCHAR(256),
+	Code VARCHAR(256),
+	Name VARCHAR(256),
+	PathAttachFile VARCHAR(256),
+	AttachFileName VARCHAR(256),
+	Amount int,
+	EffectiveState VARCHAR(256),
+	Reason NVARCHAR(256),
+	CreateDate DateTime,
+	BonusDisciplineType VARCHAR(255),
+	Date DateTime,
+	StaffName NVARCHAR(255),
+	StaffCode VARCHAR(255),
+);

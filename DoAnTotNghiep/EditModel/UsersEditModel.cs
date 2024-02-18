@@ -25,7 +25,7 @@ namespace DoAnTotNghiep.EditModel
 
         [Display(Name = "Tên nhân viên")]
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
-        [MaxLength(255, ErrorMessage = "{0} không được dài hơn {0} ký tự")]
+        [MaxLength(255, ErrorMessage = "{0} không được dài hơn {1} ký tự")]
         public string Name { get; set; }
 
         [Display(Name = "Mã nhân viên")]

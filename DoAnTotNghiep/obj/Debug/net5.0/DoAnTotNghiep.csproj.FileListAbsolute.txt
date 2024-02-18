@@ -64,8 +64,6 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\DoAnTotN
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\DoAnTotNghiep.RazorComponent.input.cache
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\App.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Components\LabelFor.razor.g.cs
-C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Pages\Counter.razor.g.cs
-C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Pages\FetchData.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Shared\LoginLayout.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Shared\SurveyPrompt.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\_Imports.razor.g.cs
@@ -82,7 +80,6 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\DoAnTotN
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\DoAnTotNghiep.runtimeconfig.json
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\DoAnTotNghiep.runtimeconfig.dev.json
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\DoAnTotNghiep.dll
-C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\ref\DoAnTotNghiep.dll
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\DoAnTotNghiep.pdb
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\DoAnTotNghiep.Views.dll
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\DoAnTotNghiep.Views.pdb
@@ -123,9 +120,7 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\DoAnTotN
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\DoAnTotNghiep.RazorCoreGenerate.cache
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\App.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Components\LabelFor.razor.g.cs
-C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Pages\Counter.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Pages\DangNhap.razor.g.cs
-C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Pages\FetchData.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Shared\LoginLayout.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Shared\SurveyPrompt.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\_Imports.razor.g.cs
@@ -159,3 +154,10 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDec
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Staff\StaffProfileDetail.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Components\TextFieldWithMask.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Staff\StaffProfileDetail.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\DoAnTotNghiep.sourcelink.json
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\staticwebassets\DoAnTotNghiep.StaticWebAssets.Pack.cache
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\staticwebassets\msbuild.DoAnTotNghiep.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\staticwebassets\msbuild.build.DoAnTotNghiep.props
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.DoAnTotNghiep.props
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.DoAnTotNghiep.props
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\refint\DoAnTotNghiep.dll

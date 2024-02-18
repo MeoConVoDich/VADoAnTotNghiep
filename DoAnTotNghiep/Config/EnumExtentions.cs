@@ -25,4 +25,23 @@ namespace DoAnTotNghiep.Config
         Staff
     }
 
+    public enum BonusDisciplineType
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Khen thưởng")]
+        Bonus = 1,
+        [Display(Name = "Kỷ luật")]
+        Discipline = 2
+    }
+
+    public enum EffectiveState
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Không hiệu lực")]
+        Disabled = 1,
+        [Display(Name = "Hiệu lực")]
+        Active = 2,
+    }
 }

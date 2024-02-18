@@ -8,22 +8,10 @@
                 Hồ sơ nhân viên
             </MenuItem>
         }
-        @if (PermissionClaim.DECISIONINFO_VIEW)
+        @if (PermissionClaim.DISCIPLINE_BONUS_VIEW)
         {
-            <MenuItem Key="/thong-tin-nhan-su/quyet-dinh" RouterLink="/thong-tin-nhan-su/quyet-dinh" RouterMatch="NavLinkMatch.All">
-                Quyết định lương
-            </MenuItem>
-        }
-        @if (PermissionClaim.BONUS_VIEW)
-        {
-            <MenuItem Key="/thong-tin-nhan-su/thong-tin-khen-thuong" RouterLink="/thong-tin-nhan-su/thong-tin-khen-thuong" RouterMatch="NavLinkMatch.All">
-                Thông tin khen thưởng
-            </MenuItem>
-        }
-        @if (PermissionClaim.DISCIPLINE_VIEW)
-        {
-            <MenuItem Key="/thong-tin-nhan-su/thong-tin-ky-luat" RouterLink="/thong-tin-nhan-su/thong-tin-ky-luat" RouterMatch="NavLinkMatch.All">
-                Thông tin kỷ luật
+            <MenuItem Key="/thong-tin-nhan-su/thong-tin-khen-thuong-ky-luat" RouterLink="/thong-tin-nhan-su/thong-tin-khen-thuong-ky-luat" RouterMatch="NavLinkMatch.All">
+                Thông tin khen thưởng, kỷ luật
             </MenuItem>
         }
         @if (PermissionClaim.IsAllowanceMenuVisible())

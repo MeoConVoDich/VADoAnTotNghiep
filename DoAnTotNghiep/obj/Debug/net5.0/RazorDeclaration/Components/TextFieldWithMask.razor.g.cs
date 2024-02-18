@@ -7,11 +7,11 @@
 namespace DoAnTotNghiep.Components
 {
     #line hidden
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Components;
+    using global::System;
+    using global::System.Collections.Generic;
+    using global::System.Linq;
+    using global::System.Threading.Tasks;
+    using global::Microsoft.AspNetCore.Components;
 #nullable restore
 #line 1 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using System.Net.Http;
@@ -110,10 +110,18 @@ using DoAnTotNghiep.EditModel;
 #line default
 #line hidden
 #nullable disable
-    public partial class TextFieldWithMask<TValue> : InputBase<TValue>
+    public partial class TextFieldWithMask<
+#nullable restore
+#line 1 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Components\TextFieldWithMask.razor"
+TValue
+
+#line default
+#line hidden
+#nullable disable
+    > : InputBase<TValue>
     {
         #pragma warning disable 1998
-        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
+        protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998

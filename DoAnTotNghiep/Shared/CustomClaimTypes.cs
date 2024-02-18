@@ -29,6 +29,15 @@ namespace DoAnTotNghiep.Shared
 
     public class PermissionKey
     {
+        public static string DISCIPLINE_BONUS_VIEW = "VA1";
+        public static string DISCIPLINE_BONUS_ADD = "VA2";
+        public static string DISCIPLINE_BONUS_EDIT = "VA3";
+        public static string DISCIPLINE_BONUS_DELETE = "VA4";
+
+
+
+
+
         public static string ADMIN = "Admin";
         public static string ACCOUNT_VIEW = "1";
         public static string ACCOUNT_ADD = "2";
@@ -429,6 +438,14 @@ namespace DoAnTotNghiep.Shared
                 || MANAGEWORKLATELEAVEEARLY_VIEW || MANAGEVACATIONREGISTRATION_VIEW || TIMEKEEPINGAGGREGATE_VIEW
                 || TIMEKEEPINGNIGHTSHIFT_VIEW || TIMEKEEPINGSHIFTGROUP_VIEW || SETUP_VIEW || TIMEKEEPINGBYHAND_VIEW || MANAGECHANGESHIFT_VIEW;
         }
+
+        public bool DISCIPLINE_BONUS_VIEW;
+        public bool DISCIPLINE_BONUS_ADD;
+        public bool DISCIPLINE_BONUS_EDIT;
+        public bool DISCIPLINE_BONUS_DELETE;
+
+
+
 
         public bool ADMIN;
         public bool ACCOUNT_VIEW;

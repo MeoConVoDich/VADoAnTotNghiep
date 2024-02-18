@@ -2,7 +2,6 @@
 using DoAnTotNghiep.Components;
 using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Domain;
-using DoAnTotNghiep.IService;
 using DoAnTotNghiep.SearchModel;
 using NHibernate;
 using NHibernate.Linq;
