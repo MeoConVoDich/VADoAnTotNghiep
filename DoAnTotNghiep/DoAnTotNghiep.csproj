@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Salary\" />
-    <Folder Include="Timekeeping\" />
-    <Folder Include="Profile\" />
     <Folder Include="System\" />
   </ItemGroup>
 

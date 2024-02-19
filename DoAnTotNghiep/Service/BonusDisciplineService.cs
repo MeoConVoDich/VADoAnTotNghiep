@@ -26,9 +26,13 @@ namespace DoAnTotNghiep.Service
         IQueryable<BonusDiscipline> CreateFilter(BonusDisciplineSearch model, ISession session)
         {
             var query = session.Query<BonusDiscipline>();
+            if (model.UsersId.IsNotNullOrEmpty())
+            {
+                query = query.Where(c => c.Users.Id == model.UsersId);
+            }
             if (model.StaffCodeOrName.IsNotNullOrEmpty())
             {
-                query = query.Where(c => c.StaffName.Contains(model.StaffCodeOrName) || c.StaffCode.Contains(model.StaffCodeOrName));
+                query = query.Where(c => c.Users.Name.Contains(model.StaffCodeOrName) || c.Users.Code.Contains(model.StaffCodeOrName));
             }
             if (model.CodeOrName.IsNotNullOrEmpty())
             {
@@ -93,7 +97,7 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         var query = CreateFilter(model, session);
-                        var data = await query.Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
+                        var data = await query.Fetch(c => c.Users).OrderByDescending(c => c.EffectiveState).Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
                         var count = await query.CountAsync();
                         transaction.Commit();
                         return (data, count);

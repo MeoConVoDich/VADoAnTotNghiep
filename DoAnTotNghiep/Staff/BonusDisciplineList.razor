@@ -10,12 +10,11 @@
             </Breadcrumb>
         </PageHeaderExtra>
     </PageHeader>
-
     <div class="site-content" style="padding-top: 4px;">
         <EditForm Model="bonusDisciplineFilterModel" OnSubmit="e => SearchAsync()">
             <Row Gutter="8">
                 <Space Size=@(("8", "8")) Wrap>
-                 @if (PermissionClaim.DISCIPLINE_BONUS_ADD)
+                    @if (PermissionClaim.DISCIPLINE_BONUS_ADD)
                     {
                         <SpaceItem><Button Icon="plus" OnClick="AddNew" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
                     }
@@ -30,15 +29,46 @@
                                             CancelText="Hủy">
                                     <ChildContent>
                                         <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
-                                 </ChildContent>
-                                 <TitleTemplate>
-                                     Bạn có chắc chắn muốn xóa?
-                                 </TitleTemplate>
-                             </Popconfirm>
-                         </SpaceItem>
+                                    </ChildContent>
+                                    <TitleTemplate>
+                                        Bạn có chắc chắn muốn xóa?
+                                    </TitleTemplate>
+                                </Popconfirm>
+                            </SpaceItem>
                         }
                     }
                 </Space>
+                <AntDesign.Col Span="4">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@bonusDisciplineFilterModel?.BonusDisciplineType.ToString()" EnableSearch
+                            OnSelectedItemChanged="e => BonusDisciplineTypeChange(e)">
+                        <SelectOptions>
+                            @foreach (var item in bonusDisciplineFilterModel.DataSource[bonusDisciplineFilterModel.Property.NameProperty(c => c.BonusDisciplineType)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Span="4">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@bonusDisciplineFilterModel?.EffectiveState.ToString()" EnableSearch
+                            OnSelectedItemChanged="e => EffectiveStateChangeAsync(e)">
+                        <SelectOptions>
+                            @foreach (var item in bonusDisciplineFilterModel.DataSource[bonusDisciplineFilterModel.Property.NameProperty(c => c.EffectiveState)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                    <ValidationMessage For="() => bonusDisciplineFilterModel.BonusDisciplineType"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="4">
+                    <RangePicker TValue="DateTime?[]" Value="@(new DateTime?[] { bonusDisciplineFilterModel.FromDate, bonusDisciplineFilterModel.ToDate })"
+                                 OnChange="e => SetViewDateAsync(e.Dates)"
+                                 OnClearClick="e => SetViewDateAsync(new DateTime?[] { null, null })"
+                                 ShowToday="true" Placeholder="@(new string[] { "Từ ngày", "Đến ngày" })" />
+                </AntDesign.Col>
                 <AntDesign.Col Span="4">
                     <Input TValue="string" Value="bonusDisciplineFilterModel.CodeOrName"
                            ValueChanged="e => bonusDisciplineFilterModel.Change(nameof(bonusDisciplineFilterModel.CodeOrName), e)"
@@ -69,34 +99,54 @@
                     <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
                     <Column @bind-Field="@context.Stt" Width="100" Fixed="left"></Column>
                     <Column @bind-Field="@context.Code" Ellipsis Width="150" Fixed="left"></Column>
-                     <Column @bind-Field="@context.Name" Ellipsis Width="200" Fixed="left"></Column>
-                     <Column @bind-Field="@context.StaffCode" Ellipsis Width="150" ></Column>
-                     <Column @bind-Field="@context.StaffName" Ellipsis Width="200" ></Column>
-                     <Column @bind-Field="@context.BonusDisciplineType" Width="150">
-                         @context.BonusDisciplineType.GetDescription();
-                     </Column>
-                    <Column @bind-Field="@context.Amount" Width="150"></Column>
-                    <Column @bind-Field="@context.Reason" Width="150"></Column>
-                    <Column @bind-Field="@context.Date" Width="150" Format="dd/MM/yyyy"></Column>
-                    <Column @bind-Field="@context.EffectiveState" Ellipsis Width="150">
-                         @context.EffectiveState.GetDescription();
+                    <Column @bind-Field="@context.Name" Ellipsis Width="200" Fixed="left"></Column>
+                    <Column @bind-Field="@context.StaffCode" Ellipsis Width="150"></Column>
+                    <Column @bind-Field="@context.StaffName" Ellipsis Width="200"></Column>
+                    <Column @bind-Field="@context.BonusDisciplineType" Width="150">
+                        <Template>
+                            @if (context.BonusDisciplineType == BonusDisciplineType.Bonus)
+                                {
+                                <AntDesign.Text Copyable="false" Type="success">@context.BonusDisciplineType.GetDescription()</AntDesign.Text>
+                                }
+                                else
+                                {
+                                <AntDesign.Text Copyable="false" Type="danger">@context.BonusDisciplineType.GetDescription()</AntDesign.Text>
+                                }
+                        </Template>
                     </Column>
-                     <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
-                         <ChildContent>
-                             <Row Justify="center">
-                                 <Space>
-                                     <SpaceItem>
-                                         <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
-                                             <Icon Type="eye" Theme="fill" OnClick="() => ViewDetail(context)" Class="btn-icon-edit" StopPropagation />
-                                         </Tooltip>
-                                     </SpaceItem>
-                                     @if (PermissionClaim.DISCIPLINE_BONUS_EDIT)
+                    <Column @bind-Field="@context.Amount" Width="150">
+                        @string.Format("{0:#,###}", @context.Amount).ToDecimalUnFormatDot()
+                    </Column>
+                    <Column @bind-Field="@context.Date" Width="150" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.Reason" Width="150"></Column>
+                    <Column @bind-Field="@context.EffectiveState" Ellipsis Width="150">
+                        <Template>
+                            @if (context.EffectiveState == EffectiveState.Active)
+                                {
+                                <AntDesign.Text Copyable="false" Type="success">@context.EffectiveState.GetDescription()</AntDesign.Text>
+                                }
+                                else
+                                {
+                                <AntDesign.Text Copyable="false" Type="danger">@context.EffectiveState.GetDescription()</AntDesign.Text>
+                                }
+                        </Template>
+                    </Column>
+                    <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
+                        <ChildContent>
+                            <Row Justify="center">
+                                <Space>
+                                    <SpaceItem>
+                                        <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
+                                            <Icon Type="eye" Theme="fill" OnClick="() => ViewDetail(context)" Class="btn-icon-edit" StopPropagation />
+                                        </Tooltip>
+                                    </SpaceItem>
+                                    @if (PermissionClaim.DISCIPLINE_BONUS_EDIT)
                                     {
                                         <SpaceItem>
                                             <Tooltip Placement="@Placement.Top" Title="Sửa">
                                                 <Icon Type="edit" Theme="fill" OnClick="() => OpenDetail(context)" Class="btn-icon-edit" StopPropagation />
-                                             </Tooltip>
-                                         </SpaceItem>
+                                            </Tooltip>
+                                        </SpaceItem>
                                     }
                                     @if (PermissionClaim.DISCIPLINE_BONUS_DELETE)
                                     {

@@ -99,12 +99,12 @@ namespace DoAnTotNghiep.Staff
             }
         }
 
-        void AddNew()
+        async Task AddNewAsync()
         {
             try
             {
                 Users users = new Users();
-                staffProfileDetail.LoadEditModel(users);
+                await staffProfileDetail.LoadEditModelAsync(users);
                 detailVisible = true;
             }
             catch (Exception ex)
@@ -152,13 +152,13 @@ namespace DoAnTotNghiep.Staff
         }
 
 
-        void ViewDetail(UsersViewModel model)
+        async Task ViewDetailAsync(UsersViewModel model)
         {
             try
             {
                 detailVisible = true;
                 var data = ListUsers.FirstOrDefault(c => c.Id == model.Id);
-                staffProfileDetail.LoadEditModel(data, true);
+                await staffProfileDetail.LoadEditModelAsync(data, true);
             }
             catch (Exception ex)
             {
@@ -166,13 +166,13 @@ namespace DoAnTotNghiep.Staff
             }
         }
 
-        void OpenDetail(UsersViewModel model)
+        async Task OpenDetailAsync(UsersViewModel model)
         {
             try
             {
                 detailVisible = true;
                 var data = ListUsers.FirstOrDefault(c => c.Id == model.Id);
-                staffProfileDetail.LoadEditModel(data);
+                await staffProfileDetail.LoadEditModelAsync(data);
             }
             catch (Exception ex)
             {

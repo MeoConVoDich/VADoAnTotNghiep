@@ -40,6 +40,7 @@ namespace DoAnTotNghiep
             services.AddServerSideBlazor();
             services.AddAutoMapperConfig();
             services.AddSingleton<UsersService>();
+            services.AddSingleton<BonusDisciplineService>();
             services.AddSingleton<ISessionFactory>(NHibernateConfig.BuildSessionFactory());
             services.AddBlazoredSessionStorage();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

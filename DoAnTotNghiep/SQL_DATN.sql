@@ -43,6 +43,4 @@ CREATE TABLE BonusDiscipline
 	CreateDate DateTime,
 	BonusDisciplineType VARCHAR(255),
 	Date DateTime,
-	StaffName NVARCHAR(255),
-	StaffCode VARCHAR(255),
 );

@@ -35,6 +35,7 @@ namespace DoAnTotNghiep.Config
             });
             var mapper = new ModelMapper();
             mapper.AddMapping(typeof(UsersMap));
+            mapper.AddMapping(typeof(BonusDisciplineMap));
             HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
             cfg.AddMapping(domainMapping);
             return cfg.BuildSessionFactory();

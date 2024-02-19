@@ -1,0 +1,51 @@
+﻿@if (PermissionClaim.IsTimekeepingMenuVisible())
+{
+<Menu Theme="MenuTheme.Dark" Class="main_menu" Mode="MenuMode.Horizontal"
+      DefaultSelectedKeys=@(new[]{"/cham-cong/quan-ly/xep-ca-lam-viec"}) TriggerSubMenuAction="@Trigger.Hover">
+
+
+    @if (PermissionClaim?.TIMEKEEPINGSHIFTSTAFF_VIEW == true)
+    {
+        <MenuItem Key="/cham-cong/xep-ca-lam-viec" RouterLink="/cham-cong/xep-ca-lam-viec"
+                  RouterMatch="NavLinkMatch.All">
+            Bảng ca làm việc
+        </MenuItem>
+    }
+    @if (PermissionClaim?.FINGERPRINT_VIEW == true)
+    {
+        <MenuItem Key="/cham-cong/du-lieu-vao-ra" RouterLink="/cham-cong/du-lieu-vao-ra"
+                  RouterMatch="NavLinkMatch.All">
+            Dữ liệu vào ra
+        </MenuItem>
+    }
+    @if (PermissionClaim.IsTimekeepingManagementMenuVisible())
+    {
+        <MenuItem Key="/cham-cong/quan-ly-don" RouterLink="/cham-cong/quan-ly-don"
+                  RouterMatch="NavLinkMatch.All">
+            Quản lý đơn
+        </MenuItem>
+    }
+    @if (PermissionClaim?.TIMEKEEPINGAGGREGATE_VIEW == true)
+    {
+        <MenuItem Key="/cham-cong/xu-ly-du-lieu-lam-them" RouterLink="/cham-cong/xu-ly-du-lieu-lam-them"
+                  RouterMatch="NavLinkMatch.All">
+            Xử lý dữ liệu làm thêm
+        </MenuItem>
+        <MenuItem Key="/cham-cong/tong-hop-cong-may" RouterLink="/cham-cong/tong-hop-cong-may"
+                  RouterMatch="NavLinkMatch.All">
+            Tổng hợp công máy
+        </MenuItem>
+        <MenuItem Key="/cham-cong/bang-cong-tong-hop" RouterLink="/cham-cong/bang-cong-tong-hop"
+                  RouterMatch="NavLinkMatch.All">
+            Bảng công tổng hợp
+        </MenuItem>
+    }
+    @if (PermissionClaim?.SETUP_TIMEKEEPING == true)
+    {
+        <MenuItem Key="/cham-cong/quy-dinh-cham-cong" RouterLink="/cham-cong/quy-dinh-cham-cong"
+                  RouterMatch="NavLinkMatch.All">
+            Quy định chấm công
+        </MenuItem>
+    }
+</Menu>
+}

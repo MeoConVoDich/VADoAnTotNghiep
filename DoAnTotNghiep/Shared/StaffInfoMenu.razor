@@ -14,14 +14,5 @@
                 Thông tin khen thưởng, kỷ luật
             </MenuItem>
         }
-        @if (PermissionClaim.IsAllowanceMenuVisible())
-        {
-            <MenuItem Key="/thong-tin-nhan-su/phu-cap" RouterLink="/thong-tin-nhan-su/phu-cap" RouterMatch="NavLinkMatch.All">
-                Phụ cấp
-            </MenuItem>
-        }
-        <MenuItem Key="/thong-tin-nhan-su/thiet-lap/phu-cap-ke-khai-bao-hiem" RouterLink="/thong-tin-nhan-su/thiet-lap/phu-cap-ke-khai-bao-hiem" RouterMatch="NavLinkMatch.All">
-            Thiết lập phụ cấp
-        </MenuItem>
     </Menu>
 }

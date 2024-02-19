@@ -17,7 +17,6 @@
                         <Image Width="160px"
                                Src="image\image_default.png" PreviewSrc="image\image_default.png"></Image>
                     }
-                    
                     <label for="importAvartar1" style="position: absolute; bottom: -11px; right: 0;">
                         <Icon Type="Camera" Theme="outline" Style="background-color: #A9A9A9; font-size: 18px;color:white" />
                     </label>
@@ -101,8 +100,8 @@
                     </AntDesign.Col>
                     <AntDesign.Col Span="8">
                         <LabelFor For="() => editModel.IdentityNumber" Title="Ngày sinh"></LabelFor>
-                        <DatePicker  Class="input" @bind-Value="editModel.DateOfBirth"
-                                    Format="dd/MM/yyyy" Style="display:block" Disabled="editModel.ReadOnly"/>
+                        <DatePicker Class="input" @bind-Value="editModel.DateOfBirth"
+                                    Format="dd/MM/yyyy" Style="display:block" Disabled="editModel.ReadOnly" />
                         <ValidationMessage For="() => editModel.DateOfBirth"></ValidationMessage>
                     </AntDesign.Col>
                     <AntDesign.Col Span="8">
@@ -144,4 +143,42 @@
             </AntDesign.Col>
         </div>
     </Row>
+
 </EditForm>
+@if (!addNew)
+{
+    <Row Gutter="8">
+        <div class="wrap_content">
+            <h3>Thông tin khen thưởng, kỷ luật</h3>
+            <AntDesign.Col Span="24">
+                <Table @ref="table" TItem="BonusDisciplineViewModel" DataSource="@BonusDisciplineViewModels"
+                       ScrollBarWidth="10px"
+                       Total="bonusDisciplineFilterModel.Page.Total" ScrollY="200px" ScrollX="1000"
+                       Loading="loading" HidePagination="true"
+                       PageIndex="bonusDisciplineFilterModel.Page.PageIndex"
+                       PageSize="bonusDisciplineFilterModel.Page.PageSize">
+                    <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
+                    <Column @bind-Field="@context.Code" Ellipsis Fixed="left"></Column>
+                    <Column @bind-Field="@context.Name" Ellipsis Fixed="left"></Column>
+                    <Column @bind-Field="@context.BonusDisciplineType">
+                        <Template>
+                            @if (context.BonusDisciplineType == BonusDisciplineType.Bonus)
+                                {
+                                <AntDesign.Text Copyable="false" Type="success">@context.BonusDisciplineType.GetDescription()</AntDesign.Text>
+                                }
+                                else
+                                {
+                                <AntDesign.Text Copyable="false" Type="danger">@context.BonusDisciplineType.GetDescription()</AntDesign.Text>
+                                }
+                        </Template>
+                    </Column>
+                    <Column @bind-Field="@context.Amount">
+                        @string.Format("{0:#,###}", @context.Amount).ToDecimalUnFormatDot()
+                    </Column>
+                    <Column @bind-Field="@context.Date" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.Reason" Ellipsis></Column>
+                </Table>
+            </AntDesign.Col>
+        </div>
+    </Row>
+}

@@ -33,6 +33,7 @@ namespace DoAnTotNghiep.Shared
         public static string DISCIPLINE_BONUS_ADD = "VA2";
         public static string DISCIPLINE_BONUS_EDIT = "VA3";
         public static string DISCIPLINE_BONUS_DELETE = "VA4";
+        public static string SETUP_TIMEKEEPING = "VA5";
 
 
 
@@ -443,7 +444,7 @@ namespace DoAnTotNghiep.Shared
         public bool DISCIPLINE_BONUS_ADD;
         public bool DISCIPLINE_BONUS_EDIT;
         public bool DISCIPLINE_BONUS_DELETE;
-
+        public bool SETUP_TIMEKEEPING;
 
 
 

@@ -7,11 +7,11 @@
 namespace DoAnTotNghiep.Staff
 {
     #line hidden
-    using global::System;
-    using global::System.Collections.Generic;
-    using global::System.Linq;
-    using global::System.Threading.Tasks;
-    using global::Microsoft.AspNetCore.Components;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Components;
 #nullable restore
 #line 1 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using System.Net.Http;
@@ -110,10 +110,24 @@ using DoAnTotNghiep.EditModel;
 #line default
 #line hidden
 #nullable disable
-    public partial class StaffProfileDetail : global::Microsoft.AspNetCore.Components.ComponentBase
+#nullable restore
+#line 15 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.Domain;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.ViewModel;
+
+#line default
+#line hidden
+#nullable disable
+    public partial class StaffProfileDetail : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
-        protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
+        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998

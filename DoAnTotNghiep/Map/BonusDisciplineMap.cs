@@ -11,7 +11,6 @@ namespace DoAnTotNghiep.Map
             Table("BonusDiscipline");
 
             Id(x => x.Id, map => map.Column("Id"));
-            Property(x => x.UsersId);
             Property(x => x.Name);
             Property(x => x.Code);
             Property(x => x.PathAttachFile);
@@ -22,6 +21,11 @@ namespace DoAnTotNghiep.Map
             Property(x => x.Reason);
             Property(x => x.CreateDate);
             Property(x => x.Date);
+            ManyToOne(x => x.Users, map =>
+            {
+                map.Column("UsersId");
+                map.Class(typeof(Users));
+            });
         }
     }
 }

@@ -1,0 +1,15 @@
+﻿@page "/ca-nhan/thong-tin-ca-nhan"
+<PageHeader Class="site-page-header" Title=@("Thông tin cá nhân")>
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Cá nhân</BreadcrumbItem>
+            <BreadcrumbItem>Thông tin cá nhân</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<div class="site-content" style="padding-top: 4px;">
+    <CascadingValue Value="StaffProfileViewMode.Staff" IsFixed>
+        <DoAnTotNghiep.Staff.StaffProfileDetail @ref="staffProfileDetail" />
+    </CascadingValue>
+</div>

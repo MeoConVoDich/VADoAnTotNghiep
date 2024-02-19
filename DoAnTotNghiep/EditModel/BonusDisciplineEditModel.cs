@@ -1,6 +1,7 @@
 ﻿using DoAnTotNghiep.Components;
 using DoAnTotNghiep.Config;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -10,15 +11,15 @@ namespace DoAnTotNghiep.EditModel
     {
         public virtual string Id { get; set; }
 
-        public virtual string UsersId { get; set; }
+        public virtual string UsersId { get => UsersData?.Id; set { } }
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Tên nhân viên")]
-        public virtual string StaffName { get; set; }
+        public virtual string StaffName { get => UsersData?.Name; set { } }
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Mã nhân viên")]
-        public virtual string StaffCode { get; set; }
+        public virtual string StaffCode { get => UsersData?.Code; set { } }
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Tên quyết định")]
@@ -30,6 +31,7 @@ namespace DoAnTotNghiep.EditModel
 
         [Display(Name = "Tệp đính kèm")]
         public virtual string PathAttachFile { get; set; }
+        [Display(Name = "Tệp đính kèm")]
         public virtual string AttachFileName { get; set; }
 
         [Display(Name = "Trạng thái")]
@@ -49,6 +51,7 @@ namespace DoAnTotNghiep.EditModel
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Ngày hiệu lực")]
         public virtual DateTime Date { get; set; }
+        public virtual UsersEditModel UsersData { get; set; } = new UsersEditModel();
 
         public Property<BonusDisciplineEditModel> Property { get; set; } = new Property<BonusDisciplineEditModel>();
 
@@ -60,6 +63,31 @@ namespace DoAnTotNghiep.EditModel
             DataSource[Property.NameProperty(c => c.BonusDisciplineType)] = Enum.GetValues(typeof(BonusDisciplineType)).Cast<BonusDisciplineType>()
                 .Where(c => c != BonusDisciplineType.All).OrderBy(c => c)
                 .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
+
+            InputFields.Add<BonusDisciplineEditModel, EffectiveState>(c => c.EffectiveState);
+            InputFields.Add<BonusDisciplineEditModel, BonusDisciplineType>(c => c.BonusDisciplineType);
+        }
+
+        public override Dictionary<string, List<string>> Validate(string nameProperty)
+        {
+            var Errors = new Dictionary<string, List<string>>();
+            if (nameProperty == Property.NameProperty(c => c.EffectiveState))
+            {
+                if (EffectiveState == EffectiveState.All)
+                {
+                    Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
+                }
+            }
+
+            if (nameProperty == Property.NameProperty(c => c.BonusDisciplineType))
+            {
+                if (BonusDisciplineType == BonusDisciplineType.All)
+                {
+                    Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
+                }
+            }
+
+            return Errors;
         }
     }
 }

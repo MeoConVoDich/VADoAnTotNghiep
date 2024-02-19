@@ -1,5 +1,138 @@
-﻿<h3>BonusDisciplineDetail</h3>
+﻿<EditForm Model="editModel">
+    <DataAnnotationsValidator />
+    <InputWatcher @ref="inputWatcher"></InputWatcher>
+    <Row Gutter="8" Justify="end">
+        <Space Size="@("small")" Style="margin-right: 10px">
+            @if (editModel.ReadOnly)
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" OnClick="Edit" Class="btn-edit">Sửa</Button>
+                </SpaceItem>
+            }
+            <SpaceItem>
+                @if (!editModel.ReadOnly)
+                {
+                    <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7" Class="btn-add-new">Lưu</Button>
+                }
+            </SpaceItem>
+            <SpaceItem>
+                @if (!editModel.ReadOnly)
+                {
+                    <Popconfirm OnConfirm="() => CancelClickAsync()"
+                                OkText="Đồng ý"
+                                CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                        </TitleTemplate>
+                    </Popconfirm>
+                }
+            </SpaceItem>
+        </Space>
+    </Row>
+    <div class="wrap_content">
+        <h3>Thông tin quyết định</h3>
+        <Row Gutter="8">
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.Code" HasRequired="true"></LabelFor>
+                <Input @bind-Value="editModel.Code" Disabled="editModel.ReadOnly" />
+                <ValidationMessage For="() => editModel.Code"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.Name" HasRequired="true"></LabelFor>
+                <Input @bind-Value="editModel.Name" Disabled="editModel.ReadOnly" />
+                <ValidationMessage For="() => editModel.Name"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.StaffName" HasRequired="true"></LabelFor>
+                @if (!editModel.ReadOnly)
+                {
+                    <Select DataSource="@StaffSearchDatas"
+                            LabelName="@nameof(Users.Name)"
+                            ValueName="@nameof(Users.Id)"
+                            TItemValue="string" TItem="Users" Placeholder="Tìm kiếm"
+                            Value="@editModel.UsersId" EnableSearch EnableVirtualization="true"
+                            OnSearch="e => OnStaffSearch(e)"
+                            ValueChanged="e => StaffChange(e)">
+                        <ItemTemplate Context="selectedContext">
+                            <StaffProfileOption Model="selectedContext" />
+                        </ItemTemplate>
+                    </Select>
+                }
+                else
+                {
+                    <Input Value="editModel.StaffName" Disabled />
+                }
+                <ValidationMessage For="() => editModel.StaffName"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.StaffCode" HasRequired="true"></LabelFor>
+                <Input @bind-Value="editModel.StaffCode" Disabled />
+                <ValidationMessage For="() => editModel.StaffCode"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.StaffName" Title="Loại quyết định"></LabelFor>
+                <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
+                        Value="@editModel?.BonusDisciplineType.ToString()" EnableSearch
+                        OnSelectedItemChanged="e => editModel.SetValue(editModel.Property.NameProperty(c => c.BonusDisciplineType), e)">
+                    <SelectOptions>
+                        @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.BonusDisciplineType)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+                <ValidationMessage For="() => editModel.BonusDisciplineType"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <TextFieldWithMask Mask="decimal-mask" TValue="int?" IntergerDigits="18" Digits="3" Class="text-left"
+                                   @bind-Value="editModel.Amount" Disable="editModel.ReadOnly"></TextFieldWithMask>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.StaffName" Title="Ngày hiệu lực"></LabelFor>
+                <DatePicker Class="input" @bind-Value="editModel.Date"
+                            Format="dd/MM/yyyy" Style="display:block" Disabled="editModel.ReadOnly" />
+                <ValidationMessage For="() => editModel.Date"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.StaffName" Title="Trạng thái"></LabelFor>
+                <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
+                        Value="@editModel?.EffectiveState.ToString()" EnableSearch
+                        OnSelectedItemChanged="e => editModel.SetValue(editModel.Property.NameProperty(c => c.EffectiveState), e)">
+                    <SelectOptions>
+                        @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.EffectiveState)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+                <ValidationMessage For="() => editModel.EffectiveState"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="24">
+                <LabelFor FieldIdentifier="context.Field(editModel.Property.Name(c => c.Reason))"></LabelFor>
+                <Input @bind-Value="editModel.Reason" Disabled="editModel.ReadOnly" />
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor FieldIdentifier="context.Field(editModel.Property.NameProperty(c => c.AttachFileName))"></LabelFor>
+                <br />
+                <input id="uploadFile" disabled class="f-input" value="@editModel.AttachFileName" style="margin: 0 !important; padding-right: 45px !important " />
+                <Tooltip Title="@("Tải xuống file")" Style=" position: absolute; top: 35px; right: 150px;">
+                    <Icon Type="download" Theme="outline" Class="pointer" Style="color: green" OnClick="() => GetFileAttachAsync(editModel)" />
+                </Tooltip>
+                @if (editModel.ReadOnly == false)
+                {
+                    <Tooltip Placement="@Placement.Top" Title="@("Xóa file")" Class="remove-file" Style="top: 35px !important">
+                        <Icon Type="delete" Theme="outline" Class="icon-remove-file" OnClick="RemoveFile" />
+                    </Tooltip>
+                    <div class="fileUpload btn btn--browse" style="margin: 0 !important; padding: 0 !important;">
+                        <label for="importDecisionAttachFile" class="ant-btn ant-btn-primary" style="width: 100%"> <Icon Type="plus" Theme="outline" />Đính kèm</label>
+                        <InputFile id="importDecisionAttachFile" hidden OnChange="ImportFileAsync" />
+                    </div>
+                }
+            </AntDesign.Col>
 
-@code {
-
-}
+        </Row>
+    </div>
+</EditForm>

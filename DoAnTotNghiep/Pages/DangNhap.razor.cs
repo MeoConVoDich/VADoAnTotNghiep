@@ -16,6 +16,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
+using Blazored.SessionStorage;
 
 namespace DoAnTotNghiep.Pages
 {
@@ -23,7 +24,7 @@ namespace DoAnTotNghiep.Pages
     {
         [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }
-        [Inject] Blazored.SessionStorage.ISessionStorageService sessionStorage { get; set; }
+        [Inject] ISessionStorageService sessionStorage { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] UsersService UsersService { get; set; }
         [Inject] PermissionClaim PermissionClaim { get; set; }
@@ -39,6 +40,7 @@ namespace DoAnTotNghiep.Pages
                 {
                     ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthienticated(login.UserName);
                     await sessionStorage.SetItemAsync("tenDangNhap", tk.UserName);
+                    await sessionStorage.SetItemAsync("UsersId", tk.Id);
                     var claims = new List<string>();
                     if (tk.IsAdmin)
                     {
@@ -59,7 +61,7 @@ namespace DoAnTotNghiep.Pages
                         claims.AddRange(claimUsers);
                     }
                     PermissionClaim.Claims(claims);
-                    NavigationManager.NavigateTo("/ca-nhan/ho-so-ca-nhan");
+                    NavigationManager.NavigateTo("/ca-nhan/thong-tin-ca-nhan");
                     return await Task.FromResult(true);
                 }
                 else

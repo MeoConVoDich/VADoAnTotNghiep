@@ -129,3 +129,84 @@ a, .btn-link {
         margin-top: 0px;
         margin-bottom: 0px;
     }
+
+.f-input {
+    height: 30px;
+    float: left;
+    padding: 0 14px;
+    width: calc(100% - 120px);
+    max-width: calc(100% - 120px);
+    border: 1px solid #d9d9d9;
+    background: #f5f5f5;
+}
+
+.ant-table.pointer tr {
+    cursor: pointer;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.remove-file {
+    position: absolute;
+    top: 27px;
+    right: 130px;
+    cursor: pointer;
+}
+
+.icon-remove-file {
+    color: red;
+}
+
+    .icon-remove-file:hover {
+        color: #f92828;
+    }
+
+.fileUpload.btn.btn--browse {
+    width: 115px;
+    display: flex;
+    margin-top: 25px;
+}
+
+    .fileUpload.btn.btn--browse span {
+        font-size: 14px;
+        align-items: center;
+    }
+
+    .fileUpload.btn.btn--browse > span {
+        font-size: 14px;
+        align-items: center;
+        display: flex;
+    }
+
+    .fileUpload.btn.btn--browse .anticon {
+        margin-right: 10px;
+    }
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+.btn--browse {
+    border: 1px solid gray;
+    border-left: 0;
+    border-radius: 0 2px 2px 0;
+    background-color: #477ae3;
+    color: #fff;
+    height: 30px;
+    padding: 10px 14px;
+}

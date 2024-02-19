@@ -9,13 +9,13 @@ namespace DoAnTotNghiep.ViewModel
         public virtual string Id { get; set; }
         public virtual int Stt { get; set; }
 
-        public virtual string UsersId { get; set; }
+        public virtual string UsersId { get => UsersData?.Id; set { } }
 
         [Display(Name = "Tên nhân viên")]
-        public virtual string StaffName { get; set; }
+        public virtual string StaffName { get => UsersData?.Name; set { } }
 
         [Display(Name = "Mã nhân viên")]
-        public virtual string StaffCode { get; set; }
+        public virtual string StaffCode { get => UsersData?.Code; set { } }
 
         [Display(Name = "Tên quyết định")]
         public virtual string Name { get; set; }
@@ -37,5 +37,7 @@ namespace DoAnTotNghiep.ViewModel
 
         [Display(Name = "Ngày hiệu lực")]
         public virtual DateTime Date { get; set; }
+        public virtual UsersViewModel UsersData { get; set; } = new UsersViewModel();
+
     }
 }

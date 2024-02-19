@@ -15,5 +15,6 @@ namespace DoAnTotNghiep.SearchModel
         public virtual BonusDisciplineType BonusDisciplineType { get; set; }
         public virtual EffectiveState EffectiveState { get; set; }
         public bool? CheckExist { get; set; }
+        public string UsersId { get; set; }
     }
 }

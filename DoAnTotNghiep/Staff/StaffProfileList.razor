@@ -18,7 +18,7 @@
                 <Space Size=@(("8", "8")) Wrap>
                     @if (PermissionClaim.STAFFPROFILE_ADD)
                     {
-                        <SpaceItem><Button Icon="plus" OnClick="AddNew" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
+                        <SpaceItem><Button Icon="plus" OnClick="AddNewAsync" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
                     }
                     @if (PermissionClaim.STAFFPROFILE_DELETE)
                     {
@@ -82,7 +82,9 @@
                     <Column @bind-Field="@context.PhoneHouseholder" Width="150"></Column>
                     <Column @bind-Field="@context.Email" Width="150"></Column>
                     <Column @bind-Field="@context.Address" Width="150"></Column>
-                    <Column @bind-Field="@context.Salary" Width="150"></Column>
+                    <Column @bind-Field="@context.Salary" Width="150">
+                        @string.Format("{0:#,###}", @context.Salary).ToDecimalUnFormatDot()
+                    </Column>
                     <Column @bind-Field="@context.UserName" Width="150"></Column>
                     <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
                         <ChildContent>
@@ -90,14 +92,14 @@
                                 <Space>
                                     <SpaceItem>
                                         <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
-                                            <Icon Type="eye" Theme="fill" OnClick="() => ViewDetail(context)" Class="btn-icon-edit" StopPropagation />
+                                            <Icon Type="eye" Theme="fill" OnClick="() => ViewDetailAsync(context)" Class="btn-icon-edit" StopPropagation />
                                         </Tooltip>
                                     </SpaceItem>
                                     @if (PermissionClaim.STAFFPROFILE_EDIT)
                                     {
                                         <SpaceItem>
                                             <Tooltip Placement="@Placement.Top" Title="Sửa">
-                                                <Icon Type="edit" Theme="fill" OnClick="() => OpenDetail(context)" Class="btn-icon-edit" StopPropagation />
+                                                <Icon Type="edit" Theme="fill" OnClick="() => OpenDetailAsync(context)" Class="btn-icon-edit" StopPropagation />
                                             </Tooltip>
                                         </SpaceItem>
                                     }

@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-ez9wMKHiWuMa3peN3u/4Pr417f5eKpsIsIb1rh4DRx6cTpg3FXmMzm2R09WRBIs" crossorigin="anonymous">
 </head>
 <body>
+    @Html.AntiForgeryToken()
     @(await Html.RenderComponentAsync<App>(RenderMode.Server))
     @*<component type="typeof(App)" render-mode="ServerPrerendered" />*@
 
@@ -37,6 +38,7 @@
     <script src="~/js/components.js"></script>
     <script src="~/js/inputmask/inputmask/bindings/inputmask.binding.min.js"></script>
     <script src="~/js/inputmask/jquery.inputmask.bundle.min.js"></script>
+    <script src="~/js/main.js"></script>
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
@@ -44,5 +46,77 @@
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     <script src="~/js/cdnjs/g2plot.js"></script>
 
+    <script nws-csp-add-nonce="true">
+        Blazor.start({
+            reconnectionOptions: {
+                maxRetries: 6,
+                retryIntervalMilliseconds: 10000
+            }
+        });
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function bindBrowserDimensionChange(dotNetHelper, methodName) {
+            $(window).resize(function () {
+                return dotNetHelper.invokeMethodAsync(methodName, window.getDimensions());
+            });
+        }
+
+        window.getDimensions = function () {
+            return {
+                width: window.innerWidth,
+                height: window.innerHeight
+            };
+        };
+
+        $(document).on('dragover', '.allowDrag', function (e) {
+            e.preventDefault();
+        });
+
+        ScrollElementIntoView = element => element.scrollIntoView();
+
+        $.ajaxTransport("+binary", function (options, originalOptions, jqXHR) {
+            // check for conditions and support for blob / arraybuffer response type
+            if (window.FormData && ((options.dataType && (options.dataType == 'binary')) || (options.data && ((window.ArrayBuffer && options.data instanceof ArrayBuffer) || (window.Blob && options.data instanceof Blob))))) {
+                return {
+                    // create new XMLHttpRequest
+                    send: function (headers, callback) {
+                        // setup all variables
+                        var xhr = new XMLHttpRequest(),
+                            url = options.url,
+                            type = options.type,
+                            async = options.async || true,
+                            // blob or arraybuffer. Default is blob
+                            dataType = options.responseType || "blob",
+                            data = options.data || null,
+                            username = options.username || null,
+                            password = options.password || null;
+
+                        xhr.addEventListener('load', function () {
+                            var data = {};
+                            data[options.dataType] = xhr.response;
+                            // make callback and send data
+                            callback(xhr.status, xhr.statusText, data, xhr.getAllResponseHeaders());
+                        });
+
+                        xhr.open(type, url, async, username, password);
+
+                        // setup custom headers
+                        for (var i in headers) {
+                            xhr.setRequestHeader(i, headers[i]);
+                        }
+
+                        xhr.responseType = dataType;
+                        xhr.send(data);
+                    },
+                    abort: function () {
+                        jqXHR.abort();
+                    }
+                };
+            }
+        });
+    </script>
 </body>
 </html>

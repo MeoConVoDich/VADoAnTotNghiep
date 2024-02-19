@@ -2,6 +2,7 @@
 using AntDesign.TableModels;
 using AutoMapper;
 using DoAnTotNghiep.Components;
+using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
@@ -9,6 +10,7 @@ using DoAnTotNghiep.Service;
 using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
+using NHibernate.Proxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,8 +103,8 @@ namespace DoAnTotNghiep.Staff
         {
             try
             {
-                Users users = new Users();
-                bonusDisciplineDetail.LoadEditModel(users);
+                BonusDiscipline bonusDiscipline = new BonusDiscipline();
+                bonusDisciplineDetail.LoadEditModel(bonusDiscipline);
                 detailVisible = true;
             }
             catch (Exception ex)
@@ -241,5 +243,48 @@ namespace DoAnTotNghiep.Staff
             }
         }
 
+        async Task BonusDisciplineTypeChange(string bonusDisciplineType)
+        {
+            try
+            {
+                bonusDisciplineFilterModel.BonusDisciplineType = bonusDisciplineType;
+                await LoadDataAsync();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        async Task EffectiveStateChangeAsync(string effectiveState)
+        {
+            try
+            {
+                bonusDisciplineFilterModel.EffectiveState = effectiveState;
+                await LoadDataAsync();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        async Task SetViewDateAsync(DateTime?[] dateTimes)
+        {
+            try
+            {
+                bonusDisciplineFilterModel.FromDate = dateTimes[0];
+                bonusDisciplineFilterModel.ToDate = dateTimes[1];
+                await LoadDataAsync();
+                StateHasChanged();
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

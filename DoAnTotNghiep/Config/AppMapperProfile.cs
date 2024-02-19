@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Config
 {
-    public class AppMappingProfile : Profile
+    public class AppMappingProfile : AutoMapper.Profile
     {
         public static JsonSerializerOptions options = new JsonSerializerOptions();
         public static JsonSerializerOptions optionIgnoreNulls = new JsonSerializerOptions();

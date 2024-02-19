@@ -6,6 +6,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System;
@@ -21,13 +22,33 @@ namespace DoAnTotNghiep.Staff
         [Inject] IMapper Mapper { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] UsersService UsersService { get; set; }
+        [Inject] BonusDisciplineService BonusDisciplineService { get; set; }
         [CascadingParameter] StaffProfileViewMode StaffProfileViewMode { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback ValueChanged { get; set; }
+        List<BonusDisciplineViewModel> BonusDisciplineViewModels = new List<BonusDisciplineViewModel>();
+        BonusDisciplineFilterEditModel bonusDisciplineFilterModel = new BonusDisciplineFilterEditModel();
+        List<BonusDiscipline> BonusDisciplines = new List<BonusDiscipline>();
+        Table<BonusDisciplineViewModel> table;
         UsersEditModel editModel = new UsersEditModel();
         InputWatcher inputWatcher;
         bool hasUserName = false;
-        public void LoadEditModel(Users value, bool readOnly = false)
+        bool addNew = false;
+        bool loading = false;
+
+        protected override void OnInitialized()
+        {
+            try
+            {
+                bonusDisciplineFilterModel.Page = new Page() { PageIndex = 1, PageSize = 1000 };
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task LoadEditModelAsync(Users value, bool readOnly = false)
         {
             try
             {
@@ -39,12 +60,52 @@ namespace DoAnTotNghiep.Staff
                 {
                     hasUserName = false;
                 }
+                if (value.Id.IsNullOrEmpty())
+                {
+                    addNew = true;
+                }
+                else
+                {
+                    addNew = false;
+                    await LoadDataBonusDisciplineAsync();
+                }
                 editModel = Mapper.Map<UsersEditModel>(value);
                 editModel.ReadOnly = readOnly;
+                StateHasChanged();
             }
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        async Task LoadDataBonusDisciplineAsync()
+        {
+            try
+            {
+                loading = true;
+                StateHasChanged();
+                var search = Mapper.Map<BonusDisciplineSearch>(bonusDisciplineFilterModel);
+                search.UsersId = editModel.Id;
+                search.EffectiveState = EffectiveState.Active;
+                var page = await BonusDisciplineService.GetPageWithFilterAsync(search);
+                BonusDisciplines = page.Item1 ?? new List<BonusDiscipline>();
+                BonusDisciplineViewModels = Mapper.Map<List<BonusDisciplineViewModel>>(BonusDisciplines ?? new List<BonusDiscipline>());
+                int stt = bonusDisciplineFilterModel.Page.PageSize * (bonusDisciplineFilterModel.Page.PageIndex - 1) + 1;
+                BonusDisciplineViewModels.ForEach(c =>
+                {
+                    c.Stt = stt++;
+                });
+                bonusDisciplineFilterModel.Page.Total = page.Item2;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                loading = false;
+                StateHasChanged();
             }
         }
 
@@ -71,6 +132,20 @@ namespace DoAnTotNghiep.Staff
                     await using FileStream fs = new(pathFile, FileMode.Create, FileAccess.Write);
                     await file.OpenReadStream(maxAllowSize).CopyToAsync(fs);
                     editModel.Avatar = pathFileSave;
+                    if (editModel.Id.IsNotNullOrEmpty())
+                    {
+                        var users = Mapper.Map<Users>(editModel);
+                        var result = await UsersService.UpdateAsync(users);
+                        if (result)
+                        {
+                            Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
+                            await ValueChanged.InvokeAsync();
+                        }
+                        else
+                        {
+                            Notice.NotiError("Cập nhật dữ liệu thất bại!");
+                        }
+                    }
                 }
             }
             catch (Exception ex)

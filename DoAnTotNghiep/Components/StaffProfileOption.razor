@@ -1,0 +1,25 @@
+﻿
+<div>
+    <Row Style="margin: 0 !important">
+        <AntDesign.Col Span="2" Class="flex-center">
+            @if (avatarPath.IsNotNullOrEmpty())
+            {
+                <Avatar Src="@avatarPath" Size="default"></Avatar>
+            }
+            else
+            {
+                <Avatar Style="@($"background-color: {color}; vertical-align: middle;")" Size="default">
+                    @shortName
+                </Avatar>
+            }
+        </AntDesign.Col>
+        <AntDesign.Col Span="20" Style="padding-left: 5px">
+            <Row>
+                <AntDesign.Col Span="24">
+                    <strong>@Model.Name</strong> (@Model.Code)
+                </AntDesign.Col>
+            </Row>
+        </AntDesign.Col>
+    </Row>
+
+</div>

@@ -7,11 +7,11 @@
 namespace DoAnTotNghiep.Staff
 {
     #line hidden
-    using global::System;
-    using global::System.Collections.Generic;
-    using global::System.Linq;
-    using global::System.Threading.Tasks;
-    using global::Microsoft.AspNetCore.Components;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Components;
 #nullable restore
 #line 1 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using System.Net.Http;
@@ -104,17 +104,31 @@ using DoAnTotNghiep.EditModel;
 #line hidden
 #nullable disable
 #nullable restore
+#line 15 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.Domain;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+using DoAnTotNghiep.ViewModel;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 2 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Staff\StaffProfileList.razor"
 using DoAnTotNghiep.Config;
 
 #line default
 #line hidden
 #nullable disable
-    [global::Microsoft.AspNetCore.Components.RouteAttribute("/thong-tin-nhan-su/ho-so-nhan-vien")]
-    public partial class StaffProfileList : global::Microsoft.AspNetCore.Components.ComponentBase
+    [Microsoft.AspNetCore.Components.RouteAttribute("/thong-tin-nhan-su/ho-so-nhan-vien")]
+    public partial class StaffProfileList : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
-        protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
+        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998

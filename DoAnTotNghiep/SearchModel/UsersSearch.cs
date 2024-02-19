@@ -9,6 +9,7 @@ namespace DoAnTotNghiep.SearchModel
     public class UsersSearch
     {
         public Page Page { get; set; } = new Page();
+        public string Id { get; set; }
         public string Code { get; set; }
         public string CodeOrName { get; set; }
         public string Name { get; set; }

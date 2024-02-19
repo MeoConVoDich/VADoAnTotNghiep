@@ -26,6 +26,10 @@ namespace DoAnTotNghiep.Service
         IQueryable<Users> CreateFilter(UsersSearch model, ISession session)
         {
             var query = session.Query<Users>();
+            if (model.Id.IsNotNullOrEmpty())
+            {
+                query = query.Where(c => c.Id == model.Id);
+            }
             if (model.Name.IsNotNullOrEmpty())
             {
                 query = query.Where(c => c.Name.Contains(model.Name));
