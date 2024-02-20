@@ -34,13 +34,52 @@ CREATE TABLE BonusDiscipline
     Id VARCHAR(32) PRIMARY KEY,	
 	UsersId VARCHAR(256),
 	Code VARCHAR(256),
-	Name VARCHAR(256),
+	Name NVARCHAR(256),
 	PathAttachFile VARCHAR(256),
-	AttachFileName VARCHAR(256),
+	AttachFileName NVARCHAR(256),
 	Amount int,
 	EffectiveState VARCHAR(256),
 	Reason NVARCHAR(256),
 	CreateDate DateTime,
 	BonusDisciplineType VARCHAR(255),
 	Date DateTime,
+);
+
+CREATE TABLE TimekeepingType
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	Code VARCHAR(256),
+	Name NVARCHAR(256),
+	Note NVARCHAR(256),
+	EffectiveState VARCHAR(256),
+	CreateDate DateTime,
+);
+
+CREATE TABLE OvertimeRate
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	Day int,
+	Night int,
+	EffectiveState VARCHAR(256),
+	CreateDate DateTime,
+	Date DateTime,
+);
+
+CREATE TABLE TimekeepingShift
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	Code VARCHAR(256),
+	Name NVARCHAR(256),
+	StartTime DateTime,
+	EndTime DateTime,
+	StartBreaksTime DateTime,
+	EndBreaksTime DateTime,
+	CreateDate DateTime,
+	Duration decimal,
+	TimekeepingTypeFull VARCHAR(256),
+	TimekeepingTypeFirst VARCHAR(256),
+	TimekeepingTypeSecond VARCHAR(256),
+	TimekeepingTypeOff VARCHAR(256),
+	EffectiveState VARCHAR(256),
+	BreaksTimeType VARCHAR(256),
 );

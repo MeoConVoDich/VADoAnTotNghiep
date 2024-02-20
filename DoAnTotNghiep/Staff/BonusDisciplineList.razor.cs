@@ -104,6 +104,8 @@ namespace DoAnTotNghiep.Staff
             try
             {
                 BonusDiscipline bonusDiscipline = new BonusDiscipline();
+                bonusDiscipline.Date = DateTime.Now;
+                bonusDiscipline.EffectiveState = EffectiveState.Active;
                 bonusDisciplineDetail.LoadEditModel(bonusDiscipline);
                 detailVisible = true;
             }

@@ -1,51 +1,29 @@
 ﻿using AutoMapper;
+using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.SearchModel;
 using NHibernate;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
-using DoAnTotNghiep.Components;
-using DoAnTotNghiep.Config;
-using System.Linq.Expressions;
-using System.Linq;
 using NHibernate.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Service
 {
-    public class BonusDisciplineService
+    public class OvertimeRateService
     {
         private readonly ISessionFactory _session;
         readonly IMapper _mapper;
-        public BonusDisciplineService(ISessionFactory session, IMapper mapper)
+        public OvertimeRateService(ISessionFactory session, IMapper mapper)
         {
             _session = session;
             _mapper = mapper;
         }
 
-        IQueryable<BonusDiscipline> CreateFilter(BonusDisciplineSearch model, ISession session)
+        IQueryable<OvertimeRate> CreateFilter(OvertimeRateSearch model, ISession session)
         {
-            var query = session.Query<BonusDiscipline>();
-            if (model.UsersId.IsNotNullOrEmpty())
-            {
-                query = query.Where(c => c.Users.Id == model.UsersId);
-            }
-            if (model.StaffCodeOrName.IsNotNullOrEmpty())
-            {
-                query = query.Where(c => c.Users.Name.Contains(model.StaffCodeOrName) || c.Users.Code.Contains(model.StaffCodeOrName));
-            }
-            if (model.CodeOrName.IsNotNullOrEmpty())
-            {
-                query = query.Where(c => c.Name.Contains(model.CodeOrName) || c.Code.Contains(model.CodeOrName));
-            }
-            if (model.CheckExist.HasValue && model.CheckExist == true)
-            {
-                if (model.Code.IsNotNullOrEmpty())
-                {
-                    query = query.Where(c => c.Code == model.Code);
-                }
-                query = query.Take(2);
-            }
+            var query = session.Query<OvertimeRate>();
             if (model.FromDate.HasValue)
             {
                 query = query.Where(c => c.Date > model.FromDate.Value.Date.AddMilliseconds(-1));
@@ -54,18 +32,13 @@ namespace DoAnTotNghiep.Service
             {
                 query = query.Where(c => c.Date < model.ToDate.Value.Date.AddDays(1));
             }
-            if (model.BonusDisciplineType != BonusDisciplineType.All)
-            {
-                query = query.Where(c => c.BonusDisciplineType == model.BonusDisciplineType);
-            }
             if (model.EffectiveState != EffectiveState.All)
             {
                 query = query.Where(c => c.EffectiveState == model.EffectiveState);
             }
             return query;
         }
-
-        public async Task<(List<BonusDiscipline>, int)> GetAllWithFilterAsync(BonusDisciplineSearch model)
+        public async Task<(List<OvertimeRate>, int)> GetAllWithFilterAsync(OvertimeRateSearch model)
         {
             using (var session = _session.OpenSession())
             {
@@ -88,7 +61,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<(List<BonusDiscipline>, int)> GetPageWithFilterAsync(BonusDisciplineSearch model)
+        public async Task<(List<OvertimeRate>, int)> GetPageWithFilterAsync(OvertimeRateSearch model)
         {
             using (var session = _session.OpenSession())
             {
@@ -97,7 +70,7 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         var query = CreateFilter(model, session);
-                        var data = await query.Fetch(c => c.Users).OrderByDescending(c => c.Date).Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
+                        var data = await query.OrderByDescending(c => c.Date).Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
                         var count = await query.CountAsync();
                         transaction.Commit();
                         return (data, count);
@@ -112,7 +85,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> DeleteAsync(BonusDiscipline model)
+        public async Task<bool> DeleteAsync(OvertimeRate model)
         {
             using (var session = _session.OpenSession())
             {
@@ -133,7 +106,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> DeleteListAsync(List<BonusDiscipline> users)
+        public async Task<bool> DeleteListAsync(List<OvertimeRate> users)
         {
             using (var session = _session.OpenSession())
             {
@@ -157,7 +130,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> UpdateAsync(BonusDiscipline model)
+        public async Task<bool> UpdateAsync(OvertimeRate model)
         {
             using (var session = _session.OpenSession())
             {
@@ -178,7 +151,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> AddAsync(BonusDiscipline model)
+        public async Task<bool> AddAsync(OvertimeRate model)
         {
             using (var session = _session.OpenSession())
             {
@@ -198,5 +171,6 @@ namespace DoAnTotNghiep.Service
                 }
             }
         }
+
     }
 }

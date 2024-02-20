@@ -20,6 +20,6 @@ namespace DoAnTotNghiep.Domain
         public virtual int? Amount { get; set; }
         public virtual string Reason { get; set; }
         public virtual DateTime CreateDate { get; set; }
-        public virtual DateTime Date { get; set; } = DateTime.Now;
+        public virtual DateTime Date { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -16,26 +17,26 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Timekeeping
 {
-    public partial class TimekeepingShiftList : ComponentBase
+    public partial class TimekeepingTypeList : ComponentBase
     {
         [Inject] IMapper Mapper { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
-        [Inject] TimekeepingShiftService TimekeepingShiftService { get; set; }
+        [Inject] TimekeepingTypeService TimekeepingTypeService { get; set; }
 
-        List<TimekeepingShift> TimekeepingShifts = new List<TimekeepingShift>();
-        List<TimekeepingShiftViewModel> TimekeepingShiftViewModels = new List<TimekeepingShiftViewModel>();
-        Table<TimekeepingShiftViewModel> table;
-        TimekeepingShiftFilterEditModel timekeepingShiftFilterModel = new TimekeepingShiftFilterEditModel();
-        TimekeepingShiftEditModel editModel = new TimekeepingShiftEditModel();
+        List<TimekeepingType> TimekeepingTypes = new List<TimekeepingType>();
+        List<TimekeepingTypeViewModel> TimekeepingTypeViewModels = new List<TimekeepingTypeViewModel>();
+        Table<TimekeepingTypeViewModel> table;
+        TimekeepingTypeFilterEditModel timekeepingFilterModel = new TimekeepingTypeFilterEditModel();
+        TimekeepingTypeEditModel editModel = new TimekeepingTypeEditModel();
         InputWatcher inputWatcher;
-        TimekeepingShift selectModel = new TimekeepingShift();
+        TimekeepingType selectModel = new TimekeepingType();
         bool loading;
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                timekeepingShiftFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                timekeepingFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
                 editModel.ReadOnly = true;
                 await LoadDataAsync();
             }
@@ -51,16 +52,16 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 loading = true;
                 StateHasChanged();
-                var search = Mapper.Map<TimekeepingShiftSearch>(timekeepingShiftFilterModel);
-                var page = await TimekeepingShiftService.GetPageWithFilterAsync(search);
-                TimekeepingShifts = page.Item1 ?? new List<TimekeepingShift>();
-                TimekeepingShiftViewModels = Mapper.Map<List<TimekeepingShiftViewModel>>(TimekeepingShifts ?? new List<TimekeepingShift>());
-                int stt = timekeepingShiftFilterModel.Page.PageSize * (timekeepingShiftFilterModel.Page.PageIndex - 1) + 1;
-                TimekeepingShiftViewModels.ForEach(c =>
+                var search = Mapper.Map<TimekeepingTypeSearch>(timekeepingFilterModel);
+                var page = await TimekeepingTypeService.GetPageWithFilterAsync(search);
+                TimekeepingTypes = page.Item1 ?? new List<TimekeepingType>();
+                TimekeepingTypeViewModels = Mapper.Map<List<TimekeepingTypeViewModel>>(TimekeepingTypes ?? new List<TimekeepingType>());
+                int stt = timekeepingFilterModel.Page.PageSize * (timekeepingFilterModel.Page.PageIndex - 1) + 1;
+                TimekeepingTypeViewModels.ForEach(c =>
                 {
                     c.Stt = stt++;
                 });
-                timekeepingShiftFilterModel.Page.Total = page.Item2;
+                timekeepingFilterModel.Page.Total = page.Item2;
             }
             catch (Exception ex)
             {
@@ -73,12 +74,12 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
-        void OnRowClick(RowData<TimekeepingShiftViewModel> rowData)
+        void OnRowClick(RowData<TimekeepingTypeViewModel> rowData)
         {
             try
             {
-                selectModel = TimekeepingShifts.FirstOrDefault(c => c.Id == rowData.Data.Id);
-                editModel = Mapper.Map<TimekeepingShiftEditModel>(selectModel);
+                selectModel = TimekeepingTypes.FirstOrDefault(c => c.Id == rowData.Data.Id);
+                editModel = Mapper.Map<TimekeepingTypeEditModel>(selectModel);
                 editModel.ReadOnly = true;
             }
             catch (Exception ex)
@@ -87,19 +88,19 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
-        async Task DeleteAsync(TimekeepingShiftEditModel model = null)
+        async Task DeleteAsync(TimekeepingTypeEditModel model = null)
         {
             try
             {
                 bool result = new();
                 if (selectModel != null)
                 {
-                    result = await TimekeepingShiftService.DeleteAsync(selectModel);
+                    result = await TimekeepingTypeService.DeleteAsync(selectModel);
                 }
                 if (result)
                 {
                     Notice.NotiSuccess("Xoá dữ liệu thành công!");
-                    editModel = new TimekeepingShiftEditModel();
+                    editModel = new TimekeepingTypeEditModel();
                     editModel.ReadOnly = true;
                     await LoadDataAsync();
 
@@ -122,7 +123,7 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 if (e.Page > 0)
                 {
-                    timekeepingShiftFilterModel.Page.PageIndex = e.Page;
+                    timekeepingFilterModel.Page.PageIndex = e.Page;
                 }
                 await SearchAsync();
 
@@ -137,8 +138,8 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                timekeepingShiftFilterModel.Page.PageIndex = 1;
-                timekeepingShiftFilterModel.Page.PageSize = e.PageSize;
+                timekeepingFilterModel.Page.PageIndex = 1;
+                timekeepingFilterModel.Page.PageSize = e.PageSize;
                 await SearchAsync();
             }
             catch (Exception ex)
@@ -151,7 +152,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                timekeepingShiftFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                timekeepingFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
                 await LoadDataAsync();
                 StateHasChanged();
             }
@@ -165,7 +166,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                timekeepingShiftFilterModel.EffectiveState = effectiveState;
+                timekeepingFilterModel.EffectiveState = effectiveState;
                 await LoadDataAsync();
                 StateHasChanged();
             }
@@ -192,7 +193,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                editModel = new TimekeepingShiftEditModel();
+                editModel = new TimekeepingTypeEditModel();
                 editModel.EffectiveState = EffectiveState.Active;
             }
             catch (Exception ex)
@@ -216,7 +217,7 @@ namespace DoAnTotNghiep.Timekeeping
                     Notice.NotiWarning("Dữ liệu còn thiếu hoặc không hợp lệ!");
                     return;
                 }
-                var exist = (await TimekeepingShiftService.GetAllWithFilterAsync(new TimekeepingShiftSearch()
+                var exist = (await TimekeepingTypeService.GetAllWithFilterAsync(new TimekeepingTypeSearch()
                 {
                     CheckExist = true,
                     Code = editModel.Code
@@ -228,16 +229,16 @@ namespace DoAnTotNghiep.Timekeeping
                     return;
                 }
 
-                var timekeepingType = Mapper.Map<TimekeepingShift>(editModel);
+                var timekeepingType = Mapper.Map<TimekeepingType>(editModel);
                 if (timekeepingType.Id.IsNotNullOrEmpty())
                 {
-                    result = await TimekeepingShiftService.UpdateAsync(timekeepingType);
+                    result = await TimekeepingTypeService.UpdateAsync(timekeepingType);
                 }
                 else
                 {
                     timekeepingType.Id = ObjectExtentions.GenerateGuid();
                     timekeepingType.CreateDate = DateTime.Now;
-                    result = await TimekeepingShiftService.AddAsync(timekeepingType);
+                    result = await TimekeepingTypeService.AddAsync(timekeepingType);
                 }
                 if (result)
                 {
@@ -261,7 +262,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                editModel = Mapper.Map<TimekeepingShiftEditModel>(selectModel);
+                editModel = Mapper.Map<TimekeepingTypeEditModel>(selectModel);
                 editModel.ReadOnly = true;
             }
             catch (Exception ex)

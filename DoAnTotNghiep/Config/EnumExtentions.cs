@@ -44,4 +44,14 @@ namespace DoAnTotNghiep.Config
         [Display(Name = "Hiệu lực")]
         Active = 2,
     }
+
+    public enum BreaksTimeType
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Không nghỉ giữa ca")]
+        None = 1,
+        [Display(Name = "Nghỉ giữa ca")]
+        Has = 2,
+    }
 }

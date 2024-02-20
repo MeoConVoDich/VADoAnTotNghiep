@@ -41,6 +41,8 @@ namespace DoAnTotNghiep
             services.AddAutoMapperConfig();
             services.AddSingleton<UsersService>();
             services.AddSingleton<BonusDisciplineService>();
+            services.AddSingleton<TimekeepingTypeService>();
+            services.AddSingleton<OvertimeRateService>();
             services.AddSingleton<ISessionFactory>(NHibernateConfig.BuildSessionFactory());
             services.AddBlazoredSessionStorage();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

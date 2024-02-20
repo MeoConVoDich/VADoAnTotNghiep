@@ -210,3 +210,7 @@ a, .btn-link {
     height: 30px;
     padding: 10px 14px;
 }
+
+.ant-input-number{
+    width: 100% !important;
+}
