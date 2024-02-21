@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Service
 {
-    public class TimekeepingTypeService
+    public class TimekeepingFormulaService
     {
         private readonly ISessionFactory _session;
         readonly IMapper _mapper;
-        public TimekeepingTypeService(ISessionFactory session, IMapper mapper)
+        public TimekeepingFormulaService(ISessionFactory session, IMapper mapper)
         {
             _session = session;
             _mapper = mapper;
         }
 
-        IQueryable<TimekeepingType> CreateFilter(TimekeepingTypeSearch model, ISession session)
+        IQueryable<TimekeepingFormula> CreateFilter(TimekeepingFormulaSearch model, ISession session)
         {
-            var query = session.Query<TimekeepingType>();
+            var query = session.Query<TimekeepingFormula>();
             if (model.Id.IsNotNullOrEmpty())
             {
                 query = query.Where(c => c.Id == model.Id);
@@ -31,10 +31,6 @@ namespace DoAnTotNghiep.Service
             if (model.CodeOrName.IsNotNullOrEmpty())
             {
                 query = query.Where(c => c.Name.Contains(model.CodeOrName) || c.Code.Contains(model.CodeOrName));
-            }
-            if (model.EffectiveState != EffectiveState.All)
-            {
-                query = query.Where(c => c.EffectiveState == model.EffectiveState);
             }
             if (model.CheckExist.HasValue && model.CheckExist == true)
             {
@@ -54,7 +50,7 @@ namespace DoAnTotNghiep.Service
             return query;
         }
 
-        public async Task<(List<TimekeepingType>, int)> GetAllWithFilterAsync(TimekeepingTypeSearch model)
+        public async Task<(List<TimekeepingFormula>, int)> GetAllWithFilterAsync(TimekeepingFormulaSearch model)
         {
             using (var session = _session.OpenSession())
             {
@@ -63,7 +59,7 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         var query = CreateFilter(model, session);
-                        var data = await query.OrderBy(c => c.Code).ToListAsync();
+                        var data = await query.ToListAsync();
                         transaction.Commit();
                         return (data, 0);
                     }
@@ -77,7 +73,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<(List<TimekeepingType>, int)> GetPageWithFilterAsync(TimekeepingTypeSearch model)
+        public async Task<(List<TimekeepingFormula>, int)> GetPageWithFilterAsync(TimekeepingFormulaSearch model)
         {
             using (var session = _session.OpenSession())
             {
@@ -101,7 +97,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> DeleteAsync(TimekeepingType model)
+        public async Task<bool> DeleteAsync(TimekeepingFormula model)
         {
             using (var session = _session.OpenSession())
             {
@@ -122,7 +118,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> DeleteListAsync(List<TimekeepingType> users)
+        public async Task<bool> DeleteListAsync(List<TimekeepingFormula> users)
         {
             using (var session = _session.OpenSession())
             {
@@ -146,7 +142,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> UpdateAsync(TimekeepingType model)
+        public async Task<bool> UpdateAsync(TimekeepingFormula model)
         {
             using (var session = _session.OpenSession())
             {
@@ -167,7 +163,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> AddAsync(TimekeepingType model)
+        public async Task<bool> AddAsync(TimekeepingFormula model)
         {
             using (var session = _session.OpenSession())
             {
@@ -183,6 +179,27 @@ namespace DoAnTotNghiep.Service
                     {
                         transaction.Rollback();
                         return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<int> GetCountCode()
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        var countCode = await session.Query<TimekeepingFormula>().MaxAsync(c => c.CountCode);
+                        transaction.Commit();
+                        return countCode + 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return 0;
                     }
                 }
             }

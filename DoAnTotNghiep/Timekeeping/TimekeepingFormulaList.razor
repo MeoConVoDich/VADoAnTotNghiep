@@ -1,0 +1,95 @@
+﻿<div class="site-content three-layout">
+    <div class="struct-wrap">
+        <Table TItem="TimekeepingFormulaViewModel" DataSource="@TimekeepingFormulaViewModels" Class="table-striped pointer table-ant-custom"
+               Loading="loading" OnRowClick="OnCellClick"
+               PageSize="1000" OnRow="OnRow" ScrollY="500px"
+               ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+               HidePagination>
+            <Column @bind-Field="@context.Stt" Width="100" ></Column>
+            <Column @bind-Field="@context.Code" Width="100" ></Column>
+            <Column @bind-Field="@context.Name" Ellipsis="true" >
+                @if (editId == context.Id)
+                {
+                    <Input AutoFocus="true" TValue="string" Value="context.Name" ValueChanged="e => NameChange(context, e)" />
+                }
+                else
+                {
+                    <div class="editable-cell-value-wrap noselect">
+                        @context.Name &nbsp;
+                    </div>
+                }
+            </Column>
+            <Column @bind-Field="@context.Formula">
+                <Template>
+                    <div style="word-wrap: break-word; height:auto">@context.Formula</div>
+                </Template>
+            </Column>
+        </Table>
+        <div class="ant_input">
+            <Row Gutter="8">
+                <AntDesign.Col Span="24" Class="search-button-col" Style="justify-content:flex-end">
+                    <Space Size=@("small") Style="margin-right:10px">
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" Color="Color.Green7" OnClick="Add">Thêm mới</Button>
+                        </SpaceItem>
+                        @if (selectModel != null)
+                        {
+                            <SpaceItem>
+                                <Popconfirm Placement="@Placement.LeftBottom"
+                                            OnConfirm="() => DeleteAsync()"
+                                            OkText="Đồng ý"
+                                            CancelText="Hủy">
+                                    <ChildContent>
+                                        <Button Type="@ButtonType.Default" Danger>Xóa</Button>
+                                    </ChildContent>
+                                    <TitleTemplate>
+                                        Bạn có chắc chắn muốn xóa?
+                                    </TitleTemplate>
+                                </Popconfirm>
+                            </SpaceItem>
+                        }
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="Color.Green7" >Lưu</Button>
+                        </SpaceItem>
+                    </Space>
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="8">
+                <AntDesign.Col Span="24">
+                    <TextArea @bind-Value="FormulaInput" Placeholder="Nhập công thức" Id="FormulaInput"
+                              AllowClear Bordered="false" AutoSize MinRows="10" MaxRows="20"
+                              ShowCount MaxLength=4000 />
+                    <Text Type="danger">@errorMessage</Text>
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="8">
+                <AntDesign.Col Span="24">
+                    <Text Type="danger">*Chú ý: Sử dụng dấu ", " để phân tách các tham số của hàm trong công thức</Text>
+                </AntDesign.Col>
+            </Row>
+        </div>
+        <div class="ant_template">
+            <AntDesign.Col Span="24" Style="text-align:center">
+                <span><b>Kiểu công</b></span>
+            </AntDesign.Col>
+            <AntDesign.Col Span="24" Style="text-align:center">
+                <Input @bind-Value=search Placeholder="Tìm kiểu công" AllowClear Bordered=false />
+            </AntDesign.Col>
+            @if (TimekeepingTypeDatas?.Any() == true)
+            {
+                <div class="xaydungcongthuc_right">
+                    <AntList Bordered DataSource="@TimekeepingTypeDatas.Where(c => c.CodeName.Contains(search ?? "", StringComparison.InvariantCultureIgnoreCase))" Size="small">
+                        <ChildContent Context="item">
+                            <ListItem Class="pointer" OnClick="() => InsertTimeKeepingTypeElementAsync(item.Name)">
+                                <Icon Type="left" Theme="outline" />
+                                <span class="ant-list-item-name" title="Nhấn để chèn">
+                                    <strong>@item.DisplayCode</strong> - @item.Name
+                                </span>
+                            </ListItem>
+                        </ChildContent>
+                    </AntList>
+                </div>
+            }
+        </div>
+    </div>
+</div>

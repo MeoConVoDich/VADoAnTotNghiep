@@ -173,3 +173,4 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDec
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Timekeeping\TimekeepingTypeList.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\OvertimeRateList.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Timekeeping\OvertimeRateList.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\TimekeepingFormulaList.razor.g.cs

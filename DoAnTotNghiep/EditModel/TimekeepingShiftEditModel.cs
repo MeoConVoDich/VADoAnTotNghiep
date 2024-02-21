@@ -51,9 +51,11 @@ namespace DoAnTotNghiep.EditModel
         [Display(Name = "Kiểu công không đi làm")]
         public virtual string TimekeepingTypeOff { get; set; }
 
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Trạng thái")]
         public virtual EffectiveState EffectiveState { get; set; }
 
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Kiểu nghỉ giữa ca")]
         public virtual BreaksTimeType BreaksTimeType { get; set; }
 
@@ -64,8 +66,13 @@ namespace DoAnTotNghiep.EditModel
             DataSource[Property.NameProperty(c => c.EffectiveState)] = Enum.GetValues(typeof(EffectiveState)).Cast<EffectiveState>()
                  .Where(c => c != EffectiveState.All).OrderBy(c => c)
                 .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
+            DataSource[Property.NameProperty(c => c.BreaksTimeType)] = Enum.GetValues(typeof(BreaksTimeType)).Cast<BreaksTimeType>()
+               .Where(c => c != BreaksTimeType.All).OrderBy(c => c)
+              .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
             InputFields.Add<TimekeepingShiftEditModel, EffectiveState>(c => c.EffectiveState);
             InputFields.Add<TimekeepingShiftEditModel, BreaksTimeType>(c => c.BreaksTimeType);
+            InputFields.Add<TimekeepingShiftEditModel>(c => c.StartTime);
+            InputFields.Add<TimekeepingShiftEditModel>(c => c.EndTime);
             InputFields.Add<TimekeepingShiftEditModel>(c => c.StartBreaksTime);
             InputFields.Add<TimekeepingShiftEditModel>(c => c.EndBreaksTime);
             InputFields.Add<TimekeepingShiftEditModel>(c => c.TimekeepingTypeSecond);
@@ -97,6 +104,17 @@ namespace DoAnTotNghiep.EditModel
                     {
                         Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
                     }
+                    else
+                    {
+                        if (StartBreaksTime >= EndBreaksTime)
+                        {
+                            Errors.AddExist(nameProperty, "Thời gian bắt đầu nghỉ giữa ca phải lớn hơn thời gian kết thúc nghỉ giữa ca!");
+                        }
+                        if ((StartTime.HasValue && StartBreaksTime <= StartTime) || (EndTime.HasValue && StartBreaksTime >= EndTime))
+                        {
+                            Errors.AddExist(nameProperty, "Thời gian bắt đầu nghỉ giữa ca phải nằm trong thời gian làm việc!");
+                        }
+                    }
                 }
             }
             if (nameProperty == Property.NameProperty(c => c.EndBreaksTime))
@@ -107,13 +125,24 @@ namespace DoAnTotNghiep.EditModel
                     {
                         Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
                     }
+                    else
+                    {
+                        if (StartBreaksTime >= EndBreaksTime)
+                        {
+                            Errors.AddExist(nameProperty, "Thời gian bắt đầu nghỉ giữa ca phải lớn hơn thời gian kết thúc nghỉ giữa ca!");
+                        }
+                        if ((StartTime.HasValue && EndBreaksTime <= StartTime) || (EndTime.HasValue && EndBreaksTime >= EndTime))
+                        {
+                            Errors.AddExist(nameProperty, "Thời gian kết thúc nghỉ giữa ca phải nằm trong thời gian làm việc!");
+                        }
+                    }
                 }
             }
             if (nameProperty == Property.NameProperty(c => c.TimekeepingTypeSecond))
             {
                 if (BreaksTimeType == BreaksTimeType.Has)
                 {
-                    if (TimekeepingTypeSecond.IsNotNullOrEmpty())
+                    if (TimekeepingTypeSecond.IsNullOrEmpty())
                     {
                         Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
                     }
@@ -123,13 +152,63 @@ namespace DoAnTotNghiep.EditModel
             {
                 if (BreaksTimeType == BreaksTimeType.Has)
                 {
-                    if (TimekeepingTypeFirst.IsNotNullOrEmpty())
+                    if (TimekeepingTypeFirst.IsNullOrEmpty())
                     {
                         Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
                     }
                 }
             }
+            if (nameProperty == Property.NameProperty(c => c.StartTime))
+            {
+                if (StartTime.HasValue && EndTime.HasValue && StartTime >= EndTime)
+                {
+                    Errors.AddExist(nameProperty, "Thời gian bắt đầu ca phải bé hơn thời gian kết thúc ca!");
+                }
+            }
+            if (nameProperty == Property.NameProperty(c => c.EndTime))
+            {
+                if (StartTime.HasValue && EndTime.HasValue && StartTime >= EndTime)
+                {
+                    Errors.AddExist(nameProperty, "Thời gian kết thúc ca phải lơn hơn thời gian bắt đầu ca!");
+                }
+            }
             return Errors;
+        }
+
+        public void TimeCalculator()
+        {
+            try
+            {
+                if (StartTime.HasValue && EndTime.HasValue && EndTime >= StartTime)
+                {
+                    var totalTime = EndTime - StartTime;
+                    if (BreaksTimeType == BreaksTimeType.Has)
+                    {
+                        if (StartBreaksTime.HasValue && EndBreaksTime.HasValue
+                        && EndBreaksTime >= StartBreaksTime
+                        && StartTime <= StartBreaksTime && EndBreaksTime <= EndTime)
+                        {
+                            var breakTime = EndBreaksTime - StartBreaksTime;
+                            totalTime -= breakTime;
+                        }
+                        else
+                        {
+                            Duration = 0;
+                            return;
+                        }
+                    }
+                    Duration = (decimal?)Math.Round(totalTime.Value.TotalHours, 2);
+                    return;
+                }
+                else
+                {
+                    Duration = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

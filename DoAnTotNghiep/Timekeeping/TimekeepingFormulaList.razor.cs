@@ -16,28 +16,28 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Timekeeping
 {
-    public partial class TimekeepingShiftList : ComponentBase
+    public partial class TimekeepingFormulaList : ComponentBase
     {
         [Inject] IMapper Mapper { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
-        [Inject] TimekeepingShiftService TimekeepingShiftService { get; set; }
+        [Inject] TimekeepingFormulaService TimekeepingFormulaService { get; set; }
         [Inject] TimekeepingTypeService TimekeepingTypeService { get; set; }
 
-        List<TimekeepingShift> TimekeepingShifts = new List<TimekeepingShift>();
+        List<TimekeepingFormula> TimekeepingFormulas = new List<TimekeepingFormula>();
         List<TimekeepingType> TimekeepingTypes = new List<TimekeepingType>();
-        List<TimekeepingShiftViewModel> TimekeepingShiftViewModels = new List<TimekeepingShiftViewModel>();
-        Table<TimekeepingShiftViewModel> table;
-        TimekeepingShiftFilterEditModel timekeepingShiftFilterModel = new TimekeepingShiftFilterEditModel();
+        List<TimekeepingFormulaViewModel> TimekeepingFormulaViewModels = new List<TimekeepingFormulaViewModel>();
+        Table<TimekeepingFormulaViewModel> table;
+        TimekeepingFormulaFilterEditModel timekeepingFormulaFilterModel = new TimekeepingFormulaFilterEditModel();
         TimekeepingShiftEditModel editModel = new TimekeepingShiftEditModel();
         InputWatcher inputWatcher;
-        TimekeepingShift selectModel = new TimekeepingShift();
+        TimekeepingFormula selectModel = new TimekeepingFormula();
         bool loading;
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                timekeepingShiftFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                timekeepingFormulaFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
                 editModel.ReadOnly = true;
                 await LoadDataAsync();
                 await LoadTimekeepingTypeAsync();
@@ -54,16 +54,16 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 loading = true;
                 StateHasChanged();
-                var search = Mapper.Map<TimekeepingShiftSearch>(timekeepingShiftFilterModel);
-                var page = await TimekeepingShiftService.GetPageWithFilterAsync(search);
-                TimekeepingShifts = page.Item1 ?? new List<TimekeepingShift>();
-                TimekeepingShiftViewModels = Mapper.Map<List<TimekeepingShiftViewModel>>(TimekeepingShifts ?? new List<TimekeepingShift>());
-                int stt = timekeepingShiftFilterModel.Page.PageSize * (timekeepingShiftFilterModel.Page.PageIndex - 1) + 1;
-                TimekeepingShiftViewModels.ForEach(c =>
+                var search = Mapper.Map<TimekeepingFormulaSearch>(timekeepingFormulaFilterModel);
+                var page = await TimekeepingFormulaService.GetPageWithFilterAsync(search);
+                TimekeepingFormulas = page.Item1 ?? new List<TimekeepingFormula>();
+                TimekeepingFormulaViewModels = Mapper.Map<List<TimekeepingFormulaViewModel>>(TimekeepingFormulas ?? new List<TimekeepingFormula>());
+                int stt = timekeepingFormulaFilterModel.Page.PageSize * (timekeepingFormulaFilterModel.Page.PageIndex - 1) + 1;
+                TimekeepingFormulaViewModels.ForEach(c =>
                 {
                     c.Stt = stt++;
                 });
-                timekeepingShiftFilterModel.Page.Total = page.Item2;
+                timekeepingFormulaFilterModel.Page.Total = page.Item2;
             }
             catch (Exception ex)
             {
@@ -80,7 +80,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                var page = await TimekeepingTypeService.GetAllWithFilterAsync(new TimekeepingTypeSearch() 
+                var page = await TimekeepingTypeService.GetAllWithFilterAsync(new TimekeepingTypeSearch()
                 {
                     EffectiveState = EffectiveState.Active
                 });
@@ -92,11 +92,11 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
-        void OnRowClick(RowData<TimekeepingShiftViewModel> rowData)
+        void OnRowClick(RowData<TimekeepingFormulaViewModel> rowData)
         {
             try
             {
-                selectModel = TimekeepingShifts.FirstOrDefault(c => c.Id == rowData.Data.Id);
+                selectModel = TimekeepingFormulas.FirstOrDefault(c => c.Id == rowData.Data.Id);
                 editModel = Mapper.Map<TimekeepingShiftEditModel>(selectModel);
                 editModel.ReadOnly = true;
             }
@@ -113,7 +113,7 @@ namespace DoAnTotNghiep.Timekeeping
                 bool result = new();
                 if (selectModel != null)
                 {
-                    result = await TimekeepingShiftService.DeleteAsync(selectModel);
+                    result = await TimekeepingFormulaService.DeleteAsync(selectModel);
                 }
                 if (result)
                 {
@@ -141,7 +141,7 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 if (e.Page > 0)
                 {
-                    timekeepingShiftFilterModel.Page.PageIndex = e.Page;
+                    timekeepingFormulaFilterModel.Page.PageIndex = e.Page;
                 }
                 await SearchAsync();
 
@@ -156,8 +156,8 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                timekeepingShiftFilterModel.Page.PageIndex = 1;
-                timekeepingShiftFilterModel.Page.PageSize = e.PageSize;
+                timekeepingFormulaFilterModel.Page.PageIndex = 1;
+                timekeepingFormulaFilterModel.Page.PageSize = e.PageSize;
                 await SearchAsync();
             }
             catch (Exception ex)
@@ -170,21 +170,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                timekeepingShiftFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
-                await LoadDataAsync();
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
-        async Task EffectiveStateChangeAsync(string effectiveState)
-        {
-            try
-            {
-                timekeepingShiftFilterModel.EffectiveState = effectiveState;
+                timekeepingFormulaFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
                 await LoadDataAsync();
                 StateHasChanged();
             }
@@ -235,7 +221,7 @@ namespace DoAnTotNghiep.Timekeeping
                     Notice.NotiWarning("Dữ liệu còn thiếu hoặc không hợp lệ!");
                     return;
                 }
-                var exist = (await TimekeepingShiftService.GetAllWithFilterAsync(new TimekeepingShiftSearch()
+                var exist = (await TimekeepingFormulaService.GetAllWithFilterAsync(new TimekeepingFormulaSearch()
                 {
                     CheckExist = true,
                     Code = editModel.Code
@@ -247,16 +233,16 @@ namespace DoAnTotNghiep.Timekeeping
                     return;
                 }
 
-                var timekeepingType = Mapper.Map<TimekeepingShift>(editModel);
+                var timekeepingType = Mapper.Map<TimekeepingFormula>(editModel);
                 if (timekeepingType.Id.IsNotNullOrEmpty())
                 {
-                    result = await TimekeepingShiftService.UpdateAsync(timekeepingType);
+                    result = await TimekeepingFormulaService.UpdateAsync(timekeepingType);
                 }
                 else
                 {
                     timekeepingType.Id = ObjectExtentions.GenerateGuid();
                     timekeepingType.CreateDate = DateTime.Now;
-                    result = await TimekeepingShiftService.AddAsync(timekeepingType);
+                    result = await TimekeepingFormulaService.AddAsync(timekeepingType);
                 }
                 if (result)
                 {

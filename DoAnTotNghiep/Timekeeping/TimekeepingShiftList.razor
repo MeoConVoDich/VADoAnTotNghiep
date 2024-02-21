@@ -37,7 +37,7 @@
                        OnRowClick="OnRowClick">
                     <Column @bind-Field="@context.Stt" Width="50" ></Column>
                     <Column @bind-Field="@context.Code" Ellipsis Width="150"></Column>
-                    <Column @bind-Field="@context.Name" Ellipsis Width="200" ></Column>
+                    <Column @bind-Field="@context.Name" Ellipsis Width="150" ></Column>
                     <Column @bind-Field="@context.StartTime" Format="HH:mm" ></Column>
                     <Column @bind-Field="@context.EndTime" Format="HH:mm" ></Column>
                     <Column @bind-Field="@context.EffectiveState">
@@ -111,7 +111,6 @@
             <DataAnnotationsValidator />
             <InputWatcher @ref="inputWatcher"></InputWatcher>
             <Row Gutter="8">
-
                 <AntDesign.Col Span="12">
                     <LabelFor For="() => editModel.Code" HasRequired="true"></LabelFor>
                     <Input @bind-Value="editModel.Code" Disabled="editModel.ReadOnly" />
@@ -122,6 +121,152 @@
                     <Input @bind-Value="editModel.Name" Disabled="editModel.ReadOnly" />
                     <ValidationMessage For="() => editModel.Name"></ValidationMessage>
                 </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.BreaksTimeType))"></LabelFor>
+                    <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
+                            Value="@editModel?.BreaksTimeType.ToString()" EnableSearch
+                            OnSelectedItemChanged="e => editModel.SetValue(editModel.Property.NameProperty(c => c.BreaksTimeType), e)">
+                        <SelectOptions>
+                            @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.BreaksTimeType)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                    <ValidationMessage For="() => editModel.BreaksTimeType"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.Duration))"></LabelFor>
+                    <AntDesign.InputNumber @bind-Value="editModel.Duration" Disabled="true"></AntDesign.InputNumber>
+                    <ValidationMessage For="() => editModel.Duration"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.StartTime))"></LabelFor>
+                    @if (editModel.ReadOnly)
+                    {
+                        <TimePicker TValue="DateTime?"  @bind-Value="editModel.StartTime" Disabled="true" Format="HH:mm" Style="display:block"
+                                    OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                        <ValidationMessage For="() => editModel.StartTime"></ValidationMessage>
+                    }
+                    else
+                    {
+                        <TimePicker TValue="DateTime?" @bind-Value="editModel.StartTime" Disabled="false" Format="HH:mm" Style="display:block"
+                                    OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                        <ValidationMessage For="() => editModel.StartTime"></ValidationMessage>
+                    }
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.EndTime))"></LabelFor>
+                    @if (editModel.ReadOnly)
+                    {
+                        <TimePicker TValue="DateTime?"  @bind-Value="editModel.EndTime" Disabled="true" Format="HH:mm" Style="display:block"
+                                    OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                        <ValidationMessage For="() => editModel.EndTime"></ValidationMessage>
+                    }
+                    else
+                    {
+                        <TimePicker TValue="DateTime?"  @bind-Value="editModel.EndTime" Disabled="false" Format="HH:mm" Style="display:block"
+                                    OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                        <ValidationMessage For="() => editModel.EndTime"></ValidationMessage>
+                    }
+                </AntDesign.Col>
+                @if (editModel?.BreaksTimeType == BreaksTimeType.Has)
+                {
+                    <AntDesign.Col Span="12">
+                        <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.StartBreaksTime))"
+                                  HasRequired="true"></LabelFor>
+                        @if (editModel.ReadOnly)
+                        {
+                            <TimePicker TValue="DateTime?"  @bind-Value="editModel.StartBreaksTime" Disabled="true"
+                                        Format="HH:mm" Style="display:block"
+                                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                            <ValidationMessage For="() => editModel.StartBreaksTime"></ValidationMessage>
+                        }
+                        else
+                        {
+                            <TimePicker TValue="DateTime?"  @bind-Value="editModel.StartBreaksTime" Disabled="false"
+                                        Format="HH:mm" Style="display:block"
+                                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                            <ValidationMessage For="() => editModel.StartBreaksTime"></ValidationMessage>
+                        }
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="12">
+                        <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.EndBreaksTime))"
+                                  HasRequired="true"></LabelFor>
+                        @if (editModel.ReadOnly)
+                        {
+                            <TimePicker TValue="DateTime?"  @bind-Value="editModel.EndBreaksTime" Disabled="true"
+                                        Format="HH:mm" Style="display:block"
+                                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                            <ValidationMessage For="() => editModel.EndBreaksTime"></ValidationMessage>
+                        }
+                        else
+                        {
+                            <TimePicker TValue="DateTime?"  @bind-Value="editModel.EndBreaksTime" Disabled="false"
+                                        Format="HH:mm" Style="display:block"
+                                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                            <ValidationMessage For="() => editModel.EndBreaksTime"></ValidationMessage>
+                        }
+                    </AntDesign.Col>
+                }
+
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.TimekeepingTypeFull))" HasRequired="true"></LabelFor>
+                    <Select DataSource="@TimekeepingTypes"
+                            @bind-Value="@editModel.TimekeepingTypeFull"
+                            LabelName="@nameof(TimekeepingType.CodeName)"
+                            ValueName="@nameof(TimekeepingType.Code)"
+                            Placeholder="Kiểu công"
+                            AllowClear
+                            EnableSearch TItem="TimekeepingType" TItemValue="string"
+                            Disabled="editModel.ReadOnly">
+                    </Select>
+                    <ValidationMessage For="() => editModel.TimekeepingTypeFull"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.TimekeepingTypeOff))" HasRequired="true"></LabelFor>
+                    <Select DataSource="@TimekeepingTypes"
+                            @bind-Value="@editModel.TimekeepingTypeOff"
+                            LabelName="@nameof(TimekeepingType.CodeName)"
+                            ValueName="@nameof(TimekeepingType.Code)"
+                            Placeholder="Kiểu công"
+                            AllowClear
+                            EnableSearch TItem="TimekeepingType" TItemValue="string"
+                            Disabled="editModel.ReadOnly">
+                    </Select>
+                    <ValidationMessage For="() => editModel.TimekeepingTypeOff"></ValidationMessage>
+                </AntDesign.Col>
+                @if (editModel?.BreaksTimeType == BreaksTimeType.Has)
+                {
+                    <AntDesign.Col Span="12">
+                        <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.TimekeepingTypeFirst))"
+                                   HasRequired="true"></LabelFor>
+                        <Select DataSource="@TimekeepingTypes"
+                                @bind-Value="@editModel.TimekeepingTypeFirst"
+                                LabelName="@nameof(TimekeepingType.CodeName)"
+                                ValueName="@nameof(TimekeepingType.Code)"
+                                Placeholder="Kiểu công"
+                                AllowClear
+                                EnableSearch TItem="TimekeepingType" TItemValue="string"
+                                Disabled="editModel.ReadOnly">
+                        </Select>
+                        <ValidationMessage For="() => editModel.TimekeepingTypeFirst"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="12">
+                        <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.TimekeepingTypeSecond))"
+                                   HasRequired="true"></LabelFor>
+                        <Select DataSource="@TimekeepingTypes"
+                                @bind-Value="@editModel.TimekeepingTypeSecond"
+                                LabelName="@nameof(TimekeepingType.CodeName)"
+                                ValueName="@nameof(TimekeepingType.Code)"
+                                Placeholder="Kiểu công"
+                                AllowClear
+                                EnableSearch TItem="TimekeepingType" TItemValue="string"
+                                Disabled="editModel.ReadOnly">
+                        </Select>
+                        <ValidationMessage For="() => editModel.TimekeepingTypeSecond"></ValidationMessage>
+                    </AntDesign.Col>
+                }
                 <AntDesign.Col Span="12">
                     <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.EffectiveState))"></LabelFor>
                     <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"

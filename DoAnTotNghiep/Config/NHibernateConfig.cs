@@ -38,6 +38,7 @@ namespace DoAnTotNghiep.Config
             mapper.AddMapping(typeof(BonusDisciplineMap));
             mapper.AddMapping(typeof(TimekeepingTypeMap));
             mapper.AddMapping(typeof(OvertimeRateMap));
+            mapper.AddMapping(typeof(TimekeepingShiftMap));
             HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
             cfg.AddMapping(domainMapping);
             return cfg.BuildSessionFactory();
