@@ -28,9 +28,10 @@ namespace DoAnTotNghiep.Timekeeping
         List<TimekeepingFormulaViewModel> TimekeepingFormulaViewModels = new List<TimekeepingFormulaViewModel>();
         Table<TimekeepingFormulaViewModel> table;
         TimekeepingFormulaFilterEditModel timekeepingFormulaFilterModel = new TimekeepingFormulaFilterEditModel();
-        TimekeepingShiftEditModel editModel = new TimekeepingShiftEditModel();
+        TimekeepingFormulaEditModel editModel = new TimekeepingFormulaEditModel();
         InputWatcher inputWatcher;
         TimekeepingFormula selectModel = new TimekeepingFormula();
+        string search;
         bool loading;
 
         protected override async Task OnInitializedAsync()
@@ -97,7 +98,7 @@ namespace DoAnTotNghiep.Timekeeping
             try
             {
                 selectModel = TimekeepingFormulas.FirstOrDefault(c => c.Id == rowData.Data.Id);
-                editModel = Mapper.Map<TimekeepingShiftEditModel>(selectModel);
+                editModel = Mapper.Map<TimekeepingFormulaEditModel>(selectModel);
                 editModel.ReadOnly = true;
             }
             catch (Exception ex)
@@ -106,7 +107,7 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
-        async Task DeleteAsync(TimekeepingShiftEditModel model = null)
+        async Task DeleteAsync(TimekeepingFormulaEditModel model = null)
         {
             try
             {
@@ -118,7 +119,7 @@ namespace DoAnTotNghiep.Timekeeping
                 if (result)
                 {
                     Notice.NotiSuccess("Xoá dữ liệu thành công!");
-                    editModel = new TimekeepingShiftEditModel();
+                    editModel = new TimekeepingFormulaEditModel();
                     editModel.ReadOnly = true;
                     await LoadDataAsync();
 
@@ -193,12 +194,14 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
-        void Add()
+        async Task AddAsync()
         {
             try
             {
-                editModel = new TimekeepingShiftEditModel();
-                editModel.EffectiveState = EffectiveState.Active;
+                var countCode = await TimekeepingFormulaService.GetCountCodeAsync();
+                editModel = new TimekeepingFormulaEditModel();
+                editModel.CountCode = countCode;
+                editModel.Code = string.Format("{0}{1:000}", "CTCC", countCode);
             }
             catch (Exception ex)
             {
@@ -221,18 +224,6 @@ namespace DoAnTotNghiep.Timekeeping
                     Notice.NotiWarning("Dữ liệu còn thiếu hoặc không hợp lệ!");
                     return;
                 }
-                var exist = (await TimekeepingFormulaService.GetAllWithFilterAsync(new TimekeepingFormulaSearch()
-                {
-                    CheckExist = true,
-                    Code = editModel.Code
-                })).Item1;
-
-                if (exist.Any(c => c.Id != editModel.Id))
-                {
-                    Notice.NotiWarning("Mã kiểu công đã được sử dụng");
-                    return;
-                }
-
                 var timekeepingType = Mapper.Map<TimekeepingFormula>(editModel);
                 if (timekeepingType.Id.IsNotNullOrEmpty())
                 {
@@ -266,8 +257,23 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                editModel = Mapper.Map<TimekeepingShiftEditModel>(selectModel);
+                editModel = Mapper.Map<TimekeepingFormulaEditModel>(selectModel);
                 editModel.ReadOnly = true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void InsertTimeKeepingTypeElementAsync(string item)
+        {
+            try
+            {
+                if (!editModel.ReadOnly)
+                {
+                    editModel.Formula = $"{editModel.Formula}[{item}]";
+                }
             }
             catch (Exception ex)
             {

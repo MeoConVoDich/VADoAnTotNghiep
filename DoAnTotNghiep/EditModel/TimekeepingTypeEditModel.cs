@@ -26,7 +26,7 @@ namespace DoAnTotNghiep.EditModel
 
         [Display(Name = "Ghi chú")]
         public virtual string Note { get; set; }
-
+        public virtual DateTime CreateDate { get; set; }
         public Property<TimekeepingTypeEditModel> Property { get; set; } = new Property<TimekeepingTypeEditModel>();
 
         public TimekeepingTypeEditModel(bool isEdit = true)

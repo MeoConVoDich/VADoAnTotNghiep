@@ -1,95 +1,132 @@
-﻿<div class="site-content three-layout">
-    <div class="struct-wrap">
-        <Table TItem="TimekeepingFormulaViewModel" DataSource="@TimekeepingFormulaViewModels" Class="table-striped pointer table-ant-custom"
-               Loading="loading" OnRowClick="OnCellClick"
-               PageSize="1000" OnRow="OnRow" ScrollY="500px"
-               ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
-               HidePagination>
-            <Column @bind-Field="@context.Stt" Width="100" ></Column>
-            <Column @bind-Field="@context.Code" Width="100" ></Column>
-            <Column @bind-Field="@context.Name" Ellipsis="true" >
-                @if (editId == context.Id)
+﻿<Row Gutter="8">
+    <AntDesign.Col Span="10">
+        <EditForm Model="timekeepingFormulaFilterModel" OnSubmit="e => SearchAsync()">
+            <Row Gutter="8">
+                <AntDesign.Col Span="8">
+                    <Input TValue="string" Value="timekeepingFormulaFilterModel.CodeOrName"
+                           ValueChanged="e => timekeepingFormulaFilterModel.Change(nameof(timekeepingFormulaFilterModel.CodeOrName), e)"
+                           Placeholder="Nhập tên, mã công thức" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="2" Class="flex-start-end">
+                    <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                </AntDesign.Col>
+            </Row>
+        </EditForm>
+        <Row Gutter="8">
+            <AntDesign.Col Span="24">
+                <Table @ref="table" TItem="TimekeepingFormulaViewModel" DataSource="@TimekeepingFormulaViewModels"
+                       ScrollBarWidth="10px"
+                       Total="timekeepingFormulaFilterModel.Page.Total" ScrollY="500px"
+                       Loading="loading"
+                       PageIndex="timekeepingFormulaFilterModel.Page.PageIndex"
+                       PageSize="timekeepingFormulaFilterModel.Page.PageSize"
+                       OnPageIndexChange="PageIndexChangeAsync"
+                       OnPageSizeChange="PageSizeChangeAsync"
+                       OnRowClick="OnRowClick">
+                    <Column @bind-Field="@context.Stt" Width="50"></Column>
+                    <Column @bind-Field="@context.Code" Ellipsis Width="150"></Column>
+                    <Column @bind-Field="@context.Name" Ellipsis Width="150"></Column>
+                    <Column @bind-Field="@context.Formula"></Column>
+                </Table>
+            </AntDesign.Col>
+        </Row>
+    </AntDesign.Col>
+    <AntDesign.Col Span="10" Style="border-right: 1px solid #ccc;">
+        <Row Gutter="8">
+            <Space Size="@("small")" Style="margin-right: 10px">
+                @if (editModel.ReadOnly)
                 {
-                    <Input AutoFocus="true" TValue="string" Value="context.Name" ValueChanged="e => NameChange(context, e)" />
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" Color="Color.Green7" OnClick="AddAsync">Thêm mới</Button>
+                    </SpaceItem>
+                    @if (editModel.Id.IsNotNullOrEmpty())
+                    {
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" OnClick="Edit">Sửa</Button>
+                        </SpaceItem>
+                    }
                 }
-                else
+                @if (editModel.Id.IsNotNullOrEmpty())
                 {
-                    <div class="editable-cell-value-wrap noselect">
-                        @context.Name &nbsp;
-                    </div>
+                    <SpaceItem>
+                        <Popconfirm Placement="@Placement.BottomRight"
+                                    OnConfirm="() => DeleteAsync()"
+                                    OkText="Đồng ý"
+                                    CancelText="Hủy">
+                            <ChildContent>
+                                <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                            </ChildContent>
+                            <TitleTemplate>
+                                Bạn có chắc chắn muốn xóa?
+                            </TitleTemplate>
+                        </Popconfirm>
+                    </SpaceItem>
                 }
-            </Column>
-            <Column @bind-Field="@context.Formula">
-                <Template>
-                    <div style="word-wrap: break-word; height:auto">@context.Formula</div>
-                </Template>
-            </Column>
-        </Table>
-        <div class="ant_input">
+                @if (!editModel.ReadOnly)
+                {
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7">Lưu</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Popconfirm OnConfirm="() => Cancel()"
+                                    OkText="Đồng ý"
+                                    CancelText="Hủy">
+                            <ChildContent>
+                                <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                            </ChildContent>
+                            <TitleTemplate>
+                                Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                            </TitleTemplate>
+                        </Popconfirm>
+                    </SpaceItem>
+                }
+            </Space>
+        </Row>
+        <EditForm Model="editModel">
+            <DataAnnotationsValidator />
+            <InputWatcher @ref="inputWatcher"></InputWatcher>
             <Row Gutter="8">
-                <AntDesign.Col Span="24" Class="search-button-col" Style="justify-content:flex-end">
-                    <Space Size=@("small") Style="margin-right:10px">
-                        <SpaceItem>
-                            <Button Type="@ButtonType.Primary" Color="Color.Green7" OnClick="Add">Thêm mới</Button>
-                        </SpaceItem>
-                        @if (selectModel != null)
-                        {
-                            <SpaceItem>
-                                <Popconfirm Placement="@Placement.LeftBottom"
-                                            OnConfirm="() => DeleteAsync()"
-                                            OkText="Đồng ý"
-                                            CancelText="Hủy">
-                                    <ChildContent>
-                                        <Button Type="@ButtonType.Default" Danger>Xóa</Button>
-                                    </ChildContent>
-                                    <TitleTemplate>
-                                        Bạn có chắc chắn muốn xóa?
-                                    </TitleTemplate>
-                                </Popconfirm>
-                            </SpaceItem>
-                        }
-                        <SpaceItem>
-                            <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="Color.Green7" >Lưu</Button>
-                        </SpaceItem>
-                    </Space>
+                <AntDesign.Col Span="12">
+                    <LabelFor For="() => editModel.Code"></LabelFor>
+                    <Input @bind-Value="editModel.Code" Disabled="true" />
+                    <ValidationMessage For="() => editModel.Code"></ValidationMessage>
                 </AntDesign.Col>
-            </Row>
-            <Row Gutter="8">
+                <AntDesign.Col Span="12">
+                    <LabelFor For="() => editModel.Name"></LabelFor>
+                    <Input @bind-Value="editModel.Name" Disabled="editModel.ReadOnly" />
+                    <ValidationMessage For="() => editModel.Name"></ValidationMessage>
+                </AntDesign.Col>
                 <AntDesign.Col Span="24">
-                    <TextArea @bind-Value="FormulaInput" Placeholder="Nhập công thức" Id="FormulaInput"
-                              AllowClear Bordered="false" AutoSize MinRows="10" MaxRows="20"
-                              ShowCount MaxLength=4000 />
-                    <Text Type="danger">@errorMessage</Text>
+                    <LabelFor For="() => editModel.Formula"></LabelFor>
+                    <TextArea AllowClear ShowCount Style="width: 100%;" MinRows="4" @bind-Value="editModel.Formula" Disabled="editModel.ReadOnly"></TextArea>
+                    <ValidationMessage For="() => editModel.Formula"></ValidationMessage>
                 </AntDesign.Col>
             </Row>
-            <Row Gutter="8">
-                <AntDesign.Col Span="24">
-                    <Text Type="danger">*Chú ý: Sử dụng dấu ", " để phân tách các tham số của hàm trong công thức</Text>
-                </AntDesign.Col>
-            </Row>
-        </div>
-        <div class="ant_template">
+        </EditForm>
+    </AntDesign.Col>
+    <AntDesign.Col Span="4">
+        <Row Gutter="8">
             <AntDesign.Col Span="24" Style="text-align:center">
                 <span><b>Kiểu công</b></span>
             </AntDesign.Col>
             <AntDesign.Col Span="24" Style="text-align:center">
                 <Input @bind-Value=search Placeholder="Tìm kiểu công" AllowClear Bordered=false />
             </AntDesign.Col>
-            @if (TimekeepingTypeDatas?.Any() == true)
+            @if (TimekeepingTypes?.Any() == true)
             {
                 <div class="xaydungcongthuc_right">
-                    <AntList Bordered DataSource="@TimekeepingTypeDatas.Where(c => c.CodeName.Contains(search ?? "", StringComparison.InvariantCultureIgnoreCase))" Size="small">
+                    <AntList Bordered DataSource="@TimekeepingTypes.Where(c => c.CodeName.Contains(search ?? "", StringComparison.InvariantCultureIgnoreCase))" Size="small">
                         <ChildContent Context="item">
                             <ListItem Class="pointer" OnClick="() => InsertTimeKeepingTypeElementAsync(item.Name)">
                                 <Icon Type="left" Theme="outline" />
                                 <span class="ant-list-item-name" title="Nhấn để chèn">
-                                    <strong>@item.DisplayCode</strong> - @item.Name
+                                    <strong>@item.Code</strong> - @item.Name
                                 </span>
                             </ListItem>
                         </ChildContent>
                     </AntList>
                 </div>
             }
-        </div>
-    </div>
-</div>
+        </Row>
+    </AntDesign.Col>
+</Row>

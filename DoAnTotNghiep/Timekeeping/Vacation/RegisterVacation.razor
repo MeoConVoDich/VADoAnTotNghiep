@@ -1,0 +1,86 @@
+﻿<Row Gutter="8">
+    <AntDesign.Col Span="12">
+        <EditForm Model="vacationFilterModel" OnSubmit="e => SearchAsync()">
+            <Row Gutter="8">
+                <AntDesign.Col Span="8">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@vacationFilterModel?.ApprovalStatus.ToString()" EnableSearch
+                            OnSelectedItemChanged="e => ApprovalStatusChangeAsync(e)">
+                        <SelectOptions>
+                            @foreach (var item in vacationFilterModel.DataSource[vacationFilterModel.Property.NameProperty(c => c.ApprovalStatus)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Span="4">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@vacationFilterModel?.Year"
+                            OnSelectedItemChanged="e => YearChangeAsync(e)">
+                        <SelectOptions>
+                            @foreach (var item in vacationFilterModel.DataSource[vacationFilterModel.Property.NameProperty(c => c.Year)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Span="4">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@vacationFilterModel?.Month"
+                            OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                        <SelectOptions>
+                            @foreach (var item in vacationFilterModel.DataSource[vacationFilterModel.Property.NameProperty(c => c.Month)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+               
+                <AntDesign.Col Span="2" Class="flex-start-end">
+                    <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                </AntDesign.Col>
+            </Row>
+        </EditForm>
+        <Row Gutter="8">
+            <AntDesign.Col Span="24">
+                <Table @ref="table" TItem="VacationViewModel" DataSource="@VacationViewModels"
+                       ScrollBarWidth="10px"
+                       Total="vacationFilterModel.Page.Total" ScrollY="500px"
+                       Loading="loading"
+                       PageIndex="vacationFilterModel.Page.PageIndex"
+                       PageSize="vacationFilterModel.Page.PageSize"
+                       OnPageIndexChange="PageIndexChangeAsync"
+                       OnPageSizeChange="PageSizeChangeAsync"
+                       OnRowClick="OnRowClick">
+                    <Column @bind-Field="@context.Stt" Width="50"></Column>
+                    <Column @bind-Field="@context.StartDate" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.EndDate" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.TimekeepingTypeName"></Column>
+                    <Column @bind-Field="@context.ApprovalStatus">
+                        <Template>
+                            @if (context.ApprovalStatus == ApprovalStatus.Pending)
+                            {
+                                <AntDesign.Text Copyable="false" Class="primary-text">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                            }
+                            else if (context.ApprovalStatus == ApprovalStatus.Approved)
+                            {
+                                <AntDesign.Text Copyable="false" Type="success">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                            }
+                            else
+                            {
+                                <AntDesign.Text Copyable="false" Type="danger">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                            }
+                        </Template>
+                    </Column>
+                    <Column @bind-Field="@context.NotApprovedReason"></Column>
+                </Table>
+            </AntDesign.Col>
+        </Row>
+    </AntDesign.Col>
+    <AntDesign.Col Span="12">
+        <VacationDetail @ref="vacationDetail" ValueChanged="SaveDetailAsync" CreatorObject="CreatorObject.Staff" TimekeepingTypes="TimekeepingTypes" ></VacationDetail>
+    </AntDesign.Col>
+</Row>

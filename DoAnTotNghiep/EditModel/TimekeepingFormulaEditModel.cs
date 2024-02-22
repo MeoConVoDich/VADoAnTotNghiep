@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.EditModel
 {
-    public class TimekeepingFormulaEditModel
+    public class TimekeepingFormulaEditModel : EditBaseModel
     {
         public virtual string Id { get; set; }
 
@@ -21,5 +21,8 @@ namespace DoAnTotNghiep.EditModel
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Công thức")]
         public virtual string Formula { get; set; }
+        public virtual int CountCode { get; set; }
+        public virtual DateTime CreateDate { get; set; }
+
     }
 }

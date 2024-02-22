@@ -214,3 +214,29 @@ a, .btn-link {
 .ant-input-number{
     width: 100% !important;
 }
+
+.xaydungcongthuc_right {
+    height: calc(100vh - 280px);
+    overflow: auto;
+    width: 100%;
+}
+
+.table-ant-custom td {
+    vertical-align: top;
+}
+
+    .xaydungcongthuc_right .ant-list-item span {
+        font-size: 13px;
+    }
+
+.xaydungcongthuc_right .ant-list-item {
+    justify-content: left;
+}
+
+    .xaydungcongthuc_right .ant-list-item .ant-list-item-name {
+        margin-left: 15px;
+    }
+
+.struct-wrap .ant_template {
+    width: 20%;
+}

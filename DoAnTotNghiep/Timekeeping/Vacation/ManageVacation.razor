@@ -1,0 +1,122 @@
+﻿<EditForm Model="vacationFilterModel" OnSubmit="e => SearchAsync()">
+    <Row Gutter="8">
+        <Space Size=@(("8", "8")) Wrap>
+            <SpaceItem><Button Icon="plus" OnClick="AddNew" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
+            @if (selectedRows?.Any() == true)
+            {
+                <SpaceItem>
+                    <Popconfirm Placement="@Placement.BottomRight"
+                                OnConfirm="() => DeleteAsync()"
+                                OkText="Đồng ý"
+                                CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn xóa?
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            }
+        </Space>
+        <AntDesign.Col Span="4">
+            <Select TItemValue="string" TItem="string"
+                    Value="@vacationFilterModel?.ApprovalStatus.ToString()" EnableSearch
+                    OnSelectedItemChanged="e => ApprovalStatusChangeAsync(e)">
+                <SelectOptions>
+                    @foreach (var item in vacationFilterModel.DataSource[vacationFilterModel.Property.NameProperty(c => c.ApprovalStatus)])
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                    }
+                </SelectOptions>
+            </Select>
+        </AntDesign.Col>
+        <AntDesign.Col Span="2">
+            <Select TItemValue="string" TItem="string"
+                    Value="@vacationFilterModel?.Year"
+                    OnSelectedItemChanged="e => YearChangeAsync(e)">
+                <SelectOptions>
+                    @foreach (var item in vacationFilterModel.DataSource[vacationFilterModel.Property.NameProperty(c => c.Year)])
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                    }
+                </SelectOptions>
+            </Select>
+        </AntDesign.Col>
+        <AntDesign.Col Span="2">
+            <Select TItemValue="string" TItem="string"
+                    Value="@vacationFilterModel?.Month"
+                    OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                <SelectOptions>
+                    @foreach (var item in vacationFilterModel.DataSource[vacationFilterModel.Property.NameProperty(c => c.Month)])
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                    }
+                </SelectOptions>
+            </Select>
+        </AntDesign.Col>
+        <AntDesign.Col Span="4">
+            <Input TValue="string" Value="vacationFilterModel.CodeOrName"
+                   ValueChanged="e => vacationFilterModel.Change(nameof(vacationFilterModel.CodeOrName), e)"
+                   Placeholder="Nhập họ tên, mã nhân viên" />
+        </AntDesign.Col>
+        <AntDesign.Col Span="2" Class="flex-start-end">
+            <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+        </AntDesign.Col>
+    </Row>
+</EditForm>
+<Row Gutter="8">
+    <AntDesign.Col Span="24">
+        <Table @ref="table" TItem="VacationViewModel" DataSource="@VacationViewModels"
+               ScrollBarWidth="10px"
+               Total="vacationFilterModel.Page.Total" ScrollY="500px"
+               Loading="loading"
+               PageIndex="vacationFilterModel.Page.PageIndex"
+               PageSize="vacationFilterModel.Page.PageSize"
+               OnPageIndexChange="PageIndexChangeAsync"
+               OnPageSizeChange="PageSizeChangeAsync"
+               OnRowClick="OnRowClick">
+            <Column @bind-Field="@context.Stt" Width="50"></Column>
+            <Column @bind-Field="@context.StartDate" Format="dd/MM/yyyy"></Column>
+            <Column @bind-Field="@context.EndDate" Format="dd/MM/yyyy"></Column>
+            <Column @bind-Field="@context.TimekeepingTypeName"></Column>
+            <Column @bind-Field="@context.ApprovalStatus">
+                <Template>
+                    @if (context.ApprovalStatus == ApprovalStatus.Pending)
+                    {
+                        <AntDesign.Text Copyable="false" Class="primary-text">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                    }
+                    else if (context.ApprovalStatus == ApprovalStatus.Approved)
+                    {
+                        <AntDesign.Text Copyable="false" Type="success">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                    }
+                    else
+                    {
+                        <AntDesign.Text Copyable="false" Type="danger">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                    }
+                </Template>
+            </Column>
+            <Column @bind-Field="@context.NotApprovedReason"></Column>
+        </Table>
+    </AntDesign.Col>
+</Row>
+<Row Justify="center">
+    <Space>
+        @if (vacationFilterModel.ApprovalStatus == ApprovalStatus.Pending.ToString() || vacationFilterModel.ApprovalStatus == ApprovalStatus.All.ToString())
+        {
+            <SpaceItem>
+                <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => ApprovedCheck(null)" Disabled=IsDisableApprovalButton()>Phê duyệt</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => DeclinedCheck(null)" Disabled=IsDisableApprovalButton() Danger>Không phê duyệt</Button>
+            </SpaceItem>
+        }
+        @if (vacationFilterModel.ApprovalStatus == ApprovalStatus.Approved.ToString() || vacationFilterModel.ApprovalStatus == ApprovalStatus.All.ToString())
+        {
+            <SpaceItem>
+                <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => CancelApproveCheck(null)" Disabled=IsDisableApprovalButton() Danger>Huỷ phê duyệt</Button>
+            </SpaceItem>
+        }
+    </Space>
+</Row>
+

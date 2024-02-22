@@ -153,7 +153,6 @@ namespace DoAnTotNghiep.Staff
 
         }
 
-
         void ViewDetail(BonusDisciplineViewModel model)
         {
             try

@@ -26,6 +26,7 @@ namespace DoAnTotNghiep.EditModel
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Đêm (%)")]
         public virtual int Night { get; set; }
+        public virtual DateTime CreateDate { get; set; }
 
         public Property<OvertimeRateEditModel> Property { get; set; } = new Property<OvertimeRateEditModel>();
 

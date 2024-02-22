@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.EditModel
 {
-    public class TimekeepingFormulaFilterEditModel
+    public class TimekeepingFormulaFilterEditModel : EditBaseModel
     {
         public Page Page { get; set; } = new Page();
         public string CodeOrName { get; set; }

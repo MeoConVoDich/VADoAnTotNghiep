@@ -1,0 +1,23 @@
+﻿@page "/ca-nhan/dang-ky-don"
+<PageHeader Class="site-page-header" Title="Đăng ký đơn">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Cá nhân</BreadcrumbItem>
+            <BreadcrumbItem>Đăng ký đơn</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<div class="site-content">
+    <Tabs DefaultActiveKey="0" @bind-ActiveKey=activeKey>
+        <TabPane Tab="Đơn nghỉ phép" Key="0">
+            @*<TimekeepingShiftList></TimekeepingShiftList>*@
+        </TabPane>
+        <TabPane Tab="Đơn làm thêm giờ" Key="1">
+            @*<OvertimeRateList></OvertimeRateList>*@
+        </TabPane>
+        <TabPane Tab="Giải trình chấm công" Key="2">
+            @*<TimekeepingTypeList></TimekeepingTypeList>*@
+        </TabPane>
+    </Tabs>
+</div>

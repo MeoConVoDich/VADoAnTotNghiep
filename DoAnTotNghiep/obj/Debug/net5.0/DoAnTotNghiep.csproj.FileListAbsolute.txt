@@ -174,3 +174,14 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Ti
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\OvertimeRateList.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Timekeeping\OvertimeRateList.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\TimekeepingFormulaList.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Timekeeping\TimekeepingFormulaList.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Profile\RegisterApplication.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\Overtime\ManageOvertime.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\Overtime\OvertimeDetail.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\Overtime\RegisterOvertime.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\TimekeepingExplanation\ManageTimekeepingExplanation.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\TimekeepingExplanation\RegisterTimekeepingExplanation.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\TimekeepingExplanation\TimekeepingExplanationDetail.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\Vacation\ManageVacation.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\Vacation\RegisterVacation.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\Vacation\VacationDetail.razor.g.cs

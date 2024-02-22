@@ -58,6 +58,7 @@ namespace DoAnTotNghiep.EditModel
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Kiểu nghỉ giữa ca")]
         public virtual BreaksTimeType BreaksTimeType { get; set; }
+        public virtual DateTime CreateDate { get; set; }
 
         public Property<TimekeepingShiftEditModel> Property { get; set; } = new Property<TimekeepingShiftEditModel>();
 

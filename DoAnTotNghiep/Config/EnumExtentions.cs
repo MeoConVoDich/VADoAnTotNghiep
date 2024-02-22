@@ -54,4 +54,40 @@ namespace DoAnTotNghiep.Config
         [Display(Name = "Nghỉ giữa ca")]
         Has = 2,
     }
+
+    public enum ApprovalStatus
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Chờ phê duyệt")]
+        Pending = 1,
+        [Display(Name = "Phê duyệt")]
+        Approved = 2,
+        [Display(Name = "Không phê duyệt")]
+        Disapproved = 3,
+        [Display(Name = "Hủy phê duyệt")]
+        CanceledApproved = 4,
+    }
+
+    public enum ChooseBreak
+    {
+        [Display(Name = "Tất cả")]
+        All,
+        [Display(Name = "Nghỉ buổi sáng")]
+        MorningBreak,
+        [Display(Name = "Nghỉ buổi chiều")]
+        AfternoonBreak,
+        [Display(Name = "Nghỉ cả ngày")]
+        FullDayBreak,
+    }
+
+    public enum CreatorObject
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "CBNV")]
+        Staff = 1,
+        [Display(Name = "CBNS")]
+        HRStaff = 2,
+    }
 }

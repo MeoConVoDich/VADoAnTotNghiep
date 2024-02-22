@@ -11,7 +11,7 @@ namespace DoAnTotNghiep.Map
     {
         public TimekeepingFormulaMap()
         {
-            Table("TimekeepingShift");
+            Table("TimekeepingFormula");
 
             Id(x => x.Id, map => map.Column("Id"));
             Property(x => x.Code);

@@ -184,7 +184,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<int> GetCountCode()
+        public async Task<int> GetCountCodeAsync()
         {
             using (var session = _session.OpenSession())
             {

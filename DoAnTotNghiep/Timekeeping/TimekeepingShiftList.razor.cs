@@ -243,7 +243,7 @@ namespace DoAnTotNghiep.Timekeeping
 
                 if (exist.Any(c => c.Id != editModel.Id))
                 {
-                    Notice.NotiWarning("Mã kiểu công đã được sử dụng");
+                    Notice.NotiWarning("Mã ca đã được sử dụng");
                     return;
                 }
 
