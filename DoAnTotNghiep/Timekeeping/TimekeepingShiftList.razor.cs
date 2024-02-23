@@ -288,5 +288,19 @@ namespace DoAnTotNghiep.Timekeeping
                 throw;
             }
         }
+
+        void BreaksTimeTypeChange(string breaksTimeType)
+        {
+            try
+            {
+                editModel.BreaksTimeType = Enum.Parse<BreaksTimeType>(breaksTimeType);
+                editModel.TimeCalculator();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

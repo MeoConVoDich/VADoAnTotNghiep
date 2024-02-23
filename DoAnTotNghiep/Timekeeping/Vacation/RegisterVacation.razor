@@ -2,7 +2,7 @@
     <AntDesign.Col Span="12">
         <EditForm Model="vacationFilterModel" OnSubmit="e => SearchAsync()">
             <Row Gutter="8">
-                <AntDesign.Col Span="8">
+                <AntDesign.Col Span="6">
                     <Select TItemValue="string" TItem="string"
                             Value="@vacationFilterModel?.ApprovalStatus.ToString()" EnableSearch
                             OnSelectedItemChanged="e => ApprovalStatusChangeAsync(e)">
@@ -59,6 +59,7 @@
                     <Column @bind-Field="@context.StartDate" Format="dd/MM/yyyy"></Column>
                     <Column @bind-Field="@context.EndDate" Format="dd/MM/yyyy"></Column>
                     <Column @bind-Field="@context.TimekeepingTypeName"></Column>
+                    <Column @bind-Field="@context.NumberOfDays">@context.NumberOfDays.ToDecimalFormatDot().ToFormatedNumber() </Column>
                     <Column @bind-Field="@context.ApprovalStatus">
                         <Template>
                             @if (context.ApprovalStatus == ApprovalStatus.Pending)

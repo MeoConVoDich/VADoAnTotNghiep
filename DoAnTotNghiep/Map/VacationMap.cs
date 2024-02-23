@@ -18,7 +18,7 @@ namespace DoAnTotNghiep.Map
             Property(x => x.EndDate);
             Property(x => x.NumberOfDays);
             Property(x => x.Reason);
-            Property(x => x.NotApprovedReason);
+            Property(x => x.DisapprovedReason);
             Property(x => x.TimekeepingTypeId);
             Property(x => x.ChooseBreak);
             Property(x => x.ApprovalStatus);

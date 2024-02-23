@@ -40,6 +40,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             try
             {
                 await LoadStaffDataAsync();
+                editModel.ReadOnly = true;
             }
             catch (Exception ex)
             {
@@ -75,6 +76,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             {
                 editModel = new VacationEditModel();
                 editModel.ApprovalStatus = ApprovalStatus.Pending;
+                editModel.CreatorObject = CreatorObject.Staff;
                 var usersId = await sessionStorage.GetItemAsync<string>("UsersId");
                 if (usersId != null)
                 {
@@ -110,14 +112,15 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
                         inputWatcher.NotifyFieldChanged(errorMessageStore.First().Key, errorMessageStore);
                     }
                     Notice.NotiWarning("Dữ liệu còn thiếu hoặc không hợp lệ!");
-                    
+                    return;
                 }
 
                 var existData = await VacationService.GetAllWithFilterAsync(new VacationSearch()
                 {
                     CheckExist = true,
                     StartDateCheckExist = editModel.StartDate,
-                    EndDateCheckExist = editModel.EndDate
+                    EndDateCheckExist = editModel.EndDate,
+                    UsersId = editModel.UsersId
                 });
                 if (existData.Item1?.Any(c => c.Id != editModel.Id) == true)
                 {
@@ -223,6 +226,20 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             {
                 StaffSearchDatas.Clear();
                 StaffSearchDatas = StaffDatas.Where(c => c.Name.Contains(e, StringComparison.OrdinalIgnoreCase)).ToList();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void ChooseBreakChange(string chooseBreak)
+        {
+            try
+            {
+                editModel.ChooseBreak = Enum.Parse<ChooseBreak>(chooseBreak);
+                editModel.TimeCalculator();
                 StateHasChanged();
             }
             catch (Exception ex)

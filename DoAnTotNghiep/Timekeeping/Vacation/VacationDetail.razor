@@ -1,7 +1,7 @@
-﻿<Row Gutter="8">
-    <Space Size="@("small")" Style="margin-right: 10px">
-        @if (CreatorObject == CreatorObject.Staff)
-        {
+﻿@if (CreatorObject == CreatorObject.Staff)
+{
+    <Row Gutter="8">
+        <Space Size="@("small")" Style="margin-right: 10px">
             @if (editModel.ReadOnly)
             {
                 <SpaceItem>
@@ -26,10 +26,14 @@
                     </Popconfirm>
                 </SpaceItem>
             }
-        }
-        else
-        {
-            if (editModel.CreatorObject == CreatorObject.HRStaff)
+        </Space>
+    </Row>
+}
+else
+{
+    <Row Gutter="8" Justify="end">
+        <Space Size="@("small")" Style="margin-left: 10px">
+            @if (editModel.CreatorObject == CreatorObject.HRStaff)
             {
                 @if (editModel.ReadOnly)
                 {
@@ -75,9 +79,9 @@
                     </SpaceItem>
                 }
             }
-        }
-    </Space>
-</Row>
+        </Space>
+    </Row>
+}
 <EditForm Model="editModel">
     <DataAnnotationsValidator />
     <InputWatcher @ref="inputWatcher"></InputWatcher>
@@ -114,14 +118,14 @@
         }
         <AntDesign.Col Span="12">
             <LabelFor FieldIdentifier="context.Field(nameof(VacationEditModel.StartDate))"></LabelFor>
-            <TimePicker TValue="DateTime?" @bind-Value="editModel.StartDate" Disabled="true" Format="dd/MM/yyyy" Style="display:block"
-                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn ngày")></TimePicker>
+            <DatePicker TValue="DateTime?" @bind-Value="editModel.StartDate" Disabled="editModel.ReadOnly" Format="dd/MM/yyyy" Style="display:block"
+                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn ngày")></DatePicker>
             <ValidationMessage For="() => editModel.StartDate"></ValidationMessage>
         </AntDesign.Col>
         <AntDesign.Col Span="12">
             <LabelFor FieldIdentifier="context.Field(nameof(VacationEditModel.EndDate))"></LabelFor>
-            <TimePicker TValue="DateTime?" @bind-Value="editModel.EndDate" Disabled="true" Format="dd/MM/yyyy" Style="display:block"
-                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn ngày")></TimePicker>
+            <DatePicker TValue="DateTime?" @bind-Value="editModel.EndDate" Disabled="editModel.ReadOnly" Format="dd/MM/yyyy" Style="display:block"
+                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn ngày")></DatePicker>
             <ValidationMessage For="() => editModel.EndDate"></ValidationMessage>
         </AntDesign.Col>
         <AntDesign.Col Span="12">
@@ -129,7 +133,7 @@
             <Select DataSource="@TimekeepingTypes"
                     @bind-Value="@editModel.TimekeepingTypeId"
                     LabelName="@nameof(TimekeepingType.CodeName)"
-                    ValueName="@nameof(TimekeepingType.Code)"
+                    ValueName="@nameof(TimekeepingType.Id)"
                     Placeholder="Kiểu công"
                     AllowClear
                     EnableSearch TItem="TimekeepingType" TItemValue="string"
@@ -141,7 +145,7 @@
             <LabelFor FieldIdentifier="context.Field(nameof(VacationEditModel.ChooseBreak))"></LabelFor>
             <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
                     Value="@editModel?.ChooseBreak.ToString()" EnableSearch
-                    OnSelectedItemChanged="e => editModel.SetValue(editModel.Property.NameProperty(c => c.ChooseBreak), e)">
+                    OnSelectedItemChanged="e => ChooseBreakChange(e)">
                 <SelectOptions>
                     @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.ChooseBreak)])
                     {
@@ -153,8 +157,13 @@
         </AntDesign.Col>
         <AntDesign.Col Span="12">
             <LabelFor FieldIdentifier="context.Field(nameof(VacationEditModel.NumberOfDays))"></LabelFor>
-            <AntDesign.InputNumber @bind-Value="editModel.NumberOfDays" Disabled="true"></AntDesign.InputNumber>
+            <Input Value="editModel.NumberOfDays.ToDecimalFormatDot().ToFormatedNumber()" Disabled="true" />
             <ValidationMessage For="() => editModel.NumberOfDays"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <LabelFor For="() => editModel.Reason"></LabelFor>
+            <Input @bind-Value="editModel.Reason" Disabled="editModel.ReadOnly" />
+            <ValidationMessage For="() => editModel.Reason"></ValidationMessage>
         </AntDesign.Col>
     </Row>
 </EditForm>

@@ -20,10 +20,10 @@ namespace DoAnTotNghiep.ViewModel
         public virtual string StaffCode { get => UsersData?.Code; set { } }
         public virtual UsersViewModel UsersData { get; set; } = new UsersViewModel();
 
-        [Display(Name = "Ngày bắt đầu nghỉ")]
+        [Display(Name = "Nghỉ từ ngày")]
         public virtual DateTime StartDate { get; set; }
 
-        [Display(Name = "Ngày kết thúc nghỉ")]
+        [Display(Name = "Nghỉ đến ngày")]
         public virtual DateTime EndDate { get; set; }
 
         [Display(Name = "Tổng ngày nghỉ")]
@@ -48,7 +48,13 @@ namespace DoAnTotNghiep.ViewModel
         [Display(Name = "Trạng thái")]
         public virtual ApprovalStatus ApprovalStatus { get; set; }
 
-        [Display(Name = "Ngày phê duyệt")]
+        [Display(Name = "Ngày kiểm duyệt")]
         public virtual DateTime? ApprovedDate { get; set; }
+
+        [Display(Name = "Đối tượng nhập")]
+        public virtual CreatorObject CreatorObject { get; set; }
+        
+        [Display(Name = "Ngày tạo")]
+        public virtual DateTime CreateDate { get; set; }
     }
 }

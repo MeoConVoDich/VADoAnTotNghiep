@@ -24,11 +24,11 @@ namespace DoAnTotNghiep.EditModel
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Nghỉ từ ngày")]
-        public virtual DateTime StartDate { get; set; }
+        public virtual DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Nghỉ đến ngày")]
-        public virtual DateTime EndDate { get; set; }
+        public virtual DateTime? EndDate { get; set; }
 
         [Display(Name = "Tổng ngày nghỉ")]
         public virtual decimal? NumberOfDays { get; set; }
@@ -37,7 +37,7 @@ namespace DoAnTotNghiep.EditModel
         public virtual string Reason { get; set; }
 
         [Display(Name = "Lý do không phê duyệt")]
-        public virtual string NotApprovedReason { get; set; }
+        public virtual string DisapprovedReason { get; set; }
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Loại hình nghỉ")]
@@ -81,14 +81,14 @@ namespace DoAnTotNghiep.EditModel
             }
             if (nameProperty == Property.NameProperty(c => c.StartDate))
             {
-                if (StartDate >= EndDate)
+                if (StartDate > EndDate && EndDate.HasValue && StartDate.HasValue)
                 {
                     Errors.AddExist(nameProperty, "Nghỉ từ ngày phải bé hơn hoặc bằng nghỉ đến ngày!");
                 }
             }
             if (nameProperty == Property.NameProperty(c => c.EndDate))
             {
-                if (StartDate >= EndDate)
+                if (StartDate > EndDate && EndDate.HasValue && StartDate.HasValue)
                 {
                     Errors.AddExist(nameProperty, "Nghỉ đến ngày phải lơn hơn hoặc bằng nghỉ từ ngày!");
                 }
@@ -100,9 +100,9 @@ namespace DoAnTotNghiep.EditModel
         {
             try
             {
-                if (EndDate >= StartDate)
+                if (EndDate >= StartDate && EndDate.HasValue && StartDate.HasValue)
                 {
-                    NumberOfDays = (EndDate - StartDate).Days;
+                    NumberOfDays = (EndDate.Value - StartDate.Value).Days + 1;
                     if (ChooseBreak != ChooseBreak.All && ChooseBreak != ChooseBreak.FullDayBreak)
                     {
                         NumberOfDays = (decimal?)NumberOfDays / 2;

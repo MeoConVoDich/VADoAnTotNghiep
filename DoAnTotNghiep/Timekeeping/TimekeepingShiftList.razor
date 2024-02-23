@@ -125,7 +125,7 @@
                     <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.BreaksTimeType))"></LabelFor>
                     <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
                             Value="@editModel?.BreaksTimeType.ToString()" EnableSearch
-                            OnSelectedItemChanged="e => editModel.SetValue(editModel.Property.NameProperty(c => c.BreaksTimeType), e)">
+                            OnSelectedItemChanged="e => BreaksTimeTypeChange(e)">
                         <SelectOptions>
                             @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.BreaksTimeType)])
                             {
@@ -137,7 +137,7 @@
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <LabelFor FieldIdentifier="context.Field(nameof(TimekeepingShiftEditModel.Duration))"></LabelFor>
-                    <AntDesign.InputNumber @bind-Value="editModel.Duration" Disabled="true"></AntDesign.InputNumber>
+                    <Input Value="editModel.Duration.ToDecimalFormatDot().ToFormatedNumber()" Disabled="true"/>
                     <ValidationMessage For="() => editModel.Duration"></ValidationMessage>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">

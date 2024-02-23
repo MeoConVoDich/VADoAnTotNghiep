@@ -75,11 +75,60 @@ CREATE TABLE TimekeepingShift
 	StartBreaksTime DateTime,
 	EndBreaksTime DateTime,
 	CreateDate DateTime,
-	Duration decimal,
+	Duration decimal(8,3),
 	TimekeepingTypeFull VARCHAR(256),
 	TimekeepingTypeFirst VARCHAR(256),
 	TimekeepingTypeSecond VARCHAR(256),
 	TimekeepingTypeOff VARCHAR(256),
 	EffectiveState VARCHAR(256),
 	BreaksTimeType VARCHAR(256),
+);
+
+
+CREATE TABLE TimekeepingFormula
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	Code VARCHAR(256),
+	Name NVARCHAR(256),
+	CountCode int,
+	Formula NVARCHAR(1000),
+	CreateDate DateTime,
+);
+
+CREATE TABLE Vacation
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	UsersId VARCHAR(256),
+	StartDate DateTime,
+	EndDate DateTime,
+	ApprovedDate DateTime,
+	NumberOfDays decimal(8,3),
+	Reason NVARCHAR(256),
+	DisapprovedReason NVARCHAR(256),
+	TimekeepingTypeId VARCHAR(256),
+	ChooseBreak VARCHAR(256),
+	ApprovalStatus VARCHAR(256),
+	CreatorObject VARCHAR(256),
+	CreateDate DateTime,
+);
+
+CREATE TABLE Overtime
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	UsersId VARCHAR(256),
+	RegisterDate DateTime,
+	StartTime DateTime2,
+	EndTime DateTime2,
+	StartBreakTime DateTime2,
+	EndBreakTime DateTime2,
+	ApprovedDate DateTime,
+	TotalHour decimal(8,3),
+	DayHourAmount decimal(8,3),
+	NightHourAmount decimal(8,3),
+	Reason NVARCHAR(256),
+	DisapprovedReason NVARCHAR(256),
+	BreaksTimeType VARCHAR(256),
+	ApprovalStatus VARCHAR(256),
+	CreatorObject VARCHAR(256),
+	CreateDate DateTime,
 );

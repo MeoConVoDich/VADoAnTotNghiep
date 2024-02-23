@@ -180,14 +180,14 @@ namespace DoAnTotNghiep.EditModel
         {
             try
             {
-                if (StartTime.HasValue && EndTime.HasValue && EndTime >= StartTime)
+                if (StartTime.HasValue && EndTime.HasValue && EndTime > StartTime)
                 {
                     var totalTime = EndTime - StartTime;
                     if (BreaksTimeType == BreaksTimeType.Has)
                     {
                         if (StartBreaksTime.HasValue && EndBreaksTime.HasValue
-                        && EndBreaksTime >= StartBreaksTime
-                        && StartTime <= StartBreaksTime && EndBreaksTime <= EndTime)
+                        && EndBreaksTime > StartBreaksTime
+                        && StartTime < StartBreaksTime && EndBreaksTime < EndTime)
                         {
                             var breakTime = EndBreaksTime - StartBreaksTime;
                             totalTime -= breakTime;
@@ -198,7 +198,7 @@ namespace DoAnTotNghiep.EditModel
                             return;
                         }
                     }
-                    Duration = (decimal?)Math.Round(totalTime.Value.TotalHours, 2);
+                    Duration = (decimal?)Math.Round(totalTime.Value.TotalHours, 3);
                     return;
                 }
                 else

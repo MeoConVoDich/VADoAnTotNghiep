@@ -26,11 +26,11 @@ namespace DoAnTotNghiep.Service
             var query = session.Query<Vacation>();
             if (model.Year.HasValue)
             {
-                query = query.Where(c => c.StartDate.Year == model.Year || c.EndDate.Year == model.Year);
+                query = query.Where(c => c.StartDate.Value.Year == model.Year || c.EndDate.Value.Year == model.Year);
             }
             if (model.Month.HasValue)
             {
-                query = query.Where(c => c.StartDate.Month == model.Month || c.EndDate.Month == model.Month);
+                query = query.Where(c => c.StartDate.Value.Month == model.Month || c.EndDate.Value.Month == model.Month);
             }
             if (model.ApprovalStatus != ApprovalStatus.All)
             {
@@ -48,9 +48,9 @@ namespace DoAnTotNghiep.Service
             {
                 if (model.StartDateCheckExist.HasValue && model.EndDateCheckExist.HasValue)
                 {
-                    query = query.Where(c => (c.StartDate <= model.EndDateCheckExist.Value.Date && model.EndDateCheckExist.Value.Date <= c.EndDate)
-                        || (c.StartDate <= model.StartDateCheckExist.Value.Date && model.StartDateCheckExist.Value.Date <= c.EndDate)
-                        || (model.StartDateCheckExist.Value.Date < c.EndDate && c.EndDate < model.EndDateCheckExist.Value.Date));
+                    query = query.Where(c => (c.StartDate.Value.Date <= model.EndDateCheckExist.Value.Date && model.EndDateCheckExist.Value.Date <= c.EndDate.Value.Date)
+                        || (c.StartDate.Value.Date <= model.StartDateCheckExist.Value.Date && model.StartDateCheckExist.Value.Date <= c.EndDate.Value.Date)
+                        || (model.StartDateCheckExist.Value.Date < c.EndDate.Value.Date && c.EndDate.Value.Date < model.EndDateCheckExist.Value.Date));
                     query = query.Where(c => c.ApprovalStatus == ApprovalStatus.Approved|| c.ApprovalStatus == ApprovalStatus.Pending);
                 }
                 query = query.Take(2);
@@ -90,7 +90,7 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         var query = CreateFilter(model, session);
-                        var data = await query.OrderByDescending(c => c.StartDate).Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
+                        var data = await query.Fetch(c => c.Users).OrderByDescending(c => c.StartDate).Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
                         var count = await query.CountAsync();
                         transaction.Commit();
                         return (data, count);
@@ -126,7 +126,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> DeleteListAsync(List<Vacation> users)
+        public async Task<bool> DeleteListAsync(List<Vacation> datas)
         {
             using (var session = _session.OpenSession())
             {
@@ -134,7 +134,7 @@ namespace DoAnTotNghiep.Service
                 {
                     try
                     {
-                        foreach (var item in users)
+                        foreach (var item in datas)
                         {
                             await session.DeleteAsync(item);
                         }
@@ -159,6 +159,30 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         await session.UpdateAsync(model);
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdateListAsync(List<Vacation> datas)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var item in datas)
+                        {
+                            await session.UpdateAsync(item);
+                        }
                         transaction.Commit();
                         return true;
                     }

@@ -240,3 +240,7 @@ a, .btn-link {
 .struct-wrap .ant_template {
     width: 20%;
 }
+
+.primary-text {
+    color: #4697fc !important;
+}

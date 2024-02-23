@@ -33,6 +33,15 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
         List<string> selectedRowIds = new List<string>();
         bool loading;
         bool detailVisible;
+        bool cancelApproveModalVisible;
+        bool cancelApproving;
+        string cancelApproveReason;
+        bool approvedModalVisible;
+        bool approving;
+        bool disapprovedModalVisible;
+        bool disapproving;
+        string disapprovedReason;
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -233,13 +242,13 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             }
         }
 
-        void OpenDetail(VacationViewModel model)
+        void Edit(VacationViewModel model)
         {
             try
             {
                 detailVisible = true;
                 var data = Vacations.FirstOrDefault(c => c.Id == model.Id);
-                vacationDetail.LoadEditModel(data);
+                vacationDetail.LoadEditModel(data, data.CreatorObject != CreatorObject.HRStaff);
             }
             catch (Exception ex)
             {
@@ -254,14 +263,27 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
                 bool result = new();
                 if (model != null)
                 {
-                    var deleteModel = Vacations.FirstOrDefault(c => c.Id == model.Id);
-                    result = await VacationService.DeleteAsync(deleteModel);
+                    if (model.CreatorObject == CreatorObject.HRStaff)
+                    {
+                        var deleteModel = Vacations.FirstOrDefault(c => c.Id == model.Id);
+                        result = await VacationService.DeleteAsync(deleteModel);
+                    }
+                    else
+                    {
+                        Notice.NotiError("Không được xoá bản ghi do nhân viên tạo!");
+                        return;
+                    }
                 }
                 else
                 {
                     if (selectedRows.Any() != true)
                     {
                         Notice.NotiError("Không có bản ghi được chọn!");
+                        return;
+                    }
+                    if (selectedRows.Any(c => c.CreatorObject != CreatorObject.HRStaff))
+                    {
+                        Notice.NotiError("Không được xoá bản ghi do nhân viên tạo!");
                         return;
                     }
                     var deleteList = Vacations.Where(c => selectedRowIds.Contains(c.Id)).ToList();
@@ -290,6 +312,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             {
                 Domain.Vacation vacation = new Domain.Vacation();
                 vacation.ApprovalStatus = ApprovalStatus.Approved;
+                vacation.CreatorObject = CreatorObject.HRStaff;
                 vacationDetail.LoadEditModel(vacation);
                 detailVisible = true;
             }
@@ -302,40 +325,6 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
         bool IsDisableApprovalButton()
         {
             return selectedRows?.Any() != true;
-        }
-
-        void DeclinedCheck(Domain.Vacation selected = null)
-        {
-            try
-            {
-                selectedApproveRows.Clear();
-                if (selected != null)
-                {
-                    selectedApproveRows.Add(VacationViewModels.FirstOrDefault(c => c.Id == selected.Id));
-                }
-                else if (selectedRows?.Any() == true)
-                {
-                    selectedApproveRows.AddRange(selectedRows);
-                }
-                if (selectedApproveRows.Any()
-                    && selectedApproveRows.Any(c => c.ApprovalStatus != ApprovalStatus.Pending))
-                {
-                    Notice.NotiWarning("Chỉ được không phê duyệt bản ghi đang chờ phê duyệt!");
-                    return;
-                }
-                else if (!selectedApproveRows.Any())
-                {
-                    Notice.NotiWarning("Không có bản ghi nào được chọn!");
-                    return;
-                }
-                notApprovedReason = null;
-                declinedModalVisible = true;
-                declining = false;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
         }
 
         void ApprovedCheck(Domain.Vacation selected = null)
@@ -362,9 +351,43 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
                     Notice.NotiWarning("Không có bản ghi nào được chọn!");
                     return;
                 }
-                notApprovedReason = null;
-                declinedModalVisible = true;
-                declining = false;
+                approvedModalVisible = true;
+                approving = false;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        void DeclinedCheck(Domain.Vacation selected = null)
+        {
+            try
+            {
+                selectedApproveRows.Clear();
+                if (selected != null)
+                {
+                    selectedApproveRows.Add(VacationViewModels.FirstOrDefault(c => c.Id == selected.Id));
+                }
+                else if (selectedRows?.Any() == true)
+                {
+                    selectedApproveRows.AddRange(selectedRows);
+                }
+                if (selectedApproveRows.Any()
+                    && selectedApproveRows.Any(c => c.ApprovalStatus != ApprovalStatus.Pending))
+                {
+                    Notice.NotiWarning("Chỉ được không phê duyệt bản ghi đang chờ phê duyệt!");
+                    return;
+                }
+                else if (!selectedApproveRows.Any())
+                {
+                    Notice.NotiWarning("Không có bản ghi nào được chọn!");
+                    return;
+                }
+                disapprovedReason = null;
+                disapprovedModalVisible = true;
+                disapproving = false;
             }
             catch (Exception ex)
             {
@@ -396,13 +419,184 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
                     Notice.NotiWarning("Không có bản ghi nào được chọn!");
                     return;
                 }
-                notApprovedReason = null;
-                declinedModalVisible = true;
-                declining = false;
+                cancelApproveReason = null;
+                cancelApproveModalVisible = true;
+                cancelApproving = false;
             }
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        void CloseApprovedModal()
+        {
+            try
+            {
+                approvedModalVisible = false;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void CloseDisapprovedModal()
+        {
+            try
+            {
+                disapprovedModalVisible = false;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void CloseCancelApproveModal()
+        {
+            try
+            {
+                cancelApproveModalVisible = false;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        async Task ApprovedAsync()
+        {
+            try
+            {
+                if (selectedApproveRows.Any())
+                {
+                    approving = true;
+                    StateHasChanged();
+                    var listId = selectedApproveRows.Select(c => c.Id).ToList();
+                    var listApproved = Vacations.Where(c => listId.Contains(c.Id)).ToList();
+                    listApproved.ForEach(c =>
+                    {
+                        c.ApprovalStatus = ApprovalStatus.Approved;
+                        c.ApprovedDate = DateTime.Now;
+                    });
+                    var result = await VacationService.UpdateListAsync(listApproved);
+                    if (result)
+                    {
+                        Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
+                        approvedModalVisible = false;
+                        detailVisible = false;
+                        await LoadDataAsync();
+                    }
+                    else
+                    {
+                        Notice.NotiError("Cập nhật dữ liệu thất bại!");
+                    }
+                }
+                else
+                {
+                    Notice.NotiWarning("Không có bản ghi nào được chọn!");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                approving = false;
+            }
+        }
+
+        async Task DisapprovedAsync()
+        {
+            try
+            {
+                if (selectedApproveRows.Any())
+                {
+                    disapproving = true;
+                    StateHasChanged();
+                    var listId = selectedApproveRows.Select(c => c.Id).ToList();
+                    var listApproved = Vacations.Where(c => listId.Contains(c.Id)).ToList();
+                    listApproved.ForEach(c =>
+                    {
+                        c.ApprovalStatus = ApprovalStatus.Disapproved;
+                        c.ApprovedDate = DateTime.Now;
+                        c.DisapprovedReason = disapprovedReason;
+                    });
+                    var result = await VacationService.UpdateListAsync(listApproved);
+                    if (result)
+                    {
+                        Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
+                        approvedModalVisible = false;
+                        detailVisible = false;
+                        await LoadDataAsync();
+                    }
+                    else
+                    {
+                        Notice.NotiError("Cập nhật dữ liệu thất bại!");
+                    }
+                }
+                else
+                {
+                    Notice.NotiWarning("Không có bản ghi nào được chọn!");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                disapproving = false;
+            }
+        }
+
+
+        async Task CancelApproveAsync()
+        {
+            try
+            {
+                if (selectedApproveRows.Any())
+                {
+                    cancelApproving = true;
+                    StateHasChanged();
+                    var listId = selectedApproveRows.Select(c => c.Id).ToList();
+                    var listApproved = Vacations.Where(c => listId.Contains(c.Id)).ToList();
+                    listApproved.ForEach(c =>
+                    {
+                        c.ApprovalStatus = ApprovalStatus.CanceledApproved;
+                        c.ApprovedDate = DateTime.Now;
+                        c.DisapprovedReason = cancelApproveReason;
+                    });
+                    var result = await VacationService.UpdateListAsync(listApproved);
+                    if (result)
+                    {
+                        Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
+                        cancelApproveModalVisible = false;
+                        detailVisible = false;
+                        await LoadDataAsync();
+                    }
+                    else
+                    {
+                        Notice.NotiError("Cập nhật dữ liệu thất bại!");
+                    }
+                }
+                else
+                {
+                    Notice.NotiWarning("Không có bản ghi nào được chọn!");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                cancelApproving = false;
             }
         }
     }

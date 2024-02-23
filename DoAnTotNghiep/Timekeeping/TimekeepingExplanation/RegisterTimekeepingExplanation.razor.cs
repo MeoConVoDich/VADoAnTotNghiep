@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
 {
-    public class RegisterTimekeepingExplanation
+    public partial class RegisterTimekeepingExplanation
     {
     }
 }

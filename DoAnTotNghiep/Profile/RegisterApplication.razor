@@ -11,10 +11,10 @@
 <div class="site-content">
     <Tabs DefaultActiveKey="0" @bind-ActiveKey=activeKey>
         <TabPane Tab="Đơn nghỉ phép" Key="0">
-            @*<TimekeepingShiftList></TimekeepingShiftList>*@
+            <DoAnTotNghiep.Timekeeping.Vacation.RegisterVacation></DoAnTotNghiep.Timekeeping.Vacation.RegisterVacation>
         </TabPane>
         <TabPane Tab="Đơn làm thêm giờ" Key="1">
-            @*<OvertimeRateList></OvertimeRateList>*@
+            <DoAnTotNghiep.Timekeeping.Overtime.RegisterOvertime></DoAnTotNghiep.Timekeeping.Overtime.RegisterOvertime>
         </TabPane>
         <TabPane Tab="Giải trình chấm công" Key="2">
             @*<TimekeepingTypeList></TimekeepingTypeList>*@

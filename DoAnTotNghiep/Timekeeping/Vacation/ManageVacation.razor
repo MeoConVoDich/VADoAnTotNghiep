@@ -69,17 +69,23 @@
     <AntDesign.Col Span="24">
         <Table @ref="table" TItem="VacationViewModel" DataSource="@VacationViewModels"
                ScrollBarWidth="10px"
-               Total="vacationFilterModel.Page.Total" ScrollY="500px"
+               Total="vacationFilterModel.Page.Total" ScrollY="500px" ScrollX="2000"
                Loading="loading"
                PageIndex="vacationFilterModel.Page.PageIndex"
                PageSize="vacationFilterModel.Page.PageSize"
                OnPageIndexChange="PageIndexChangeAsync"
                OnPageSizeChange="PageSizeChangeAsync"
-               OnRowClick="OnRowClick">
-            <Column @bind-Field="@context.Stt" Width="50"></Column>
+               OnRowClick="OnRowClick"
+               @bind-SelectedRows="selectedRows">
+            <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+            <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
+            <Column @bind-Field="@context.StaffCode" Width="150" Fixed="left"></Column>
+            <Column @bind-Field="@context.StaffName" Width="150" Fixed="left"></Column>
             <Column @bind-Field="@context.StartDate" Format="dd/MM/yyyy"></Column>
             <Column @bind-Field="@context.EndDate" Format="dd/MM/yyyy"></Column>
             <Column @bind-Field="@context.TimekeepingTypeName"></Column>
+            <Column @bind-Field="@context.NumberOfDays">@context.NumberOfDays.ToDecimalFormatDot().ToFormatedNumber() </Column>
+            <Column @bind-Field="@context.Reason"></Column>
             <Column @bind-Field="@context.ApprovalStatus">
                 <Template>
                     @if (context.ApprovalStatus == ApprovalStatus.Pending)
@@ -96,7 +102,45 @@
                     }
                 </Template>
             </Column>
+            <Column @bind-Field="@context.CreatorObject">
+                <AntDesign.Text Copyable="false">@context.CreatorObject.GetDescription()</AntDesign.Text>
+            </Column>
+            <Column @bind-Field="@context.CreateDate" Format="dd/MM/yyyy"></Column>
+            <Column @bind-Field="@context.ApprovedDate" Format="dd/MM/yyyy"></Column>
             <Column @bind-Field="@context.NotApprovedReason"></Column>
+            <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
+                <ChildContent>
+                    <Row Justify="center">
+                        <Space>
+                            <SpaceItem>
+                                <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
+                                    <Icon Type="eye" Theme="fill" OnClick="() => ViewDetail(context)" Class="btn-icon-edit" StopPropagation />
+                                </Tooltip>
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Tooltip Placement="@Placement.Top" Title="Sửa">
+                                    <Icon Type="edit" Theme="fill" OnClick="() => Edit(context)" Class="btn-icon-edit" StopPropagation />
+                                </Tooltip>
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Tooltip Placement="@Placement.Top" Title="Xóa">
+                                    <Popconfirm Placement="@Placement.LeftBottom"
+                                                OnConfirm="() => DeleteAsync(context)"
+                                                OkText="Đồng ý"
+                                                CancelText="Huỷ">
+                                        <ChildContent>
+                                            <Icon Type="delete" Theme="fill" Class="btn-icon-delete"></Icon>
+                                        </ChildContent>
+                                        <TitleTemplate>
+                                            Bạn có chắc chắn muốn xóa?
+                                        </TitleTemplate>
+                                    </Popconfirm>
+                                </Tooltip>
+                            </SpaceItem>
+                        </Space>
+                    </Row>
+                </ChildContent>
+            </ActionColumn>
         </Table>
     </AntDesign.Col>
 </Row>
@@ -119,4 +163,49 @@
         }
     </Space>
 </Row>
+
+<Modal Title="Đồng ý phê duyệt"
+       Visible="@approvedModalVisible" ConfirmLoading=approving
+       OnOk="@ApprovedAsync"
+       OnCancel="@CloseApprovedModal"
+       OkText=@("Đồng ý")>
+    <Spin Spinning=approving>
+        <Row Justify="center">
+            <Text Strong>Phê duyệt các yêu cầu đã chọn?</Text>
+        </Row>
+    </Spin>
+</Modal>
+<Modal Title="Lý do từ chối" Width="500" Style="top: 50px"
+       Visible="@disapprovedModalVisible" ConfirmLoading=disapproving
+       OnOk="@DisapprovedAsync"
+       OnCancel="@CloseDisapprovedModal"
+       OkText="@("Đồng ý")">
+    <Spin Spinning=disapproving>
+        <Row Style="margin-left: 16px;">
+            <TextArea AllowClear ShowCount MaxLength="1000" Style="width: 100%;" MinRows="3" MaxRows="3" @bind-Value="disapprovedReason"></TextArea>
+        </Row>
+    </Spin>
+</Modal>
+
+<Modal Title="Lý do huỷ phê duyệt" Width="500" Style="top: 50px"
+       Visible="@cancelApproveModalVisible" ConfirmLoading=cancelApproving
+       OnOk="@CancelApproveAsync"
+       OnCancel="@CloseCancelApproveModal"
+       OkText="@("Đồng ý")">
+    <Spin Spinning=cancelApproving>
+        <Row Style="margin-left: 16px;">
+            <TextArea AllowClear ShowCount MaxLength="1000" Style="width: 100%;" MinRows="3" MaxRows="3" @bind-Value="disapprovedReason"></TextArea>
+        </Row>
+    </Spin>
+</Modal>
+<Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
+        Width="1000"
+        Placement="right" BodyStyle="padding-top:0px"
+        Title="@("Thông tin đơn nghỉ phép")" OnClose="CloseDetail">
+    <Template>
+        <VacationDetail @ref="vacationDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync" CreatorObject="CreatorObject.HRStaff"
+                        OpenApprovedModal="() => ApprovedCheck()" OpenCancelApproveModal="() => CancelApproveCheck()" 
+                        OpenDeclinedModal="() => DeclinedCheck()" TimekeepingTypes="TimekeepingTypes"/>
+    </Template>
+</Drawer>
 

@@ -1,5 +1,187 @@
-﻿<h3>OvertimeDetail</h3>
-
-@code {
-
+﻿@if (CreatorObject == CreatorObject.Staff)
+{
+    <Row Gutter="8">
+        <Space Size="@("small")" Style="margin-right: 10px">
+            @if (editModel.ReadOnly)
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" Color="Color.Green7" OnClick="AddAsync">Thêm mới</Button>
+                </SpaceItem>
+            }
+            @if (!editModel.ReadOnly)
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7">Gửi phê duyệt</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm OnConfirm="() => CancelAsync()"
+                                OkText="Đồng ý"
+                                CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            }
+        </Space>
+    </Row>
 }
+else
+{
+    <Row Gutter="8" Justify="end">
+        <Space Size="@("small")" Style="margin-left: 10px">
+            @if (editModel.CreatorObject == CreatorObject.HRStaff)
+            {
+                @if (editModel.ReadOnly)
+                {
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="Edit">Sửa</Button>
+                    </SpaceItem>
+                }
+            }
+            @if (!editModel.ReadOnly)
+            {
+
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7">Lưu</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm OnConfirm="() => CancelAsync()"
+                                OkText="Đồng ý"
+                                CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            }
+            @if (editModel.ReadOnly)
+            {
+                @if (editModel.ApprovalStatus == ApprovalStatus.Pending)
+                {
+                    <SpaceItem>
+                        <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => OpenApprovedModal.InvokeAsync(selectModel)">Phê duyệt</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => OpenDeclinedModal.InvokeAsync(selectModel)" Danger>Không phê duyệt</Button>
+                    </SpaceItem>
+                }
+                @if (editModel.ApprovalStatus == ApprovalStatus.Approved)
+                {
+                    <SpaceItem>
+                        <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => OpenCancelApproveModal.InvokeAsync(selectModel)" Danger>Huỷ phê duyệt</Button>
+                    </SpaceItem>
+                }
+            }
+        </Space>
+    </Row>
+}
+<EditForm Model="editModel">
+    <DataAnnotationsValidator />
+    <InputWatcher @ref="inputWatcher"></InputWatcher>
+    <Row Gutter="8">
+        @if (CreatorObject == CreatorObject.HRStaff)
+        {
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.StaffName" HasRequired="true"></LabelFor>
+                @if (!editModel.ReadOnly)
+                {
+                    <Select DataSource="@StaffSearchDatas"
+                            LabelName="@nameof(Users.Name)"
+                            ValueName="@nameof(Users.Id)"
+                            TItemValue="string" TItem="Users" Placeholder="Tìm kiếm"
+                            Value="@editModel.UsersId" EnableSearch EnableVirtualization="true"
+                            OnSearch="e => OnStaffSearch(e)"
+                            ValueChanged="e => StaffChange(e)">
+                        <ItemTemplate Context="selectedContext">
+                            <StaffProfileOption Model="selectedContext" />
+                        </ItemTemplate>
+                    </Select>
+                }
+                else
+                {
+                    <Input Value="editModel.StaffName" Disabled />
+                }
+                <ValidationMessage For="() => editModel.StaffName"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor For="() => editModel.StaffCode" HasRequired="true"></LabelFor>
+                <Input @bind-Value="editModel.StaffCode" Disabled />
+                <ValidationMessage For="() => editModel.StaffCode"></ValidationMessage>
+            </AntDesign.Col>
+        }
+        <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.RegisterDate))"></LabelFor>
+            <DatePicker TValue="DateTime?" @bind-Value="editModel.RegisterDate" Disabled="editModel.ReadOnly"
+                        Format="dd/MM/yyyy" Style="display:block" Placeholder=@("Chọn ngày")></DatePicker>
+            <ValidationMessage For="() => editModel.RegisterDate"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.BreaksTimeType))"></LabelFor>
+            <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
+                    Value="@editModel?.BreaksTimeType.ToString()" EnableSearch
+                    OnSelectedItemChanged="e => BreaksTimeTypeChange(e)">
+                <SelectOptions>
+                    @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.BreaksTimeType)])
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                    }
+                </SelectOptions>
+            </Select>
+            <ValidationMessage For="() => editModel.BreaksTimeType"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.StartTime))"></LabelFor>
+            <TimePicker TValue="DateTime?" @bind-Value="editModel.StartTime" Disabled="editModel.ReadOnly" Format="HH:mm" Style="display:block"
+                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+            <ValidationMessage For="() => editModel.StartTime"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.EndTime))"></LabelFor>
+            <TimePicker TValue="DateTime?" @bind-Value="editModel.EndTime" Disabled="editModel.ReadOnly" Format="HH:mm" Style="display:block"
+                        OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+            <ValidationMessage For="() => editModel.EndTime"></ValidationMessage>
+        </AntDesign.Col>
+        @if (editModel.BreaksTimeType == BreaksTimeType.Has)
+        {
+            <AntDesign.Col Span="12">
+                <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.StartBreakTime))" HasRequired></LabelFor>
+                <TimePicker TValue="DateTime?" @bind-Value="editModel.StartBreakTime" Disabled="editModel.ReadOnly" Format="HH:mm" Style="display:block"
+                            OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                <ValidationMessage For="() => editModel.StartBreakTime"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.EndBreakTime))" HasRequired></LabelFor>
+                <TimePicker TValue="DateTime?" @bind-Value="editModel.EndBreakTime" Disabled="editModel.ReadOnly" Format="HH:mm" Style="display:block"
+                            OnChange="editModel.TimeCalculator" Placeholder=@("Chọn thời gian")></TimePicker>
+                <ValidationMessage For="() => editModel.EndBreakTime"></ValidationMessage>
+            </AntDesign.Col>
+        }
+        <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.DayHourAmount))"></LabelFor>
+            <Input Value="editModel.DayHourAmount.ToDecimalFormatDot().ToFormatedNumber()" Disabled="true" />
+            <ValidationMessage For="() => editModel.DayHourAmount"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.NightHourAmount))"></LabelFor>
+            <Input Value="editModel.NightHourAmount.ToDecimalFormatDot().ToFormatedNumber()" Disabled="true" />
+            <ValidationMessage For="() => editModel.NightHourAmount"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.TotalHour))"></LabelFor>
+            <Input Value="editModel.TotalHour.ToDecimalFormatDot().ToFormatedNumber()" Disabled="true" />
+            <ValidationMessage For="() => editModel.TotalHour"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <LabelFor For="() => editModel.Reason"></LabelFor>
+            <Input @bind-Value="editModel.Reason" Disabled="editModel.ReadOnly" />
+            <ValidationMessage For="() => editModel.Reason"></ValidationMessage>
+        </AntDesign.Col>
+    </Row>
+</EditForm>
