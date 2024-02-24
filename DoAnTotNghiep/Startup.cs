@@ -47,6 +47,7 @@ namespace DoAnTotNghiep
             services.AddSingleton<TimekeepingShiftService>();
             services.AddSingleton<VacationService>();
             services.AddSingleton<OvertimeService>();
+            services.AddSingleton<TimekeepingExplanationService>();
             services.AddSingleton<ISessionFactory>(NHibernateConfig.BuildSessionFactory());
             services.AddBlazoredSessionStorage();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

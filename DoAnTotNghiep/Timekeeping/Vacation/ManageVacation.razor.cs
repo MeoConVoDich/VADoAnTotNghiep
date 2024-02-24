@@ -71,7 +71,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
                 VacationViewModels.ForEach(c =>
                 {
                     c.Stt = stt++;
-                    c.TimekeepingTypeName = TimekeepingTypes.FirstOrDefault(v => v.Id == c.TimekeepingTypeId)?.Name;
+                    c.TimekeepingTypeName = TimekeepingTypes.FirstOrDefault(v => v.Id == c.TimekeepingTypeId)?.CodeName;
                 });
                 vacationFilterModel.Page.Total = page.Item2;
             }

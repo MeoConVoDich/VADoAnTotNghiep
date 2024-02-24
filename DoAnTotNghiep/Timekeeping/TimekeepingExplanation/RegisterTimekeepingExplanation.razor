@@ -1,5 +1,87 @@
-﻿<h3>RegisterTimekeepingExplanation</h3>
+﻿<Row Gutter="8">
+    <AntDesign.Col Span="14">
+        <EditForm Model="timekeepingExplanationFilterModel" OnSubmit="e => SearchAsync()">
+            <Row Gutter="8">
+                <AntDesign.Col Span="6">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@timekeepingExplanationFilterModel?.ApprovalStatus.ToString()" EnableSearch
+                            OnSelectedItemChanged="e => ApprovalStatusChangeAsync(e)">
+                        <SelectOptions>
+                            @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.ApprovalStatus)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Span="4">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@timekeepingExplanationFilterModel?.Year"
+                            OnSelectedItemChanged="e => YearChangeAsync(e)">
+                        <SelectOptions>
+                            @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.Year)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Span="4">
+                    <Select TItemValue="string" TItem="string"
+                            Value="@timekeepingExplanationFilterModel?.Month"
+                            OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                        <SelectOptions>
+                            @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.Month)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
 
-@code {
-
-}
+                <AntDesign.Col Span="2" Class="flex-start-end">
+                    <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                </AntDesign.Col>
+            </Row>
+        </EditForm>
+        <Row Gutter="8">
+            <AntDesign.Col Span="24">
+                <Table @ref="table" TItem="TimekeepingExplanationViewModel" DataSource="@TimekeepingExplanationViewModels"
+                       ScrollBarWidth="10px"
+                       Total="timekeepingExplanationFilterModel.Page.Total" ScrollY="500px" ScrollX="800"
+                       Loading="loading"
+                       PageIndex="timekeepingExplanationFilterModel.Page.PageIndex"
+                       PageSize="timekeepingExplanationFilterModel.Page.PageSize"
+                       OnPageIndexChange="PageIndexChangeAsync"
+                       OnPageSizeChange="PageSizeChangeAsync"
+                       OnRowClick="OnRowClick">
+                    <Column @bind-Field="@context.Stt" Width="50"></Column>
+                    <Column @bind-Field="@context.RegisterDate" Format="dd/MM/yyyy" Width="150"></Column>
+                    <Column @bind-Field="@context.StartTime" Format="HH:mm" Width="100"></Column>
+                    <Column @bind-Field="@context.EndTime" Format="HH:mm" Width="100"></Column>
+                    <Column @bind-Field="@context.TimekeepingTypeName"></Column>
+                    <Column @bind-Field="@context.ApprovalStatus" Width="100">
+                        <Template>
+                            @if (context.ApprovalStatus == ApprovalStatus.Pending)
+                            {
+                                <AntDesign.Text Copyable="false" Class="primary-text">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                            }
+                            else if (context.ApprovalStatus == ApprovalStatus.Approved)
+                            {
+                                <AntDesign.Text Copyable="false" Type="success">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                            }
+                            else
+                            {
+                                <AntDesign.Text Copyable="false" Type="danger">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                            }
+                        </Template>
+                    </Column>
+                    <Column @bind-Field="@context.NotApprovedReason"></Column>
+                </Table>
+            </AntDesign.Col>
+        </Row>
+    </AntDesign.Col>
+    <AntDesign.Col Span="10">
+        <TimekeepingExplanationDetail @ref="timekeepingExplanationDetail" ValueChanged="SaveDetailAsync" CreatorObject="CreatorObject.Staff" TimekeepingTypes="TimekeepingTypes"></TimekeepingExplanationDetail>
+    </AntDesign.Col>
+</Row>

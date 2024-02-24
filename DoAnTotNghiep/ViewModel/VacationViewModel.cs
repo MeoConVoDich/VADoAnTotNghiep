@@ -26,7 +26,7 @@ namespace DoAnTotNghiep.ViewModel
         [Display(Name = "Nghỉ đến ngày")]
         public virtual DateTime EndDate { get; set; }
 
-        [Display(Name = "Tổng ngày nghỉ")]
+        [Display(Name = "Số ngày")]
         public virtual decimal? NumberOfDays { get; set; }
 
         [Display(Name = "Lý do")]

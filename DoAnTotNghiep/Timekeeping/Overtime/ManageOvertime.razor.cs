@@ -21,7 +21,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
         [Inject] IMapper Mapper { get; set; }
         [Inject] OvertimeService OvertimeService { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
-        List<Domain.Overtime> Vacations = new List<Domain.Overtime>();
+        List<Domain.Overtime> Overtimes = new List<Domain.Overtime>();
         List<OvertimeViewModel> selectedApproveRows = new();
         List<OvertimeViewModel> OvertimeViewModels = new List<OvertimeViewModel>();
         Table<OvertimeViewModel> table;
@@ -62,8 +62,8 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                 StateHasChanged();
                 var search = Mapper.Map<OvertimeSearch>(overtimeFilterModel);
                 var page = await OvertimeService.GetPageWithFilterAsync(search);
-                Vacations = page.Item1 ?? new List<Domain.Overtime>();
-                OvertimeViewModels = Mapper.Map<List<OvertimeViewModel>>(Vacations ?? new List<Domain.Overtime>());
+                Overtimes = page.Item1 ?? new List<Domain.Overtime>();
+                OvertimeViewModels = Mapper.Map<List<OvertimeViewModel>>(Overtimes ?? new List<Domain.Overtime>());
                 int stt = overtimeFilterModel.Page.PageSize * (overtimeFilterModel.Page.PageIndex - 1) + 1;
                 OvertimeViewModels.ForEach(c =>
                 {
@@ -87,7 +87,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 List<string> ids;
-                var selectData = Vacations.FirstOrDefault(c => c.Id == rowData.Data.Id);
+                var selectData = Overtimes.FirstOrDefault(c => c.Id == rowData.Data.Id);
                 ids = selectedRows != null ? selectedRows.Select(c => c.Id).ToList() : new();
                 if (ids.Contains(selectData.Id))
                 {
@@ -216,7 +216,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 detailVisible = true;
-                var data = Vacations.FirstOrDefault(c => c.Id == model.Id);
+                var data = Overtimes.FirstOrDefault(c => c.Id == model.Id);
                 overtimeDetail.LoadEditModel(data, true);
             }
             catch (Exception ex)
@@ -230,7 +230,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 detailVisible = true;
-                var data = Vacations.FirstOrDefault(c => c.Id == model.Id);
+                var data = Overtimes.FirstOrDefault(c => c.Id == model.Id);
                 overtimeDetail.LoadEditModel(data, data.CreatorObject != CreatorObject.HRStaff);
             }
             catch (Exception ex)
@@ -248,7 +248,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                 {
                     if (model.CreatorObject == CreatorObject.HRStaff)
                     {
-                        var deleteModel = Vacations.FirstOrDefault(c => c.Id == model.Id);
+                        var deleteModel = Overtimes.FirstOrDefault(c => c.Id == model.Id);
                         result = await OvertimeService.DeleteAsync(deleteModel);
                     }
                     else
@@ -269,7 +269,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                         Notice.NotiError("Không được xoá bản ghi do nhân viên tạo!");
                         return;
                     }
-                    var deleteList = Vacations.Where(c => selectedRowIds.Contains(c.Id)).ToList();
+                    var deleteList = Overtimes.Where(c => selectedRowIds.Contains(c.Id)).ToList();
                     result = await OvertimeService.DeleteListAsync(deleteList);
                 }
                 if (result)
@@ -457,7 +457,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                     approving = true;
                     StateHasChanged();
                     var listId = selectedApproveRows.Select(c => c.Id).ToList();
-                    var listApproved = Vacations.Where(c => listId.Contains(c.Id)).ToList();
+                    var listApproved = Overtimes.Where(c => listId.Contains(c.Id)).ToList();
                     listApproved.ForEach(c =>
                     {
                         c.ApprovalStatus = ApprovalStatus.Approved;
@@ -501,7 +501,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                     disapproving = true;
                     StateHasChanged();
                     var listId = selectedApproveRows.Select(c => c.Id).ToList();
-                    var listApproved = Vacations.Where(c => listId.Contains(c.Id)).ToList();
+                    var listApproved = Overtimes.Where(c => listId.Contains(c.Id)).ToList();
                     listApproved.ForEach(c =>
                     {
                         c.ApprovalStatus = ApprovalStatus.Disapproved;
@@ -547,7 +547,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                     cancelApproving = true;
                     StateHasChanged();
                     var listId = selectedApproveRows.Select(c => c.Id).ToList();
-                    var listApproved = Vacations.Where(c => listId.Contains(c.Id)).ToList();
+                    var listApproved = Overtimes.Where(c => listId.Contains(c.Id)).ToList();
                     listApproved.ForEach(c =>
                     {
                         c.ApprovalStatus = ApprovalStatus.CanceledApproved;

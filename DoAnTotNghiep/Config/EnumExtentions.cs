@@ -90,4 +90,22 @@ namespace DoAnTotNghiep.Config
         [Display(Name = "CBNS")]
         HRStaff = 2,
     }
+
+    public enum ViolationType
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Quên chấm công cả ngày")]
+        ForgotTimekeepingAllDay = 1,
+        [Display(Name = "Quên checkin")]
+        ForgotCheckin = 2,
+        [Display(Name = "Quên checkout")]
+        ForgotCheckout = 3,
+        [Display(Name = "Xin không chấm công")]
+        NoTimekeeping = 4,
+        [Display(Name = "Chấm công muộn/sớm do công việc")]
+        TimekeepingLateOrEarly = 5,
+        [Display(Name = "Khác")]
+        Other = 6,
+    }
 }

@@ -117,8 +117,9 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                 var existData = await OvertimeService.GetAllWithFilterAsync(new OvertimeSearch()
                 {
                     CheckExist = true,
-                    //StartDateCheckExist = editModel.StartDate,
-                    //EndDateCheckExist = editModel.EndDate,
+                    RegisterDate = editModel.RegisterDate,
+                    StartTime = editModel.StartTime,
+                    EndTime = editModel.EndTime,
                     UsersId = editModel.UsersId
                 });
                 if (existData.Item1?.Any(c => c.Id != editModel.Id) == true)

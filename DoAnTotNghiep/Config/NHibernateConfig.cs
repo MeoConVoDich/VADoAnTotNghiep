@@ -42,6 +42,7 @@ namespace DoAnTotNghiep.Config
             mapper.AddMapping(typeof(TimekeepingFormulaMap));
             mapper.AddMapping(typeof(OvertimeMap));
             mapper.AddMapping(typeof(VacationMap));
+            mapper.AddMapping(typeof(TimekeepingExplanationMap));
             HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
             cfg.AddMapping(domainMapping);
             return cfg.BuildSessionFactory();

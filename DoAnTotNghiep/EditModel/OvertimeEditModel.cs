@@ -75,6 +75,7 @@ namespace DoAnTotNghiep.EditModel
             DataSource[Property.NameProperty(c => c.BreaksTimeType)] = Enum.GetValues(typeof(BreaksTimeType)).Cast<BreaksTimeType>()
               .Where(c => c != BreaksTimeType.All).OrderBy(c => c)
              .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
+            InputFields.Add<OvertimeEditModel, BreaksTimeType>(c => c.BreaksTimeType);
             InputFields.Add<OvertimeEditModel>(c => c.StartTime);
             InputFields.Add<OvertimeEditModel>(c => c.EndTime);
             InputFields.Add<OvertimeEditModel>(c => c.StartBreakTime);
@@ -184,11 +185,11 @@ namespace DoAnTotNghiep.EditModel
                     }
                     else if(StartTime < hour6)
                     {
-                        nightTime = totalTime - (hour6 - StartTime);
+                        nightTime = hour6 - StartTime;
                     }
                     else if(EndTime > hour22)
                     {
-                        nightTime = totalTime - (EndTime - hour22);
+                        nightTime = EndTime - hour22;
                     }
 
                     if (BreaksTimeType == BreaksTimeType.Has)
@@ -205,11 +206,11 @@ namespace DoAnTotNghiep.EditModel
                             }
                             else if (StartBreakTime < hour6)
                             {
-                                nightTime -= breakTime - (hour6 - StartBreakTime);
+                                nightTime -= hour6 - StartBreakTime;
                             }
                             else if (EndBreakTime > hour22)
                             {
-                                nightTime -= breakTime - (EndBreakTime - hour22);
+                                nightTime -= EndBreakTime - hour22;
                             }
                         }
                         else

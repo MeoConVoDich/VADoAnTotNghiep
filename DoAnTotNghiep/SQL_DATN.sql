@@ -132,3 +132,20 @@ CREATE TABLE Overtime
 	CreatorObject VARCHAR(256),
 	CreateDate DateTime,
 );
+
+CREATE TABLE TimekeepingExplanation
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	UsersId VARCHAR(256),
+	RegisterDate DateTime,
+	StartTime DateTime2,
+	EndTime DateTime2,
+	ViolationType VARCHAR(256),
+	ApprovedDate DateTime,
+	Reason NVARCHAR(256),
+	DisapprovedReason NVARCHAR(256),
+	TimekeepingTypeId VARCHAR(256),
+	ApprovalStatus VARCHAR(256),
+	CreatorObject VARCHAR(256),
+	CreateDate DateTime,
+);

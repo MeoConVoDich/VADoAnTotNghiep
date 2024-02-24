@@ -1,0 +1,119 @@
+﻿<EditForm Model="workShiftTableFilterModel" OnSubmit="e => SearchAsync()">
+    <Row Gutter="8">
+        <Space Size=@(("8", "8")) Wrap>
+            @if (workShiftTableFilterModel.ReadOnly)
+            {
+                <SpaceItem>
+                    <Button OnClick="Edit" Type="@ButtonType.Primary">Sửa</Button>
+                </SpaceItem>
+                @if (selectedRows?.Any() == true)
+                {
+                    <SpaceItem>
+                        <Popconfirm Placement="@Placement.BottomRight"
+                                    OnConfirm="() => DeleteAsync()"
+                                    OkText="Đồng ý"
+                                    CancelText="Hủy">
+                            <ChildContent>
+                                <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                            </ChildContent>
+                            <TitleTemplate>
+                                Bạn có chắc chắn muốn xóa?
+                            </TitleTemplate>
+                        </Popconfirm>
+                    </SpaceItem>
+                }
+            }
+            @if (!workShiftTableFilterModel.ReadOnly)
+            {
+                <SpaceItem>
+                    <Button OnClick="SaveAsync" Type="@ButtonType.Primary" Color="@Color.Green7">Lưu</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm OnConfirm="() => CancelAsync()"
+                                OkText="Đồng ý"
+                                CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            }
+
+        </Space>
+        <AntDesign.Col Span="2">
+            <Select TItemValue="string" TItem="string"
+                    Value="@workShiftTableFilterModel?.Year"
+                    OnSelectedItemChanged="e => YearChangeAsync(e)">
+                <SelectOptions>
+                    @foreach (var item in workShiftTableFilterModel.DataSource[workShiftTableFilterModel.Property.NameProperty(c => c.Year)])
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                    }
+                </SelectOptions>
+            </Select>
+        </AntDesign.Col>
+        <AntDesign.Col Span="2">
+            <Select TItemValue="string" TItem="string"
+                    Value="@workShiftTableFilterModel?.Month"
+                    OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                <SelectOptions>
+                    @foreach (var item in workShiftTableFilterModel.DataSource[workShiftTableFilterModel.Property.NameProperty(c => c.Month)])
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                    }
+                </SelectOptions>
+            </Select>
+        </AntDesign.Col>
+        <AntDesign.Col Span="4">
+            <Input TValue="string" Value="workShiftTableFilterModel.CodeOrName"
+                   ValueChanged="e => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.CodeOrName), e)"
+                   Placeholder="Nhập họ tên, mã nhân viên" />
+        </AntDesign.Col>
+        <AntDesign.Col Span="2" Class="flex-start-end">
+            <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+        </AntDesign.Col>
+    </Row>
+    <Row Gutter="8">
+        <Space Size=@(("8", "8")) Wrap>
+            <SpaceItem>
+                <Select TItem="TimekeepingShift" TItemValue="string" Disabled="workShiftTableFilterModel.ReadOnly"
+                        DataSource="@TimekeepingShifts" Style="width: 200px"
+                        @bind-Value="@workShiftTableFilterModel.TimekeepingShiftCode"
+                        LabelName="@nameof(TimekeepingShift.CodeName)"
+                        ValueName="@nameof(TimekeepingShift.Code)"
+                        Placeholder="Ca làm việc">
+                </Select>
+            </SpaceItem>
+            <SpaceItem>
+                <RangePicker TValue="DateTime?[]" Value="@(new DateTime?[] { workShiftTableFilterModel.DefaultStartDate, workShiftTableFilterModel.DefaultEndDate })"
+                             DisabledDate="date => date.Month != workShiftTableFilterModel.Month.ToInt() || date.Year != workShiftTableFilterModel.Year.ToInt()"
+                             OnChange="e => workShiftTableFilterModel.SetDate(e.Dates)" Disabled="workShiftTableFilterModel.ReadOnly"
+                             OnClearClick="e => workShiftTableFilterModel.SetDate(new DateTime?[] { null, null })"
+                             ShowToday="true" Placeholder="@(new string[] { "Từ ngày", "Đến ngày"})"/>
+            </SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick="SetShiftDefaultAsync" Disabled="workShiftTableFilterModel.ReadOnly">Xếp</Button></SpaceItem>
+        </Space>
+    </Row>
+</EditForm>
+<Row Gutter="8">
+    <AntDesign.Col Span="24">
+        <Table @ref="table" TItem="WorkShiftTableViewModel" DataSource="@WorkShiftTableViewModels"
+               ScrollBarWidth="10px"
+               Total="workShiftTableFilterModel.Page.Total" ScrollY="500px" ScrollX="2000"
+               Loading="loading"
+               PageIndex="workShiftTableFilterModel.Page.PageIndex"
+               PageSize="workShiftTableFilterModel.Page.PageSize"
+               OnPageIndexChange="PageIndexChangeAsync"
+               OnPageSizeChange="PageSizeChangeAsync"
+               OnRowClick="OnRowClick"
+               @bind-SelectedRows="selectedRows">
+            <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+            <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
+            <Column @bind-Field="@context.StaffCode" Width="150" Fixed="left"></Column>
+            <Column @bind-Field="@context.StaffName" Width="150" Fixed="left"></Column>
+        </Table>
+    </AntDesign.Col>
+</Row>

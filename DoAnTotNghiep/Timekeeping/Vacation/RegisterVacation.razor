@@ -1,5 +1,5 @@
 ﻿<Row Gutter="8">
-    <AntDesign.Col Span="12">
+    <AntDesign.Col Span="14">
         <EditForm Model="vacationFilterModel" OnSubmit="e => SearchAsync()">
             <Row Gutter="8">
                 <AntDesign.Col Span="6">
@@ -48,7 +48,7 @@
             <AntDesign.Col Span="24">
                 <Table @ref="table" TItem="VacationViewModel" DataSource="@VacationViewModels"
                        ScrollBarWidth="10px"
-                       Total="vacationFilterModel.Page.Total" ScrollY="500px"
+                       Total="vacationFilterModel.Page.Total" ScrollY="500px" ScrollX="800"
                        Loading="loading"
                        PageIndex="vacationFilterModel.Page.PageIndex"
                        PageSize="vacationFilterModel.Page.PageSize"
@@ -56,11 +56,11 @@
                        OnPageSizeChange="PageSizeChangeAsync"
                        OnRowClick="OnRowClick">
                     <Column @bind-Field="@context.Stt" Width="50"></Column>
-                    <Column @bind-Field="@context.StartDate" Format="dd/MM/yyyy"></Column>
-                    <Column @bind-Field="@context.EndDate" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.StartDate" Format="dd/MM/yyyy" Width="150" ></Column>
+                    <Column @bind-Field="@context.EndDate" Format="dd/MM/yyyy" Width="150"></Column>
                     <Column @bind-Field="@context.TimekeepingTypeName"></Column>
-                    <Column @bind-Field="@context.NumberOfDays">@context.NumberOfDays.ToDecimalFormatDot().ToFormatedNumber() </Column>
-                    <Column @bind-Field="@context.ApprovalStatus">
+                    <Column @bind-Field="@context.NumberOfDays" Width="100">@context.NumberOfDays.ToDecimalFormatDot().ToFormatedNumber() </Column>
+                    <Column @bind-Field="@context.ApprovalStatus" Width="100">
                         <Template>
                             @if (context.ApprovalStatus == ApprovalStatus.Pending)
                             {
@@ -81,7 +81,7 @@
             </AntDesign.Col>
         </Row>
     </AntDesign.Col>
-    <AntDesign.Col Span="12">
+    <AntDesign.Col Span="10">
         <VacationDetail @ref="vacationDetail" ValueChanged="SaveDetailAsync" CreatorObject="CreatorObject.Staff" TimekeepingTypes="TimekeepingTypes" ></VacationDetail>
     </AntDesign.Col>
 </Row>

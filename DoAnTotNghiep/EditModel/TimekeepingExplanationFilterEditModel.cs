@@ -8,17 +8,18 @@ using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.EditModel
 {
-    public class VacationFilterEditModel : EditBaseModel
+    public class TimekeepingExplanationFilterEditModel : EditBaseModel
     {
         public Page Page { get; set; } = new Page();
         public string CodeOrName { get; set; }
         public virtual string ApprovalStatus { get; set; } = Config.ApprovalStatus.All.ToString();
         public virtual string Year { get; set; } = DateTime.Now.Year.ToString();
         public virtual string Month { get; set; } = DateTime.Now.Month.ToString();
-        public virtual string UsersId { get; set; } 
-        public Property<VacationFilterEditModel> Property { get; set; } = new Property<VacationFilterEditModel>();
+        public virtual DateTime? SearchMonth { get; set; } = DateTime.Now;
+        public virtual string UsersId { get; set; }
+        public Property<TimekeepingExplanationFilterEditModel> Property { get; set; } = new Property<TimekeepingExplanationFilterEditModel>();
 
-        public VacationFilterEditModel()
+        public TimekeepingExplanationFilterEditModel()
         {
             DataSource[Property.NameProperty(c => c.ApprovalStatus)] = Enum.GetValues(typeof(ApprovalStatus)).Cast<ApprovalStatus>()
                 .OrderBy(c => c)

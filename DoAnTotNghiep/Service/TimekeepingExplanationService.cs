@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DoAnTotNghiep.Components;
 using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.SearchModel;
@@ -8,78 +7,56 @@ using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Service
 {
-    public class UsersService
+    public class TimekeepingExplanationService
     {
         private readonly ISessionFactory _session;
         readonly IMapper _mapper;
-        public UsersService(ISessionFactory session, IMapper mapper)
+        public TimekeepingExplanationService(ISessionFactory session, IMapper mapper)
         {
             _session = session;
             _mapper = mapper;
         }
 
-        IQueryable<Users> CreateFilter(UsersSearch model, ISession session)
+        IQueryable<TimekeepingExplanation> CreateFilter(TimekeepingExplanationSearch model, ISession session)
         {
-            var query = session.Query<Users>();
-            if (model.Id.IsNotNullOrEmpty())
+            var query = session.Query<TimekeepingExplanation>();
+            if (model.Year.HasValue)
             {
-                query = query.Where(c => c.Id == model.Id);
+                query = query.Where(c => c.RegisterDate.Value.Year == model.Year);
             }
-            if (model.Name.IsNotNullOrEmpty())
+            if (model.Month.HasValue)
             {
-                query = query.Where(c => c.Name.Contains(model.Name));
+                query = query.Where(c => c.RegisterDate.Value.Month == model.Month);
+            }
+            if (model.ApprovalStatus != ApprovalStatus.All)
+            {
+                query = query.Where(c => c.ApprovalStatus == model.ApprovalStatus);
             }
             if (model.CodeOrName.IsNotNullOrEmpty())
             {
-                query = query.Where(c => c.Name.Contains(model.CodeOrName) || c.Code.Contains(model.CodeOrName));
+                query = query.Where(c => c.Users.Name.Contains(model.CodeOrName) || c.Users.Code.Contains(model.CodeOrName));
             }
-
+            if (model.UsersId.IsNotNullOrEmpty())
+            {
+                query = query.Where(c => c.Users.Id == model.UsersId);
+            }
             if (model.CheckExist.HasValue && model.CheckExist == true)
             {
-                List<Expression<Func<Users, bool>>> compareExpressions = new List<Expression<Func<Users, bool>>>();
-                if (model.IdentityNumber.IsNotNullOrEmpty() )
+                if (model.RegisterDate.HasValue)
                 {
-                    compareExpressions.Add(c => c.IdentityNumber == model.IdentityNumber);
-                }
-                if (model.Code.IsNotNullOrEmpty())
-                {
-                    compareExpressions.Add(c => c.Code == model.Code);
-                }
-                if (model.UserName.IsNotNullOrEmpty())
-                {
-                    compareExpressions.Add(c => c.UserName == model.UserName);
-                }
-                var condition = PredicateBuilder.Create<Users>(x => false);
-                if (compareExpressions.Count > 0)
-                {
-                    foreach (var item in compareExpressions)
-                    {
-                        condition = condition.Or(item);
-                    }
-                    query = query.Where(condition);
+                    query = query.Where(c => c.RegisterDate.Value.Date <= model.RegisterDate.Value.Date);
+                    query = query.Where(c => c.ApprovalStatus == ApprovalStatus.Approved || c.ApprovalStatus == ApprovalStatus.Pending);
                 }
                 query = query.Take(2);
-            }
-            else
-            {
-                if (model.Code.IsNotNullOrEmpty())
-                {
-                    query = query.Where(c => c.Name.Contains(model.Code));
-                }
-                if (model.UserName.IsNotNullOrEmpty())
-                {
-                    query = query.Where(c => c.UserName.Contains(model.UserName));
-                }
             }
             return query;
         }
 
-        public async Task<(List<Users>, int)> GetAllWithFilterAsync(UsersSearch model)
+        public async Task<(List<TimekeepingExplanation>, int)> GetAllWithFilterAsync(TimekeepingExplanationSearch model)
         {
             using (var session = _session.OpenSession())
             {
@@ -88,7 +65,7 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         var query = CreateFilter(model, session);
-                        var data = await query.OrderBy(c => c.Name).ToListAsync();
+                        var data = await query.ToListAsync();
                         transaction.Commit();
                         return (data, 0);
                     }
@@ -102,7 +79,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<(List<Users>, int)> GetPageWithFilterAsync(UsersSearch model)
+        public async Task<(List<TimekeepingExplanation>, int)> GetPageWithFilterAsync(TimekeepingExplanationSearch model)
         {
             using (var session = _session.OpenSession())
             {
@@ -111,7 +88,7 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         var query = CreateFilter(model, session);
-                        var data = await query.OrderBy(c => c.Name).Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
+                        var data = await query.Fetch(c => c.Users).OrderByDescending(c => c.RegisterDate).Skip((model.Page.PageIndex - 1) * model.Page.PageSize).Take(model.Page.PageSize).ToListAsync();
                         var count = await query.CountAsync();
                         transaction.Commit();
                         return (data, count);
@@ -126,7 +103,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> DeleteAsync(Users model)
+        public async Task<bool> DeleteAsync(TimekeepingExplanation model)
         {
             using (var session = _session.OpenSession())
             {
@@ -147,7 +124,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> DeleteListAsync(List<Users> users)
+        public async Task<bool> DeleteListAsync(List<TimekeepingExplanation> datas)
         {
             using (var session = _session.OpenSession())
             {
@@ -155,7 +132,7 @@ namespace DoAnTotNghiep.Service
                 {
                     try
                     {
-                        foreach (var item in users)
+                        foreach (var item in datas)
                         {
                             await session.DeleteAsync(item);
                         }
@@ -171,7 +148,7 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> UpdateAsync(Users model)
+        public async Task<bool> UpdateAsync(TimekeepingExplanation model)
         {
             using (var session = _session.OpenSession())
             {
@@ -192,7 +169,31 @@ namespace DoAnTotNghiep.Service
             }
         }
 
-        public async Task<bool> AddAsync(Users model)
+        public async Task<bool> UpdateListAsync(List<TimekeepingExplanation> datas)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var item in datas)
+                        {
+                            await session.UpdateAsync(item);
+                        }
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> AddAsync(TimekeepingExplanation model)
         {
             using (var session = _session.OpenSession())
             {
@@ -210,31 +211,6 @@ namespace DoAnTotNghiep.Service
                         return false;
                     }
                 }
-            }
-        }
-
-        public async Task<Users> GetUsersAsync(string userName, string password)
-        {
-            using (var session = _session.OpenSession())
-            {
-                using (var transaction = session.BeginTransaction())
-                {
-                    try
-                    {
-                        var data = await session.Query<Users>()
-                            .Where(c => c.UserName == userName)
-                            .Where(c => c.Password == password)
-                            .FirstOrDefaultAsync();
-                        transaction.Commit();
-                        return data;
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
-
             }
         }
     }
