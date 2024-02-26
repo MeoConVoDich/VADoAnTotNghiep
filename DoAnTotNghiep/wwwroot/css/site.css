@@ -244,3 +244,36 @@ a, .btn-link {
 .primary-text {
     color: #4697fc !important;
 }
+
+.editable-row:hover .editable-cell-value-wrap {
+    padding: 1px;
+    border: 1px solid #40a9ff;
+    border-radius: 2px;
+}
+
+[data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+    border: 1px solid #434343;
+}
+
+.ant-table-thead > tr > th {
+    border-right: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    padding: 5px !important;
+}
+
+.ant-table-tbody > tr > td {
+    transition: background 0.3s;
+    border-right: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
+.ant-table table {
+    border-top: 1px solid #ddd !important;
+    border-left: 1px solid #ddd !important;
+}
+
+.ant-table-cell {
+    padding: 5px !important;
+}
+
+

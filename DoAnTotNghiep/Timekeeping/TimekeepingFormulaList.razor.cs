@@ -38,7 +38,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                timekeepingFormulaFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                timekeepingFormulaFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 editModel.ReadOnly = true;
                 await LoadDataAsync();
                 await LoadTimekeepingTypeAsync();
@@ -144,7 +144,7 @@ namespace DoAnTotNghiep.Timekeeping
                 {
                     timekeepingFormulaFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
+                await LoadDataAsync();
 
             }
             catch (Exception ex)
@@ -159,7 +159,7 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 timekeepingFormulaFilterModel.Page.PageIndex = 1;
                 timekeepingFormulaFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -171,7 +171,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                timekeepingFormulaFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                timekeepingFormulaFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }

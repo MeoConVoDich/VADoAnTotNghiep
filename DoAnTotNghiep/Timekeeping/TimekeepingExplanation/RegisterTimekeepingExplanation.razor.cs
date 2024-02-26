@@ -41,7 +41,7 @@ namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
                 if (usersId != null)
                 {
                     timekeepingExplanationFilterModel.UsersId = usersId;
-                    timekeepingExplanationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                    timekeepingExplanationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                     await LoadTimekeepingTypeAsync();
                     await LoadDataAsync();
                 }
@@ -133,7 +133,7 @@ namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
                 {
                     timekeepingExplanationFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
+                await LoadDataAsync();
 
             }
             catch (Exception ex)
@@ -148,7 +148,7 @@ namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
             {
                 timekeepingExplanationFilterModel.Page.PageIndex = 1;
                 timekeepingExplanationFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -160,7 +160,7 @@ namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
         {
             try
             {
-                timekeepingExplanationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                timekeepingExplanationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }

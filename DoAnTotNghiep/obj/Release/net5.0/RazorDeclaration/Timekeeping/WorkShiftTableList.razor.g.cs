@@ -124,6 +124,7 @@ using DoAnTotNghiep.ViewModel;
 #line default
 #line hidden
 #nullable disable
+    [Microsoft.AspNetCore.Components.RouteAttribute("/cham-cong/xep-ca-lam-viec")]
     public partial class WorkShiftTableList : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998

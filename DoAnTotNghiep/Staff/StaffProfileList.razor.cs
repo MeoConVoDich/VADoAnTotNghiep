@@ -38,7 +38,7 @@ namespace DoAnTotNghiep.Staff
         {
             try
             {
-                usersFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                usersFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
             }
             catch (Exception ex)
@@ -52,6 +52,7 @@ namespace DoAnTotNghiep.Staff
             try
             {
                 loading = true;
+                selectedRows = null;
                 StateHasChanged();
                 var search = Mapper.Map<UsersSearch>(usersFilterModel);
                 var page = await UsersService.GetPageWithFilterAsync(search);
@@ -206,7 +207,7 @@ namespace DoAnTotNghiep.Staff
                 {
                     usersFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
+                await LoadDataAsync();
 
             }
             catch (Exception ex)
@@ -221,7 +222,7 @@ namespace DoAnTotNghiep.Staff
             {
                 usersFilterModel.Page.PageIndex = 1;
                 usersFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -233,7 +234,7 @@ namespace DoAnTotNghiep.Staff
         {
             try
             {
-                usersFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                usersFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }

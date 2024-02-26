@@ -35,7 +35,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                overtimeRateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                overtimeRateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 editModel.ReadOnly = true;
                 await LoadDataAsync();
             }
@@ -125,7 +125,7 @@ namespace DoAnTotNghiep.Timekeeping
                 {
                     overtimeRateFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
+                await LoadDataAsync();
 
             }
             catch (Exception ex)
@@ -140,7 +140,8 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 overtimeRateFilterModel.Page.PageIndex = 1;
                 overtimeRateFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
+
             }
             catch (Exception ex)
             {
@@ -152,7 +153,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                overtimeRateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                overtimeRateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }

@@ -38,7 +38,7 @@ namespace DoAnTotNghiep.Staff
         {
             try
             {
-                bonusDisciplineFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                bonusDisciplineFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
             }
             catch (Exception ex)
@@ -52,6 +52,7 @@ namespace DoAnTotNghiep.Staff
             try
             {
                 loading = true;
+                selectedRows = null;
                 StateHasChanged();
                 var search = Mapper.Map<BonusDisciplineSearch>(bonusDisciplineFilterModel);
                 var page = await BonusDisciplineService.GetPageWithFilterAsync(search);
@@ -207,7 +208,7 @@ namespace DoAnTotNghiep.Staff
                 {
                     bonusDisciplineFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
+                await LoadDataAsync();
 
             }
             catch (Exception ex)
@@ -222,7 +223,7 @@ namespace DoAnTotNghiep.Staff
             {
                 bonusDisciplineFilterModel.Page.PageIndex = 1;
                 bonusDisciplineFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -234,7 +235,7 @@ namespace DoAnTotNghiep.Staff
         {
             try
             {
-                bonusDisciplineFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                bonusDisciplineFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }

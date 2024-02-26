@@ -108,4 +108,30 @@ namespace DoAnTotNghiep.Config
         [Display(Name = "Khác")]
         Other = 6,
     }
+
+    public enum DayOffInWeekType
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Nghỉ chủ nhật")]
+        Sun = 1,
+        [Display(Name = "Nghỉ thứ 7, chủ nhật")]
+        SatAndSun = 2,
+        [Display(Name = "Nghỉ thứ 7 cách tuần, chủ nhật")]
+        TwoWeekInMonth = 3,
+        [Display(Name = "Nghỉ trong tuần")]
+        InWeek = 4,
+        [Display(Name = "Khác")]
+        Custom = 5,
+    }
+
+    public enum WorkInFirstWeekType
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Làm tuần đầu")]
+        WorkFirstWeek = 1,
+        [Display(Name = "Nghỉ tuần đầu")]
+        OffFirstWeek = 2,
+    }
 }

@@ -20,6 +20,7 @@ namespace DoAnTotNghiep.Timekeeping
     {
         [Inject] IMapper Mapper { get; set; }
         [Inject] WorkShiftTableService WorkShiftTableService { get; set; }
+        [Inject] TimekeepingShiftService TimekeepingShiftService { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
         List<WorkShiftTable> WorkShiftTables = new List<WorkShiftTable>();
         List<TimekeepingShift> TimekeepingShifts = new List<TimekeepingShift>();
@@ -29,25 +30,21 @@ namespace DoAnTotNghiep.Timekeeping
         WorkShiftTableFilterEditModel workShiftTableFilterModel = new WorkShiftTableFilterEditModel();
         IEnumerable<WorkShiftTableViewModel> selectedRows;
         List<DayColumn> dayColumns = new List<DayColumn>();
+        List<DayColumn> dayOffs = new List<DayColumn>();
         List<string> selectedRowIds = new List<string>();
+        InputWatcher inputWatcher;
         bool loading;
-        bool detailVisible;
-        bool cancelApproveModalVisible;
-        bool cancelApproving;
-        string cancelApproveReason;
-        bool approvedModalVisible;
-        bool approving;
-        bool disapprovedModalVisible;
-        bool disapproving;
-        string disapprovedReason;
-
+        string editId;
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                workShiftTableFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                workShiftTableFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
+                workShiftTableFilterModel.ReadOnly = true;
+                BuildNameColumn();
                 await LoadDataAsync();
+                await LoadTimekeepingShiftsAsync();
             }
             catch (Exception ex)
             {
@@ -57,25 +54,33 @@ namespace DoAnTotNghiep.Timekeeping
 
         void BuildNameColumn()
         {
-
-            dayColumns.Clear();
-            if (workShiftTableFilterModel.Year.IsNotNullOrEmpty() && workShiftTableFilterModel.Month.IsNotNullOrEmpty())
+            try
             {
-                var dates = DateTimeExtentions.GetDates(workShiftTableFilterModel.DefaultStartDate.Value, workShiftTableFilterModel.DefaultEndDate.Value);
-
-            }
-            foreach (var date in dates)
-            {
-                dayColumns.Add(new DayColumn(date));
-            }
-            if (dayColumns.Count < 31)
-            {
-                int addDay = 31 - dayColumns.Count;
-                for (int i = 0; i < addDay; i++)
+                dayColumns.Clear();
+                if (workShiftTableFilterModel.Year.IsNotNullOrEmpty() && workShiftTableFilterModel.Month.IsNotNullOrEmpty())
                 {
-                    dayColumns.Add(new DayColumn(dayColumns.ElementAt(0).DateTime) { Hidden = true });
+                    var startDate = new DateTime(workShiftTableFilterModel.Year.ToInt(), workShiftTableFilterModel.Month.ToInt(), 1);
+                    var endDate = new DateTime(workShiftTableFilterModel.Year.ToInt(), workShiftTableFilterModel.Month.ToInt() + 1, 1).AddDays(-1);
+                    var dates = DateTimeExtentions.GetDates(startDate, endDate);
+                    foreach (var date in dates)
+                    {
+                        dayColumns.Add(new DayColumn(date));
+                    }
+                    if (dayColumns.Count < 31)
+                    {
+                        int addDay = 31 - dayColumns.Count;
+                        for (int i = 0; i < addDay; i++)
+                        {
+                            dayColumns.Add(new DayColumn(dayColumns.ElementAt(0).DateTime) { Hidden = true });
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
         async Task LoadDataAsync()
@@ -83,6 +88,7 @@ namespace DoAnTotNghiep.Timekeeping
             try
             {
                 loading = true;
+                selectedRows = null;
                 StateHasChanged();
                 var search = Mapper.Map<WorkShiftTableSearch>(workShiftTableFilterModel);
                 var page = await WorkShiftTableService.GetPageWithFilterAsync(search);
@@ -106,20 +112,34 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
+        async Task LoadTimekeepingShiftsAsync()
+        {
+            try
+            {
+                StateHasChanged();
+                var data = await TimekeepingShiftService.GetAllWithFilterAsync(new TimekeepingShiftSearch() { EffectiveState = EffectiveState.Active });
+                TimekeepingShifts = data.Item1 ?? new List<TimekeepingShift>();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         void OnRowClick(RowData<WorkShiftTableViewModel> rowData)
         {
             try
             {
                 List<string> ids;
-                var selectData = WorkShiftTables.FirstOrDefault(c => c.Id == rowData.Data.Id);
-                ids = selectedRows != null ? selectedRows.Select(c => c.Id).ToList() : new();
-                if (ids.Contains(selectData.Id))
+                var selectData = WorkShiftTables.FirstOrDefault(c => c.UsersId == rowData.Data.UsersId);
+                ids = selectedRows != null ? selectedRows.Select(c => c.UsersId).ToList() : new();
+                if (ids.Contains(selectData.UsersId))
                 {
-                    ids.Remove(selectData.Id);
+                    ids.Remove(selectData.UsersId);
                 }
                 else
                 {
-                    ids.Add(selectData.Id);
+                    ids.Add(selectData.UsersId);
                 }
                 table.SetSelection(ids.ToArray());
                 selectedRowIds = ids;
@@ -138,8 +158,7 @@ namespace DoAnTotNghiep.Timekeeping
                 {
                     workShiftTableFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
-
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -153,7 +172,7 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 workShiftTableFilterModel.Page.PageIndex = 1;
                 workShiftTableFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -165,7 +184,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                workShiftTableFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                workShiftTableFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }
@@ -180,6 +199,7 @@ namespace DoAnTotNghiep.Timekeeping
             try
             {
                 workShiftTableFilterModel.Year = year;
+                BuildNameColumn();
                 await LoadDataAsync();
                 StateHasChanged();
             }
@@ -194,6 +214,7 @@ namespace DoAnTotNghiep.Timekeeping
             try
             {
                 workShiftTableFilterModel.Month = month;
+                BuildNameColumn();
                 await LoadDataAsync();
                 StateHasChanged();
             }
@@ -207,9 +228,15 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
+                dayOffs.Clear();
                 workShiftTableFilterModel.ReadOnly = false;
                 workShiftTableFilterModel.DefaultStartDate = new DateTime(workShiftTableFilterModel.Year.ToInt(), workShiftTableFilterModel.Month.ToInt(), 1);
                 workShiftTableFilterModel.DefaultEndDate = new DateTime(workShiftTableFilterModel.Year.ToInt(), workShiftTableFilterModel.Month.ToInt() + 1, 1).AddDays(-1);
+                var dates = DateTimeExtentions.GetDates(workShiftTableFilterModel.DefaultStartDate.Value, workShiftTableFilterModel.DefaultEndDate.Value);
+                foreach (var date in dates)
+                {
+                    dayOffs.Add(new DayColumn(date));
+                }
             }
             catch (Exception ex)
             {
@@ -227,13 +254,13 @@ namespace DoAnTotNghiep.Timekeeping
                     Notice.NotiError("Không có nhân viên được chọn!");
                     return;
                 }
-                var deleteList = WorkShiftTables.Where(c => selectedRowIds.Contains(c.Id)).ToList();
+                var deleteList = WorkShiftTables.Where(c => selectedRowIds.Contains(c.UsersId) && c.Id.IsNotNullOrEmpty()).ToList();
                 result = await WorkShiftTableService.DeleteListAsync(deleteList);
                 if (result)
                 {
                     Notice.NotiSuccess("Xoá dữ liệu thành công!");
                     await LoadDataAsync();
-
+                    
                 }
                 else
                 {
@@ -258,6 +285,7 @@ namespace DoAnTotNghiep.Timekeeping
                 if (result)
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
+                    workShiftTableFilterModel.ReadOnly = true;
                     await LoadDataAsync();
                 }
                 else
@@ -287,21 +315,20 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
-        async Task SetShiftDefaultAsync()
+        void SetShiftDefault()
         {
             try
             {
-                if (workShiftTableFilterModel.TimekeepingShiftCode.IsNullOrEmpty())
+                var errorMessageStore = workShiftTableFilterModel.ValidateAll();
+                if (!inputWatcher.Validate() || errorMessageStore.Any())
                 {
-                    Notice.NotiWarning("Chưa chọn ca làm việc");
+                    if (errorMessageStore.Any())
+                    {
+                        inputWatcher.NotifyFieldChanged(errorMessageStore.First().Key, errorMessageStore);
+                    }
+                    Notice.NotiWarning("Dữ liệu còn thiếu hoặc không hợp lệ!");
                     return;
                 }
-                if (!workShiftTableFilterModel.DefaultStartDate.HasValue || !workShiftTableFilterModel.DefaultEndDate.HasValue)
-                {
-                    Notice.NotiWarning("Chưa chọn ngày cần xếp ca");
-                    return;
-                }
-
                 loading = true;
                 List<WorkShiftTableViewModel> shiftViews = new();
                 List<WorkShiftTable> shiftDatas = new();
@@ -325,6 +352,23 @@ namespace DoAnTotNghiep.Timekeeping
                         }
                     });
                 }
+                else
+                {
+                    WorkShiftTableViewModels.ForEach(c =>
+                    {
+                        if (c.UsersId != null)
+                        {
+                            SetAllShiftCode(c, workShiftTableFilterModel.TimekeepingShiftCode, workShiftTableFilterModel.DefaultStartDate.Value, workShiftTableFilterModel.DefaultEndDate.Value);
+                        }
+                    });
+                    WorkShiftTables.ForEach(c =>
+                    {
+                        if (c.UsersId != null)
+                        {
+                            SetAllShiftCode(c, workShiftTableFilterModel.TimekeepingShiftCode, workShiftTableFilterModel.DefaultStartDate.Value, workShiftTableFilterModel.DefaultEndDate.Value);
+                        }
+                    });
+                }
 
             }
             catch (Exception ex)
@@ -337,28 +381,157 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
+        void SetDate(DateTime?[] dateTimes)
+        {
+            try
+            {
+                dayOffs.Clear();
+                workShiftTableFilterModel.DefaultStartDate = dateTimes[0];
+                workShiftTableFilterModel.DefaultEndDate = dateTimes[1];
+                if (workShiftTableFilterModel.DefaultStartDate.HasValue && workShiftTableFilterModel.DefaultEndDate.HasValue)
+                {
+                    var dates = DateTimeExtentions.GetDates(workShiftTableFilterModel.DefaultStartDate.Value, workShiftTableFilterModel.DefaultEndDate.Value);
+                    foreach (var date in dates)
+                    {
+                        dayOffs.Add(new DayColumn(date));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         void SetAllShiftCode<T>(T obj, string code, DateTime startDate, DateTime endDate)
         {
             try
             {
                 var dayOfPhase = DateTimeExtentions.GetDictionaryDates(startDate, endDate);
+                var Saturdays = DateTimeExtentions.GetDates(startDate, endDate)
+                                  .Where(dateTime => dateTime.DayOfWeek == DayOfWeek.Saturday)
+                                  .ToList();
                 foreach (var day in dayOfPhase)
                 {
-                    if (timekeepingPhaseTypeEditModel.GetWorkDay(day.Value).IsNotNullOrEmpty())
+                    if (GetOffDay(day.Value, Saturdays))
                     {
-                        obj.SetValue(string.Format("Day{0:00}", day.Value.Day), code);
+                        obj.SetValue(string.Format("Day{0:00}", day.Value.Day), null);
                     }
                     else
                     {
-                        obj.SetValue(string.Format("Day{0:00}", day.Value.Day), null);
+                        obj.SetValue(string.Format("Day{0:00}", day.Value.Day), code);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Error.ProcessError(ex);
+                throw;
+            }
+        }
+
+        bool GetOffDay(DateTime dateTime, List<DateTime> saturdays)
+        {
+            try
+            {
+                if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.Sun.ToString())
+                {
+                    if (dateTime.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        return true;
+                    }
+                }
+                else if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.SatAndSun.ToString())
+                {
+                    if (dateTime.DayOfWeek == DayOfWeek.Sunday || dateTime.DayOfWeek == DayOfWeek.Saturday)
+                    {
+                        return true;
+                    }
+                }
+                else if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.TwoWeekInMonth.ToString())
+                {
+                    if (dateTime.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        return true;
+                    }
+                    else if (dateTime.DayOfWeek == DayOfWeek.Saturday)
+                    {
+                        List<int> indexes = new();
+                        
+                        if (workShiftTableFilterModel.WorkInFirstWeekType == WorkInFirstWeekType.OffFirstWeek.ToString())
+                        {
+                            indexes = new List<int>() { 0, 2, 4, 6 };
+                        }
+                        else if (workShiftTableFilterModel.WorkInFirstWeekType == WorkInFirstWeekType.WorkFirstWeek.ToString())
+                        {
+                            indexes = new List<int>() { 1, 3, 5, 7 };
+                        }
+                        var isWorkDay = saturdays.Where((c, index) => c.Date == dateTime.Date && indexes.Contains(index)).Any();
+                        if (isWorkDay)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.InWeek.ToString())
+                {
+                    if (workShiftTableFilterModel.DayOffInWeek?.Any() == true)
+                    {
+                        if (workShiftTableFilterModel.DayOffInWeek.Contains(dateTime.DayOfWeek.ToString()))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.Custom.ToString())
+                {
+                    if (workShiftTableFilterModel.DayOff?.Any() == true)
+                    {
+                        if (workShiftTableFilterModel.DayOff.Contains(dateTime.Date.ToString()))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void SetShift(WorkShiftTableViewModel model, string propertyName, string shiftCode)
+        {
+
+            try
+            {
+                model.SetValue(propertyName, shiftCode);
+                var selectModel = WorkShiftTables.FirstOrDefault(c => c.Id == model.Id);
+                if (selectModel == null)
+                {
+                    return;
+                }
+                selectModel.SetValue(propertyName, shiftCode);
+                if (shiftCode.IsNullOrEmpty())
+                {
+                    editId = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
 
+        }
+
+        void StartEdit(string id)
+        {
+            editId = id;
+        }
+
+        void StopEdit()
+        {
+            editId = null;
         }
     }
 }

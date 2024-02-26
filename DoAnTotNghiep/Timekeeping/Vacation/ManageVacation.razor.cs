@@ -47,7 +47,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
         {
             try
             {
-                vacationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                vacationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadTimekeepingTypeAsync();
                 await LoadDataAsync();
             }
@@ -62,6 +62,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             try
             {
                 loading = true;
+                selectedRows = null;
                 StateHasChanged();
                 var search = Mapper.Map<VacationSearch>(vacationFilterModel);
                 var page = await VacationService.GetPageWithFilterAsync(search);
@@ -149,7 +150,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
                 {
                     vacationFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
+                await LoadDataAsync();
 
             }
             catch (Exception ex)
@@ -164,7 +165,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             {
                 vacationFilterModel.Page.PageIndex = 1;
                 vacationFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -176,7 +177,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
         {
             try
             {
-                vacationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                vacationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }

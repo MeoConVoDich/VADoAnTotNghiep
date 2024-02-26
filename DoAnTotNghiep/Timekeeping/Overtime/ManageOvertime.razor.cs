@@ -45,7 +45,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
         {
             try
             {
-                overtimeFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                overtimeFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
             }
             catch (Exception ex)
@@ -59,6 +59,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 loading = true;
+                selectedRows = null;
                 StateHasChanged();
                 var search = Mapper.Map<OvertimeSearch>(overtimeFilterModel);
                 var page = await OvertimeService.GetPageWithFilterAsync(search);
@@ -132,7 +133,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                 {
                     overtimeFilterModel.Page.PageIndex = e.Page;
                 }
-                await SearchAsync();
+                await LoadDataAsync();
 
             }
             catch (Exception ex)
@@ -147,7 +148,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             {
                 overtimeFilterModel.Page.PageIndex = 1;
                 overtimeFilterModel.Page.PageSize = e.PageSize;
-                await SearchAsync();
+                await LoadDataAsync();
             }
             catch (Exception ex)
             {
@@ -159,7 +160,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
         {
             try
             {
-                overtimeFilterModel.Page = new Page() { PageIndex = 1, PageSize = 10 };
+                overtimeFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadDataAsync();
                 StateHasChanged();
             }

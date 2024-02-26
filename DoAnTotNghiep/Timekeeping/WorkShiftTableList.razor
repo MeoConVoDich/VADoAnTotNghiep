@@ -1,119 +1,254 @@
-﻿<EditForm Model="workShiftTableFilterModel" OnSubmit="e => SearchAsync()">
-    <Row Gutter="8">
-        <Space Size=@(("8", "8")) Wrap>
-            @if (workShiftTableFilterModel.ReadOnly)
-            {
-                <SpaceItem>
-                    <Button OnClick="Edit" Type="@ButtonType.Primary">Sửa</Button>
-                </SpaceItem>
-                @if (selectedRows?.Any() == true)
+﻿@page "/cham-cong/xep-ca-lam-viec"
+<PageHeader Class="site-page-header" Title="Xếp ca làm việc">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Chấm công</BreadcrumbItem>
+            <BreadcrumbItem>Xếp ca làm việc</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<div class="site-content">
+    <EditForm Model="workShiftTableFilterModel" OnSubmit="e => SearchAsync()">
+        <DataAnnotationsValidator />
+        <InputWatcher @ref="inputWatcher"></InputWatcher>
+        <Row Gutter="8">
+            <Space Size=@(("8", "8")) Wrap>
+                @if (workShiftTableFilterModel.ReadOnly)
                 {
                     <SpaceItem>
-                        <Popconfirm Placement="@Placement.BottomRight"
-                                    OnConfirm="() => DeleteAsync()"
+                        <Button OnClick="Edit" Type="@ButtonType.Primary">Sửa</Button>
+                    </SpaceItem>
+                    @if (selectedRows?.Any() == true)
+                    {
+                        <SpaceItem>
+                            <Popconfirm Placement="@Placement.BottomRight"
+                                        OnConfirm="() => DeleteAsync()"
+                                        OkText="Đồng ý"
+                                        CancelText="Hủy">
+                                <ChildContent>
+                                    <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                                </ChildContent>
+                                <TitleTemplate>
+                                    Bạn có chắc chắn muốn xóa?
+                                </TitleTemplate>
+                            </Popconfirm>
+                        </SpaceItem>
+                    }
+                }
+                @if (!workShiftTableFilterModel.ReadOnly)
+                {
+                    <SpaceItem>
+                        <Button OnClick="SaveAsync" Type="@ButtonType.Primary" Color="@Color.Green7">Lưu</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Popconfirm OnConfirm="() => CancelAsync()"
                                     OkText="Đồng ý"
                                     CancelText="Hủy">
                             <ChildContent>
-                                <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                                <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
                             </ChildContent>
                             <TitleTemplate>
-                                Bạn có chắc chắn muốn xóa?
+                                Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
                             </TitleTemplate>
                         </Popconfirm>
                     </SpaceItem>
                 }
-            }
-            @if (!workShiftTableFilterModel.ReadOnly)
-            {
-                <SpaceItem>
-                    <Button OnClick="SaveAsync" Type="@ButtonType.Primary" Color="@Color.Green7">Lưu</Button>
-                </SpaceItem>
-                <SpaceItem>
-                    <Popconfirm OnConfirm="() => CancelAsync()"
-                                OkText="Đồng ý"
-                                CancelText="Hủy">
-                        <ChildContent>
-                            <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
-                        </ChildContent>
-                        <TitleTemplate>
-                            Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
-                        </TitleTemplate>
-                    </Popconfirm>
-                </SpaceItem>
-            }
 
-        </Space>
-        <AntDesign.Col Span="2">
-            <Select TItemValue="string" TItem="string"
-                    Value="@workShiftTableFilterModel?.Year"
-                    OnSelectedItemChanged="e => YearChangeAsync(e)">
-                <SelectOptions>
-                    @foreach (var item in workShiftTableFilterModel.DataSource[workShiftTableFilterModel.Property.NameProperty(c => c.Year)])
-                    {
-                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
-                    }
-                </SelectOptions>
-            </Select>
-        </AntDesign.Col>
-        <AntDesign.Col Span="2">
-            <Select TItemValue="string" TItem="string"
-                    Value="@workShiftTableFilterModel?.Month"
-                    OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
-                <SelectOptions>
-                    @foreach (var item in workShiftTableFilterModel.DataSource[workShiftTableFilterModel.Property.NameProperty(c => c.Month)])
-                    {
-                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
-                    }
-                </SelectOptions>
-            </Select>
-        </AntDesign.Col>
-        <AntDesign.Col Span="4">
-            <Input TValue="string" Value="workShiftTableFilterModel.CodeOrName"
-                   ValueChanged="e => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.CodeOrName), e)"
-                   Placeholder="Nhập họ tên, mã nhân viên" />
-        </AntDesign.Col>
-        <AntDesign.Col Span="2" Class="flex-start-end">
-            <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
-        </AntDesign.Col>
-    </Row>
-    <Row Gutter="8">
-        <Space Size=@(("8", "8")) Wrap>
-            <SpaceItem>
+            </Space>
+            <AntDesign.Col Span="2">
+                <Select TItemValue="string" TItem="string"
+                        Value="@workShiftTableFilterModel?.Year"
+                        OnSelectedItemChanged="e => YearChangeAsync(e)">
+                    <SelectOptions>
+                        @foreach (var item in workShiftTableFilterModel.DataSource[workShiftTableFilterModel.Property.NameProperty(c => c.Year)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+            </AntDesign.Col>
+            <AntDesign.Col Span="2">
+                <Select TItemValue="string" TItem="string"
+                        Value="@workShiftTableFilterModel?.Month"
+                        OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                    <SelectOptions>
+                        @foreach (var item in workShiftTableFilterModel.DataSource[workShiftTableFilterModel.Property.NameProperty(c => c.Month)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+            </AntDesign.Col>
+            <AntDesign.Col Span="4">
+                <Input TValue="string" Value="workShiftTableFilterModel.CodeOrName"
+                       ValueChanged="e => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.CodeOrName), e)"
+                       Placeholder="Nhập họ tên, mã nhân viên" />
+            </AntDesign.Col>
+            <AntDesign.Col Span="2" Class="flex-start-end">
+                <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+            </AntDesign.Col>
+        </Row>
+        <Row Gutter="8" Style="margin-bottom:10px">
+            <AntDesign.Col Span="4">
+                <LabelFor For="() => workShiftTableFilterModel.TimekeepingShiftCode" HasRequired="true"></LabelFor>
                 <Select TItem="TimekeepingShift" TItemValue="string" Disabled="workShiftTableFilterModel.ReadOnly"
-                        DataSource="@TimekeepingShifts" Style="width: 200px"
+                        DataSource="@TimekeepingShifts"
                         @bind-Value="@workShiftTableFilterModel.TimekeepingShiftCode"
                         LabelName="@nameof(TimekeepingShift.CodeName)"
                         ValueName="@nameof(TimekeepingShift.Code)"
                         Placeholder="Ca làm việc">
                 </Select>
-            </SpaceItem>
-            <SpaceItem>
+                <ValidationMessage For="() => workShiftTableFilterModel.TimekeepingShiftCode"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="4">
+                <LabelFor FieldIdentifier="context.Field(nameof(workShiftTableFilterModel.DefaultStartDate))" HasRequired="true"></LabelFor>
                 <RangePicker TValue="DateTime?[]" Value="@(new DateTime?[] { workShiftTableFilterModel.DefaultStartDate, workShiftTableFilterModel.DefaultEndDate })"
                              DisabledDate="date => date.Month != workShiftTableFilterModel.Month.ToInt() || date.Year != workShiftTableFilterModel.Year.ToInt()"
-                             OnChange="e => workShiftTableFilterModel.SetDate(e.Dates)" Disabled="workShiftTableFilterModel.ReadOnly"
-                             OnClearClick="e => workShiftTableFilterModel.SetDate(new DateTime?[] { null, null })"
-                             ShowToday="true" Placeholder="@(new string[] { "Từ ngày", "Đến ngày"})"/>
-            </SpaceItem>
-            <SpaceItem><Button Type="@ButtonType.Primary" OnClick="SetShiftDefaultAsync" Disabled="workShiftTableFilterModel.ReadOnly">Xếp</Button></SpaceItem>
-        </Space>
+                             OnChange="e => SetDate(e.Dates)" Disabled="workShiftTableFilterModel.ReadOnly"
+                             OnClearClick="e => SetDate(new DateTime?[] { null, null })"
+                             ShowToday="true" Placeholder="@(new string[] { "Từ ngày", "Đến ngày"})" />
+                <ValidationMessage For="() => workShiftTableFilterModel.DefaultStartDate"></ValidationMessage>
+            </AntDesign.Col>
+            <AntDesign.Col Span="4">
+                <LabelFor FieldIdentifier="context.Field(nameof(workShiftTableFilterModel.DayOffInWeekType))" HasRequired="true"></LabelFor>
+                <Select TItemValue="string"
+                        TItem="string"
+                        Value="@workShiftTableFilterModel.DayOffInWeekType" Disabled="workShiftTableFilterModel.ReadOnly"
+                        ValueChanged="(e => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.DayOffInWeekType), e))">
+                    <SelectOptions>
+                        @foreach (var item in workShiftTableFilterModel.DataSource[nameof(workShiftTableFilterModel.DayOffInWeekType)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+                <ValidationMessage For="() => workShiftTableFilterModel.DayOffInWeekType"></ValidationMessage>
+            </AntDesign.Col>
+            @if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.InWeek.ToString())
+            {
+                <AntDesign.Col Span="4">
+                    <LabelFor FieldIdentifier="context.Field(nameof(workShiftTableFilterModel.DayOffInWeek))"></LabelFor>
+                    <Select TItemValue="string" AllowClear EnableSearch Mode="multiple"
+                            TItem="string" Placeholder="Chọn ngày nghỉ trong tuần"
+                            Values="@workShiftTableFilterModel.DayOffInWeek" Disabled="workShiftTableFilterModel.ReadOnly"
+                            OnClearSelected="() => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.DayOffInWeek), null)"
+                            ValuesChanged="(e => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.DayOffInWeek), e))">
+                        <SelectOptions>
+                            @foreach (var item in workShiftTableFilterModel.DataSource[nameof(workShiftTableFilterModel.DayOffInWeek)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+            }
+            else if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.TwoWeekInMonth.ToString())
+            {
+                <AntDesign.Col Span="4">
+                    <LabelFor FieldIdentifier="context.Field(nameof(workShiftTableFilterModel.WorkInFirstWeekType))" HasRequired="true"></LabelFor>
+                    <Select TItemValue="string" TItem="string" AllowClear
+                            Value="@workShiftTableFilterModel.WorkInFirstWeekType" Disabled="workShiftTableFilterModel.ReadOnly"
+                            ValueChanged="(e => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.WorkInFirstWeekType), e))">
+                        <SelectOptions>
+                            @foreach (var item in workShiftTableFilterModel.DataSource[nameof(workShiftTableFilterModel.WorkInFirstWeekType)])
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                    <ValidationMessage For="() => workShiftTableFilterModel.WorkInFirstWeekType"></ValidationMessage>
+                </AntDesign.Col>
+            }
+            else if (workShiftTableFilterModel.DayOffInWeekType == DayOffInWeekType.Custom.ToString())
+            {
+                <AntDesign.Col Span="5">
+
+                    <LabelFor FieldIdentifier="context.Field(nameof(workShiftTableFilterModel.DayOff))"></LabelFor>
+                    <Select TItemValue="string" TItem="string" AllowClear Mode="multiple"
+                            Values="@workShiftTableFilterModel.DayOff" Disabled="workShiftTableFilterModel.ReadOnly"
+                            ValuesChanged="(e => workShiftTableFilterModel.Change(nameof(workShiftTableFilterModel.DayOff), e))">
+                        <SelectOptions>
+                            @foreach (var item in dayOffs)
+                            {
+                                <SelectOption TItemValue="string" TItem="string" Value="@item.DateTime.Date.ToString()" Label="@item.DateOfWeek" />
+                            }
+                        </SelectOptions>
+                    </Select>
+                </AntDesign.Col>
+            }
+            <AntDesign.Col Style="margin-top: 30px">
+                <Button Type="@ButtonType.Primary" OnClick="SetShiftDefault" Disabled="workShiftTableFilterModel.ReadOnly">Xếp</Button>
+            </AntDesign.Col>
+        </Row>
+    </EditForm>
+    <Row Gutter="8">
+        <AntDesign.Col Span="24">
+
+            <Table @ref="table" TItem="WorkShiftTableViewModel" DataSource="@WorkShiftTableViewModels"
+                   ScrollBarWidth="10px" RowClassName="@(_=>"editable-row")"
+                   Total="workShiftTableFilterModel.Page.Total" ScrollY="500px" ScrollX="2000"
+                   Loading="loading"
+                   PageIndex="workShiftTableFilterModel.Page.PageIndex"
+                   PageSize="workShiftTableFilterModel.Page.PageSize"
+                   OnPageIndexChange="PageIndexChangeAsync"
+                   OnPageSizeChange="PageSizeChangeAsync"
+                   OnRowClick="OnRowClick"
+                   @bind-SelectedRows="selectedRows">
+                <ColumnDefinitions>
+                    <Selection Key="@context.UsersId" Width="50" Fixed="left"></Selection>
+                    <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
+                    <Column @bind-Field="@context.StaffCode" Width="150" Ellipsis Fixed="left"></Column>
+                    <Column @bind-Field="@context.StaffName" Width="200" Fixed="left"></Column>
+                    @foreach (var dayColumn in dayColumns)
+                    {
+                        string value = context.GetExactValue<WorkShiftTableViewModel, string>(dayColumn.DayField);
+                        <Column TData="string" Width="100" Hidden=dayColumn.Hidden>
+                            @if (editId == context.UsersId + dayColumn.DayField && !workShiftTableFilterModel.ReadOnly)
+                            {
+                                <Select TItem="TimekeepingShift" TItemValue="string"
+                                        DataSource="@TimekeepingShifts"
+                                        Value="@value" OnBlur="StopEdit" Size="small"
+                                        LabelName="@nameof(TimekeepingShift.CodeName)"
+                                        ValueName="@nameof(TimekeepingShift.Code)"
+                                        EnableSearch
+                                        ValueChanged="e => SetShift(context, dayColumn.DayField, e)"
+                                        AllowClear OnClearSelected="() => SetShift(context, dayColumn.DayField, null)"
+                                        Placeholder="Chọn"
+                                        DropdownMatchSelectWidth=false>
+                                </Select>
+                            }
+                            else
+                            {
+                                <div class="editable-cell-value-wrap noselect" style="padding-right:24px"
+                                     @onclick="() => StartEdit(context.UsersId + dayColumn.DayField)">
+                                    @value &nbsp;
+                                </div>
+                            }
+                        </Column>
+                    }
+                </ColumnDefinitions>
+                <HeaderTemplate>
+                    <TableRow>
+                        <SimpleTableHeader></SimpleTableHeader>
+                        <TableHeader @bind-Field="@context.Stt" Fixed="left" Ellipsis RowSpan="2"></TableHeader>
+                        <TableHeader @bind-Field="@context.StaffCode" Fixed="left" Ellipsis RowSpan="2"></TableHeader>
+                        <TableHeader @bind-Field="@context.StaffName" Fixed="left" Ellipsis RowSpan="2"></TableHeader>
+
+                        @foreach (var dayColumn in dayColumns)
+                        {
+                            <SimpleTableHeader Align="@ColumnAlign.Center" Hidden=dayColumn.Hidden>@dayColumn.DayMonth</SimpleTableHeader>
+                        }
+                    </TableRow>
+                    <TableRow>
+                        <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+                        @foreach (var dayColumn in dayColumns)
+                        {
+                            <SimpleTableHeader Align="@ColumnAlign.Center" Hidden=dayColumn.Hidden>@dayColumn.DayOfWeek</SimpleTableHeader>
+                        }
+                    </TableRow>
+                </HeaderTemplate>
+            </Table>
+        </AntDesign.Col>
     </Row>
-</EditForm>
-<Row Gutter="8">
-    <AntDesign.Col Span="24">
-        <Table @ref="table" TItem="WorkShiftTableViewModel" DataSource="@WorkShiftTableViewModels"
-               ScrollBarWidth="10px"
-               Total="workShiftTableFilterModel.Page.Total" ScrollY="500px" ScrollX="2000"
-               Loading="loading"
-               PageIndex="workShiftTableFilterModel.Page.PageIndex"
-               PageSize="workShiftTableFilterModel.Page.PageSize"
-               OnPageIndexChange="PageIndexChangeAsync"
-               OnPageSizeChange="PageSizeChangeAsync"
-               OnRowClick="OnRowClick"
-               @bind-SelectedRows="selectedRows">
-            <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
-            <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
-            <Column @bind-Field="@context.StaffCode" Width="150" Fixed="left"></Column>
-            <Column @bind-Field="@context.StaffName" Width="150" Fixed="left"></Column>
-        </Table>
-    </AntDesign.Col>
-</Row>
+</div>

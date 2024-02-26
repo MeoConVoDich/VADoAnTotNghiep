@@ -22,7 +22,7 @@ namespace DoAnTotNghiep.Domain
             DayOfWeek = DateTimeExtentions.MapDayOfWeeks[dateTime.DayOfWeek];
             DayField = $"Day{Day:00}";
             DayMonth = $"{dateTime.Day}/{dateTime.Month}";
-            DateOfWeek = $"{dateTime.Day}/{dateTime.Month}/{dateTime.Year}";
+            DateOfWeek = $"{dateTime.DayOfWeek.GetDayOfWeekByName()} - {dateTime.Day}/{dateTime.Month}/{dateTime.Year}";
         }
     }
 }
