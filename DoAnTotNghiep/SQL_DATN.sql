@@ -188,3 +188,13 @@ CREATE TABLE WorkShiftTable
 	Day30 VARCHAR(256),
 	Day31 VARCHAR(256),
 );
+
+CREATE TABLE FingerprintManagement
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	UsersId VARCHAR(256),
+	ScanDate DateTime,
+	CreateDate DateTime,
+	Year int,
+	Month int,
+);

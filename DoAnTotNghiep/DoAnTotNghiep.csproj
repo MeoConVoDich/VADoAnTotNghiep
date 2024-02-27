@@ -5,8 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="ExcelModel\" />
     <Folder Include="Salary\" />
     <Folder Include="System\" />
+    <Folder Include="wwwroot\input\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,10 +16,17 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Blazored.SessionStorage" Version="2.2.0" />
+    <PackageReference Include="EPPlus" Version="7.0.9" />
     <PackageReference Include="FluentNHibernate" Version="3.3.0" />
     <PackageReference Include="NHibernate" Version="5.5.0" />
     <PackageReference Include="NHibernate.Caches.CoreMemoryCache" Version="5.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\filemau\FileMauLichSuVaoRa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

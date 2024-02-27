@@ -44,6 +44,7 @@ namespace DoAnTotNghiep.Config
             mapper.AddMapping(typeof(VacationMap));
             mapper.AddMapping(typeof(TimekeepingExplanationMap));
             mapper.AddMapping(typeof(WorkShiftTableMap));
+            mapper.AddMapping(typeof(FingerprintManagementMap));
             HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
             cfg.AddMapping(domainMapping);
             return cfg.BuildSessionFactory();

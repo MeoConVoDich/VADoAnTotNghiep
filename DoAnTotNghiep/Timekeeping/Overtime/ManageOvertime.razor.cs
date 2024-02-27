@@ -175,7 +175,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 overtimeFilterModel.ApprovalStatus = approvalStatus;
-                await LoadDataAsync();
+                await SearchAsync();
                 StateHasChanged();
             }
             catch (Exception ex)
@@ -189,7 +189,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 overtimeFilterModel.Year = year;
-                await LoadDataAsync();
+                await SearchAsync();
                 StateHasChanged();
             }
             catch (Exception ex)
@@ -203,7 +203,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 overtimeFilterModel.Month = month;
-                await LoadDataAsync();
+                await SearchAsync();
                 StateHasChanged();
             }
             catch (Exception ex)

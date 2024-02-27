@@ -1,0 +1,161 @@
+﻿@page "/cham-cong/du-lieu-vao-ra"
+<PageHeader Class="site-page-header" Title="Dữ liệu vào ra">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Chấm công</BreadcrumbItem>
+            <BreadcrumbItem>Dữ liệu vào ra</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<div class="site-content">
+    <Row Gutter="8">
+        <AntDesign.Col Span="24">
+            <EditForm Model="fingerprintManagementFilterModel" OnValidSubmit="SearchAsync" Context="context">
+                <Row Gutter="8">
+                    <Space>
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" OnClick="@ShowModal">Nạp Excel </Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Icon="file-excel" OnClick="() => ExportExcelAsync()" Type="@ButtonType.Primary" Loading="excelExporting">Xuất Excel</Button>
+                        </SpaceItem>
+                    </Space>
+                    <AntDesign.Col Span="2">
+                        <Select TItemValue="string" TItem="string"
+                                Value="@fingerprintManagementFilterModel?.Year"
+                                OnSelectedItemChanged="e => YearChangeAsync(e)">
+                            <SelectOptions>
+                                @foreach (var item in fingerprintManagementFilterModel.DataSource[fingerprintManagementFilterModel.Property.NameProperty(c => c.Year)])
+                                {
+                                    <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                }
+                            </SelectOptions>
+                        </Select>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="2">
+                        <Select TItemValue="string" TItem="string"
+                                Value="@fingerprintManagementFilterModel?.Month"
+                                OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                            <SelectOptions>
+                                @foreach (var item in fingerprintManagementFilterModel.DataSource[fingerprintManagementFilterModel.Property.NameProperty(c => c.Month)])
+                                {
+                                    <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                }
+                            </SelectOptions>
+                        </Select>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="4">
+                        <Input @bind-Value="usersSearch.CodeOrName" Placeholder="Nhập họ tên, mã nhân viên" />
+                    </AntDesign.Col>
+                    <AntDesign.Col Style="display:none">
+                        <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                    </AntDesign.Col>
+                </Row>
+            </EditForm>
+        </AntDesign.Col>
+    </Row>
+    <Row Gutter="8" Style="padding-top:10px">
+        <AntDesign.Col Span="12">
+            <Row Gutter="8">
+                <AntDesign.Col Span="24">
+                    <Table TItem="UsersViewModel" DataSource="@UsersViewModels" Class="table-striped"
+                           Total="usersSearch.Page.Total"
+                           Loading="usersLoading" ScrollY="500"
+                           ScrollBarWidth="10px"
+                           PageIndex="usersSearch.Page.PageIndex"
+                           PageSize="usersSearch.Page.PageSize"
+                           OnPageIndexChange="PageIndexStaffChangeAsync"
+                           OnPageSizeChange="PageSizeStaffChangeAsync"
+                           OnRowClick="OnRowClickAsync">
+                        <Column @bind-Field="@context.Code"></Column>
+                        <Column @bind-Field="@context.Name"></Column>
+                        <Column @bind-Field="@context.DateOfBirth" Format="dd/MM/yyyy"></Column>
+                        <Column @bind-Field="@context.IdentityNumber"></Column>
+                    </Table>
+                </AntDesign.Col>
+            </Row>
+        </AntDesign.Col>
+        <AntDesign.Col Span="12">
+            <Table TItem="FingerprintGroupViewModel" DataSource="@FingerprintGroupViewModels" Class="table-striped"
+                   Total="fingerprintManagementFilterModel.Page.Total" HidePagination="true"
+                   Loading="loading" ScrollY="500" ScrollBarWidth="10px"
+                   PageIndex="fingerprintManagementFilterModel.Page.PageIndex"
+                   PageSize="fingerprintManagementFilterModel.Page.PageSize">
+                <Column @bind-Field="@context.ScanDate" Format="dd/MM/yyyy" Width="150"></Column>
+                <Column @bind-Field="@context.Fingerprints" Width="200">
+                    <Template>
+                        @foreach (var item in context.Fingerprints)
+                        {
+                            <Badge Status="default" />
+                            <span title="@item">@item</span>
+                            <br />
+                        }
+                    </Template>
+                </Column>
+            </Table>
+        </AntDesign.Col>
+    </Row>
+</div>
+<Modal Title="Nhập dữ liệu chấm công từ file Excel"
+       Visible="@importVisible" OkText=@("Tải lên") Style="top: 50px"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <EditForm Model="excelFilterModel" OnValidSubmit="SearchAsync" Context="context">
+            <Spin Size="large" Tip=@("Đang xử lý") Spinning=confirmLoading>
+                <div class="" style="padding:0 10px;">
+                    <Row Gutter="10">
+                        <AntDesign.Col Span="12">
+                            <Select TItemValue="string" TItem="string"
+                                    Value="@excelFilterModel?.Year"
+                                    OnSelectedItemChanged="e => YearChangeAsync(e)">
+                                <SelectOptions>
+                                    @foreach (var item in excelFilterModel.DataSource[excelFilterModel.Property.NameProperty(c => c.Year)])
+                                    {
+                                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                    }
+                                </SelectOptions>
+                            </Select>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <Select TItemValue="string" TItem="string"
+                                    Value="@excelFilterModel?.Month"
+                                    OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                                <SelectOptions>
+                                    @foreach (var item in excelFilterModel.DataSource[excelFilterModel.Property.NameProperty(c => c.Month)])
+                                    {
+                                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                    }
+                                </SelectOptions>
+                            </Select>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="24" Class="border-hidden" Style="display:flex">
+                            <Input @bind-Value="@fileNameShow" disabled /><label for="importFingerprintFromExcel" class="ant-btn" style="margin-left:10px">Chọn File</label>
+                            <InputFile id="importFingerprintFromExcel" hidden OnChange="@ImportFingerprintManagementFromExcelAsync" />
+                        </AntDesign.Col>
+                        <div>
+                            <a class="a-pointer" @onclick="ExportFingerprintManagementAsync" style="color: #0366d6 !important">
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                                Tải file mẫu
+                            </a>
+                        </div>
+                        @if (errorMessage.IsNotNullOrEmpty())
+                        {
+                            <AntDesign.Col Span="24">
+                                <Text Type="danger">@errorMessage</Text>
+                            </AntDesign.Col>
+                            @if (notExistCodes?.Any() == true)
+                            {
+                                <AntDesign.Col Span="24">
+                                    <Table TItem="string" DataSource="@notExistCodes" HidePagination="true"
+                                           Class="table-striped" Context="tableContext" ScrollY="100">
+                                        <Column @bind-Field="@tableContext" Width="50" Ellipsis Title="Mã nhân viên"></Column>
+                                    </Table>
+                                </AntDesign.Col>
+                            }
+                        }
+                    </Row>
+                </div>
+            </Spin>
+    </EditForm>
+</Modal>
