@@ -47,6 +47,9 @@ namespace DoAnTotNghiep.ViewModel
         [Display(Name = "Đối tượng nhập")]
         public virtual CreatorObject CreatorObject { get; set; }
 
+        [Display(Name = "Hình thức")]
+        public virtual OvertimeType OvertimeType { get; set; }
+
         [Display(Name = "Ngày tạo")]
         public virtual DateTime CreateDate { get; set; }
     }

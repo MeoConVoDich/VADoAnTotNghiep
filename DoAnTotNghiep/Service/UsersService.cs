@@ -38,6 +38,10 @@ namespace DoAnTotNghiep.Service
             {
                 query = query.Where(c => c.Name.Contains(model.CodeOrName) || c.Code.Contains(model.CodeOrName));
             }
+            if (model.Codes?.Any() == true)
+            {
+                query = query.Where(c => model.Codes.Contains(c.Code));
+            }
 
             if (model.CheckExist.HasValue && model.CheckExist == true)
             {

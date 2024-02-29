@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DoAnTotNghiep.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +72,8 @@ namespace DoAnTotNghiep.Config
                 }
             }
             #endregion
+
+            CreateMap<Overtime, OvertimeAggregate>().ReverseMap();
         }
     }
 }

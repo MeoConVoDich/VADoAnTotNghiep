@@ -160,7 +160,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
         {
             try
             {
-                editModel = Mapper.Map<OvertimeEditModel>(selectModel);
+                editModel = Mapper.Map<OvertimeEditModel>(selectModel ?? new Domain.Overtime());
                 editModel.ReadOnly = true;
                 await Cancel.InvokeAsync();
             }

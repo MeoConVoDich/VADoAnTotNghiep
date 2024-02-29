@@ -27,5 +27,6 @@ namespace DoAnTotNghiep.Domain
         public virtual DateTime CreateDate { get; set; }
         public virtual CreatorObject CreatorObject { get; set; }
         public virtual BreaksTimeType BreaksTimeType { get; set; }
+        public virtual OvertimeType OvertimeType { get; set; }
     }
 }

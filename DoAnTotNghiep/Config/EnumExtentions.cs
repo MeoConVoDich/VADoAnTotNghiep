@@ -134,4 +134,16 @@ namespace DoAnTotNghiep.Config
         [Display(Name = "Nghỉ tuần đầu")]
         OffFirstWeek = 2,
     }
+
+    public enum OvertimeType
+    {
+        [Display(Name = "Tất cả")]
+        All = 0,
+        [Display(Name = "Ngày thường")]
+        NormalDay = 1,
+        [Display(Name = "Ngày nghỉ tuần")]
+        WeeklyRestDay = 2,
+        [Display(Name = "Ngày lễ")]
+        Holiday = 3,
+    }
 }

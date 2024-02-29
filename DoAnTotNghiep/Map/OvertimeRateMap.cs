@@ -16,6 +16,10 @@ namespace DoAnTotNghiep.Map
             Id(x => x.Id, map => map.Column("Id"));
             Property(x => x.Day);
             Property(x => x.Night);
+            Property(x => x.DayOff);
+            Property(x => x.NightOff);
+            Property(x => x.DayHoliday);
+            Property(x => x.NightHoliday);
             Property(x => x.CreateDate);
             Property(x => x.Date);
             Property(x => x.EffectiveState);

@@ -38,8 +38,6 @@
                        OnRowClick="OnRowClick">
                     <Column @bind-Field="@context.Stt" Width="50"></Column>
                     <Column @bind-Field="@context.Date" Format="dd/MM/yyyy" ></Column>
-                    <Column @bind-Field="@context.Day"></Column>
-                    <Column @bind-Field="@context.Night"></Column>
                     <Column @bind-Field="@context.EffectiveState">
                         <Template>
                             @if (context.EffectiveState == EffectiveState.Active)
@@ -120,6 +118,26 @@
                     <LabelFor FieldIdentifier="context.Field(nameof(OvertimeRateEditModel.Night))"></LabelFor>
                     <AntDesign.InputNumber @bind-Value="editModel.Night" Disabled="editModel.ReadOnly"></AntDesign.InputNumber>
                     <ValidationMessage For="() => editModel.Night"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(OvertimeRateEditModel.DayOff))"></LabelFor>
+                    <AntDesign.InputNumber @bind-Value="editModel.DayOff" Disabled="editModel.ReadOnly"></AntDesign.InputNumber>
+                    <ValidationMessage For="() => editModel.DayOff"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(OvertimeRateEditModel.NightOff))"></LabelFor>
+                    <AntDesign.InputNumber @bind-Value="editModel.NightOff" Disabled="editModel.ReadOnly"></AntDesign.InputNumber>
+                    <ValidationMessage For="() => editModel.NightOff"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(OvertimeRateEditModel.DayHoliday))"></LabelFor>
+                    <AntDesign.InputNumber @bind-Value="editModel.DayHoliday" Disabled="editModel.ReadOnly"></AntDesign.InputNumber>
+                    <ValidationMessage For="() => editModel.DayHoliday"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <LabelFor FieldIdentifier="context.Field(nameof(OvertimeRateEditModel.NightHoliday))"></LabelFor>
+                    <AntDesign.InputNumber @bind-Value="editModel.NightHoliday" Disabled="editModel.ReadOnly"></AntDesign.InputNumber>
+                    <ValidationMessage For="() => editModel.NightHoliday"></ValidationMessage>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <LabelFor FieldIdentifier="context.Field(nameof(OvertimeRateEditModel.Date))"></LabelFor>

@@ -20,12 +20,28 @@ namespace DoAnTotNghiep.EditModel
         public virtual EffectiveState EffectiveState { get; set; }
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
-        [Display(Name = "Ngày (%)")]
+        [Display(Name = "Ngày thường (%)")]
         public virtual int Day { get; set; }
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
-        [Display(Name = "Đêm (%)")]
+        [Display(Name = "Đêm thưởng (%)")]
         public virtual int Night { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Ngày nghỉ (%)")]
+        public virtual int DayOff { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Đêm nghỉ (%)")]
+        public virtual int NightOff { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Ngày nghỉ lễ (%)")]
+        public virtual int DayHoliday { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Đêm nghỉ lễ (%)")]
+        public virtual int NightHoliday { get; set; }
         public virtual DateTime CreateDate { get; set; }
 
         public Property<OvertimeRateEditModel> Property { get; set; } = new Property<OvertimeRateEditModel>();

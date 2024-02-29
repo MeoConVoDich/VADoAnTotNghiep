@@ -179,6 +179,20 @@ else
             <ValidationMessage For="() => editModel.TotalHour"></ValidationMessage>
         </AntDesign.Col>
         <AntDesign.Col Span="12">
+            <LabelFor FieldIdentifier="context.Field(nameof(OvertimeEditModel.OvertimeType))"></LabelFor>
+            <Select TItemValue="string" TItem="string" Disabled="editModel.ReadOnly"
+                    Value="@editModel?.OvertimeType.ToString()" EnableSearch
+                     OnSelectedItemChanged="e => editModel.SetValue(editModel.Property.NameProperty(c => c.OvertimeType), e)">
+                <SelectOptions>
+                    @foreach (var item in editModel.DataSource[editModel.Property.NameProperty(c => c.OvertimeType)])
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                    }
+                </SelectOptions>
+            </Select>
+            <ValidationMessage For="() => editModel.OvertimeType"></ValidationMessage>
+        </AntDesign.Col>
+        <AntDesign.Col Span="24">
             <LabelFor For="() => editModel.Reason"></LabelFor>
             <Input @bind-Value="editModel.Reason" Disabled="editModel.ReadOnly" />
             <ValidationMessage For="() => editModel.Reason"></ValidationMessage>

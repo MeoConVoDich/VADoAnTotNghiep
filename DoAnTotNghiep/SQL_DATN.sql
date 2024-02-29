@@ -60,6 +60,10 @@ CREATE TABLE OvertimeRate
     Id VARCHAR(32) PRIMARY KEY,	
 	Day int,
 	Night int,
+	DayOff int,
+	NightOff int,
+	DayHoliday int,
+	NightHoliday int,
 	EffectiveState VARCHAR(256),
 	CreateDate DateTime,
 	Date DateTime,
@@ -129,6 +133,7 @@ CREATE TABLE Overtime
 	DisapprovedReason NVARCHAR(256),
 	BreaksTimeType VARCHAR(256),
 	ApprovalStatus VARCHAR(256),
+	OvertimeType VARCHAR(256),
 	CreatorObject VARCHAR(256),
 	CreateDate DateTime,
 );
@@ -197,4 +202,24 @@ CREATE TABLE FingerprintManagement
 	CreateDate DateTime,
 	Year int,
 	Month int,
+);
+
+CREATE TABLE OvertimeAggregate
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	UsersId VARCHAR(256),
+	RegisterDate DateTime,
+	StartTime DateTime2,
+	EndTime DateTime2,
+	StartBreakTime DateTime2,
+	EndBreakTime DateTime2,
+	DayHourAmount decimal(8,3),
+	DayHourCoefficientAmount decimal(8,3),
+	NightHourAmount decimal(8,3),
+	NightHourCoefficientAmount decimal(8,3),
+	Total decimal(8,3),
+	Year int, 
+	Month int,
+	Reason NVARCHAR(256),
+	OvertimeType VARCHAR(256),
 );

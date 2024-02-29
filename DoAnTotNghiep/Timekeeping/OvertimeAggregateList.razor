@@ -1,0 +1,148 @@
+﻿@page "/cham-cong/xu-ly-du-lieu-lam-them"
+<PageHeader Class="site-page-header" Title="Xử lý dữ liệu làm thêm">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Chấm công</BreadcrumbItem>
+            <BreadcrumbItem>Xử lý dữ liệu làm thêm</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<div class="site-content">
+    <Row Gutter="8" Style="padding-top: 10px">
+        <AntDesign.Col Span="24">
+            <EditForm Model="overtimeAggregateFilterModel" OnValidSubmit="SearchAsync">
+                <Row Gutter="8">
+                    <Space Size="@("small")">
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" OnClick="ShowSummaryConfirm" Loading=aggregating>Tổng hợp</Button>
+                        </SpaceItem>
+                    </Space>
+                    <AntDesign.Col Span="2">
+                        <Select TItemValue="string" TItem="string"
+                                Value="@overtimeAggregateFilterModel?.Year"
+                                OnSelectedItemChanged="e => YearChangeAsync(e)">
+                            <SelectOptions>
+                                @foreach (var item in overtimeAggregateFilterModel.DataSource[overtimeAggregateFilterModel.Property.NameProperty(c => c.Year)])
+                                {
+                                    <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                }
+                            </SelectOptions>
+                        </Select>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="2">
+                        <Select TItemValue="string" TItem="string"
+                                Value="@overtimeAggregateFilterModel?.Month"
+                                OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                            <SelectOptions>
+                                @foreach (var item in overtimeAggregateFilterModel.DataSource[overtimeAggregateFilterModel.Property.NameProperty(c => c.Month)])
+                                {
+                                    <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                }
+                            </SelectOptions>
+                        </Select>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="4">
+                        <Input @bind-Value="usersSearch.CodeOrName" Placeholder="Nhập họ tên, mã nhân viên" />
+                    </AntDesign.Col>
+                    <AntDesign.Col>
+                        <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                    </AntDesign.Col>
+                </Row>
+            </EditForm>
+        </AntDesign.Col>
+    </Row>
+    <Row Gutter="8" Style="margin-top: 10px">
+        <AntDesign.Col Span="6">
+            <Table TItem="UsersViewModel" DataSource="@UsersViewModels" Class="table-striped"
+                   Total="usersSearch.Page.Total" @ref="table"
+                   Loading="usersLoading" ScrollY="500"
+                   ScrollBarWidth="10px"
+                   PageIndex="usersSearch.Page.PageIndex"
+                   PageSize="usersSearch.Page.PageSize"
+                   OnPageIndexChange="PageIndexStaffChangeAsync"
+                   OnPageSizeChange="PageSizeStaffChangeAsync"
+                   OnRowClick="OnRowClickAsync"
+                   @bind-SelectedRows="selectedRows">
+                <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+                <Column @bind-Field="@context.Stt" Width="50"></Column>
+                <Column @bind-Field="@context.Code"></Column>
+                <Column @bind-Field="@context.Name"></Column>
+            </Table>
+        </AntDesign.Col>
+        <AntDesign.Col Span="18">
+            <Table TItem="OvertimeAggregateViewModel" DataSource="@OvertimeAggregateViewModels"
+                   Class="table-striped" ScrollBarWidth="10px"
+                   Total="overtimeAggregateFilterModel.Page.Total"
+                   Loading="loading" ScrollX="1600" ScrollY="500"
+                   PageIndex="overtimeAggregateFilterModel.Page.PageIndex"
+                   PageSize="overtimeAggregateFilterModel.Page.PageSize"
+                   OnPageIndexChange="PageIndexChange"
+                   OnPageSizeChange="PageSizeChange">
+                <Column @bind-Field="@context.RegisterDate" Width="150" Format="dd/MM/yyyy" Fixed="left" />
+                <Column @bind-Field="@context.OvertimeType" Width="150">@context.OvertimeType.GetDescription()</Column>
+                <Column @bind-Field="@context.WorkTime" Width="200" Align="ColumnAlign.Center" />
+                <Column @bind-Field="@context.BreakTime" Width="200" Align="ColumnAlign.Center" />
+                <Column @bind-Field="@context.DayHourAmount" Format="N2" Width="150" />
+                <Column @bind-Field="@context.DayHourCoefficientAmount" Format="N2" Width="150" />
+                <Column @bind-Field="@context.NightHourAmount" Format="N2" Width="150" />
+                <Column @bind-Field="@context.NightHourCoefficientAmount" Format="N2" Width="150" />
+                <Column @bind-Field="@context.Reason" />
+                <Column @bind-Field="@context.Total" Format="N2" Width="150" Fixed="right" />
+                <SummaryRow>
+                    <SummaryCell ColSpan="1"></SummaryCell>
+                    <SummaryCell ColSpan="1"></SummaryCell>
+                    <SummaryCell ColSpan="1"></SummaryCell>
+                    <SummaryCell><Text Strong>Tổng</Text></SummaryCell>
+                    <SummaryCell>
+                        <Text Strong>@summary.DayHourAmount.ToString("N2")</Text>
+                    </SummaryCell>
+                    <SummaryCell>
+                        <Text Strong>@summary.DayHourCoefficientAmount.ToString("N2")</Text>
+                    </SummaryCell>
+                    <SummaryCell>
+                        <Text Strong>@summary.NightHourAmount.ToString("N2")</Text>
+                    </SummaryCell>
+                    <SummaryCell>
+                        <Text Strong>@summary.NightHourCoefficientAmount.ToString("N2")</Text>
+                    </SummaryCell>
+                    <SummaryCell></SummaryCell>
+                    <SummaryCell>
+                        <Text Strong>@summary.Total.ToString("N2")</Text>
+                    </SummaryCell>
+                </SummaryRow>
+            </Table>
+        </AntDesign.Col>
+    </Row>
+</div>
+
+@code {
+    void ShowSummaryConfirm()
+    {
+        try
+        {
+            if (overtimeAggregateFilterModel.Year.IsNotNullOrEmpty() && overtimeAggregateFilterModel.Month.IsNotNullOrEmpty())
+            {
+                cancelButtonProps.Disabled = false;
+                ModalService.Confirm(new ConfirmOptions()
+                {
+                    Title = "Xác nhận",
+                    Icon =@<Icon Type="exclamation-circle" Theme="Outline"></Icon>,
+                    Content = "Bạn có muốn tổng hợp dữ liệu",
+                    OkText = "Đồng ý",
+                    CancelText = "Hủy",
+                    OnOk = AggregationAsync,
+                    CancelButtonProps = cancelButtonProps
+                }); 
+            }
+            else
+            {
+                Notice.NotiWarning("Năm, tháng chưa được chọn!");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+}

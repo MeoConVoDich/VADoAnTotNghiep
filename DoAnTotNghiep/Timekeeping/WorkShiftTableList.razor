@@ -186,7 +186,7 @@
         <AntDesign.Col Span="24">
 
             <Table @ref="table" TItem="WorkShiftTableViewModel" DataSource="@WorkShiftTableViewModels"
-                   ScrollBarWidth="10px" RowClassName="@(_=>"editable-row")"
+                   ScrollBarWidth="10px" RowClassName="@(_=>"editable-row")" Class="table-striped"
                    Total="workShiftTableFilterModel.Page.Total" ScrollY="500px" ScrollX="2000"
                    Loading="loading"
                    PageIndex="workShiftTableFilterModel.Page.PageIndex"

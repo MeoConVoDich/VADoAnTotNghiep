@@ -9,7 +9,7 @@
     </PageHeaderExtra>
 </PageHeader>
 <div class="site-content">
-    <Row Gutter="8">
+    <Row Gutter="8" Style="padding-top:10px">
         <AntDesign.Col Span="24">
             <EditForm Model="fingerprintManagementFilterModel" OnValidSubmit="SearchAsync" Context="context">
                 <Row Gutter="8">
@@ -68,10 +68,10 @@
                            OnPageIndexChange="PageIndexStaffChangeAsync"
                            OnPageSizeChange="PageSizeStaffChangeAsync"
                            OnRowClick="OnRowClickAsync">
+                        <Column @bind-Field="@context.Stt" Width="50"></Column>
                         <Column @bind-Field="@context.Code"></Column>
                         <Column @bind-Field="@context.Name"></Column>
                         <Column @bind-Field="@context.DateOfBirth" Format="dd/MM/yyyy"></Column>
-                        <Column @bind-Field="@context.IdentityNumber"></Column>
                     </Table>
                 </AntDesign.Col>
             </Row>
@@ -129,8 +129,8 @@
                                 </SelectOptions>
                             </Select>
                         </AntDesign.Col>
-                        <AntDesign.Col Span="24" Class="border-hidden" Style="display:flex">
-                            <Input @bind-Value="@fileNameShow" disabled /><label for="importFingerprintFromExcel" class="ant-btn" style="margin-left:10px">Chọn File</label>
+                        <AntDesign.Col Span="24" Class="border-hidden" Style="display:flex; padding-top:10px;">
+                            <Input @bind-Value="@fileNameShow" disabled Style="height: 33px;" /><label for="importFingerprintFromExcel" class="ant-btn" style="margin-left: 10px;">Chọn File</label>
                             <InputFile id="importFingerprintFromExcel" hidden OnChange="@ImportFingerprintManagementFromExcelAsync" />
                         </AntDesign.Col>
                         <div>

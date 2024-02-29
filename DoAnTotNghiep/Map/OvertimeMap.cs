@@ -29,6 +29,7 @@ namespace DoAnTotNghiep.Map
             Property(x => x.CreateDate);
             Property(x => x.CreatorObject);
             Property(x => x.BreaksTimeType);
+            Property(x => x.OvertimeType);
             ManyToOne(x => x.Users, map =>
             {
                 map.Column("UsersId");

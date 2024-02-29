@@ -7,7 +7,6 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
-using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -103,6 +102,7 @@ namespace DoAnTotNghiep.Timekeeping
                 FingerprintGroupViewModels.ForEach(c =>
                 {
                     c.Stt = stt++;
+                    c.GetFingerprints();
                 });
                 fingerprintManagementFilterModel.Page.Total = page.Item2;
             }
@@ -356,6 +356,7 @@ namespace DoAnTotNghiep.Timekeeping
                     Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
                     importVisible = false;
                     await SearchAsync();
+                    await LoadDataAsync();
                 }
                 else
                 {

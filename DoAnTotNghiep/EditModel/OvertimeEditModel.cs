@@ -64,6 +64,10 @@ namespace DoAnTotNghiep.EditModel
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Kiểu nghỉ giữa ca")]
         public virtual BreaksTimeType BreaksTimeType { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Hình thức")]
+        public virtual OvertimeType OvertimeType { get; set; } = OvertimeType.NormalDay;
         public virtual DateTime CreateDate { get; set; }
         public virtual CreatorObject CreatorObject { get; set; }
         public virtual UsersEditModel UsersData { get; set; } = new UsersEditModel();
@@ -75,7 +79,14 @@ namespace DoAnTotNghiep.EditModel
             DataSource[Property.NameProperty(c => c.BreaksTimeType)] = Enum.GetValues(typeof(BreaksTimeType)).Cast<BreaksTimeType>()
               .Where(c => c != BreaksTimeType.All).OrderBy(c => c)
              .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
+            DataSource[Property.NameProperty(c => c.CreatorObject)] = Enum.GetValues(typeof(CreatorObject)).Cast<CreatorObject>()
+             .Where(c => c != CreatorObject.All).OrderBy(c => c)
+            .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
+            DataSource[Property.NameProperty(c => c.OvertimeType)] = Enum.GetValues(typeof(OvertimeType)).Cast<OvertimeType>()
+            .Where(c => c != OvertimeType.All).OrderBy(c => c)
+           .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
             InputFields.Add<OvertimeEditModel, BreaksTimeType>(c => c.BreaksTimeType);
+            InputFields.Add<OvertimeEditModel, OvertimeType>(c => c.OvertimeType);
             InputFields.Add<OvertimeEditModel>(c => c.StartTime);
             InputFields.Add<OvertimeEditModel>(c => c.EndTime);
             InputFields.Add<OvertimeEditModel>(c => c.StartBreakTime);
@@ -88,6 +99,13 @@ namespace DoAnTotNghiep.EditModel
             if (nameProperty == Property.NameProperty(c => c.BreaksTimeType))
             {
                 if (BreaksTimeType == BreaksTimeType.All)
+                {
+                    Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
+                }
+            }
+            if (nameProperty == Property.NameProperty(c => c.OvertimeType))
+            {
+                if (OvertimeType == OvertimeType.All)
                 {
                     Errors.AddExist(nameProperty, "Dữ liệu bắt buộc nhập!");
                 }

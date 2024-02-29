@@ -82,6 +82,7 @@
             <Column @bind-Field="@context.StaffCode" Width="150" Fixed="left"></Column>
             <Column @bind-Field="@context.StaffName" Width="150" Fixed="left"></Column>
             <Column @bind-Field="@context.RegisterDate" Format="dd/MM/yyyy"></Column>
+            <Column @bind-Field="@context.OvertimeType">@context.OvertimeType.GetDescription()</Column>
             <Column @bind-Field="@context.StartTime" Format="HH:mm"></Column>
             <Column @bind-Field="@context.EndTime" Format="HH:mm"></Column>
             <Column @bind-Field="@context.TotalHour">@context.TotalHour.ToDecimalFormatDot().ToFormatedNumber() </Column>
