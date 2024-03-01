@@ -22,7 +22,6 @@ namespace DoAnTotNghiep.Domain
         public virtual DateTime? EndBreakTime { get; set; }
         public virtual int Year { get; set; }
         public virtual int Month { get; set; }
-        public virtual Users Users { get; set; }
         public virtual string Reason { get; set; }
         public virtual OvertimeType OvertimeType { get; set; }
     }

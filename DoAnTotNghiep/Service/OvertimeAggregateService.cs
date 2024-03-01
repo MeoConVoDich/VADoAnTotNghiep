@@ -107,7 +107,7 @@ namespace DoAnTotNghiep.Service
                                 .Where(c => c.Month == model.Month)
                                 .Where(c => usersBatchIds.Contains(c.UsersId))
                                 .DeleteAsync();
-                            var Overtimes = await session.Query<Overtime>()
+                            var overtimes = await session.Query<Overtime>()
                                 .Where(c => usersBatchIds.Contains(c.Users.Id))
                                 .Where(c => c.ApprovalStatus == ApprovalStatus.Approved)
                                 .Where(c => c.RegisterDate.Value.Month == model.Month)
@@ -116,10 +116,11 @@ namespace DoAnTotNghiep.Service
 
                             foreach (var usersId in usersBatchIds)
                             {
-                                var OvertimeUsers = Overtimes.Where(c => c.Users.Id == usersId);
-                                foreach (var ot in OvertimeUsers)
+                                var overtimeUsers = overtimes.Where(c => c.Users.Id == usersId);
+                                foreach (var ot in overtimeUsers)
                                 {
                                     OvertimeAggregate dt = _mapper.Map<OvertimeAggregate>(ot);
+                                    dt.Id = ObjectExtentions.GenerateGuid();
                                     dt.Month = model.Month.Value;
                                     dt.Year = model.Year.Value;
                                     if (overtimeRate != null)

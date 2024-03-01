@@ -48,7 +48,7 @@ namespace DoAnTotNghiep.Service
             {
                 if (model.RegisterDate.HasValue)
                 {
-                    query = query.Where(c => c.RegisterDate.Value.Date <= model.RegisterDate.Value.Date);
+                    query = query.Where(c => c.RegisterDate.Value.Date == model.RegisterDate.Value.Date);
                     query = query.Where(c => c.ApprovalStatus == ApprovalStatus.Approved || c.ApprovalStatus == ApprovalStatus.Pending);
                 }
                 query = query.Take(2);

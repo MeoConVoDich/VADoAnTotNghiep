@@ -146,4 +146,10 @@ namespace DoAnTotNghiep.Config
         [Display(Name = "Ngày lễ")]
         Holiday = 3,
     }
+
+    public enum TimekeepingTypeDefault
+    {
+        OFF,
+        KL,
+    }
 }
