@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DoAnTotNghiep.EditModel 
+namespace DoAnTotNghiep.EditModel
 {
-    public class OvertimeAggregateFilterEditModel : EditBaseModel
+    public class TimekeepingAggregateFilterEditModel : EditBaseModel
     {
         public Page Page { get; set; }
         public string Id { get; set; }
@@ -23,10 +23,9 @@ namespace DoAnTotNghiep.EditModel
         public string UsersId { get; set; }
 
         public string CodeOrName { get; set; }
-        public Property<OvertimeAggregateFilterEditModel> Property { get; set; } = new Property<OvertimeAggregateFilterEditModel>();
-        public OvertimeAggregateFilterEditModel()
+        public Property<TimekeepingAggregateFilterEditModel> Property  = new Property<TimekeepingAggregateFilterEditModel>();
+        public TimekeepingAggregateFilterEditModel()
         {
-            Property = new Property<OvertimeAggregateFilterEditModel>();
             DataSource[Property.Name(c => c.Year)] = DateTimeExtentions.GetListYears();
             DataSource[Property.Name(c => c.Month)] = DateTimeExtentions.GetListMonths();
         }

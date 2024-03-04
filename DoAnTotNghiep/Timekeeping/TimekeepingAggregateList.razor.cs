@@ -29,16 +29,16 @@ namespace DoAnTotNghiep.Timekeeping
         [Inject] IMapper Mapper { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] UsersService UsersService { get; set; }
-        [Inject] OvertimeAggregateService OvertimeAggregateService { get; set; }
+        [Inject] TimekeepingAggregateService TimekeepingAggregateService { get; set; }
         [Inject] ModalService ModalService { get; set; }
-        OvertimeAggregateFilterEditModel overtimeAggregateFilterModel = new OvertimeAggregateFilterEditModel();
+        TimekeepingAggregateFilterEditModel timekeepingAggregateFilterModel = new TimekeepingAggregateFilterEditModel();
         UsersSearch usersSearch = new UsersSearch();
         List<Users> ListUsers = new List<Users>();
         List<UsersViewModel> UsersViewModels = new List<UsersViewModel>();
-        List<OvertimeAggregate> OvertimeAggregates = new List<OvertimeAggregate>();
-        List<OvertimeAggregateViewModel> OvertimeAggregateViewModels = new List<OvertimeAggregateViewModel>();
-        List<OvertimeAggregate> OvertimeAggregateExcelModels = new List<OvertimeAggregate>();
-        OvertimeAggregateViewModel summary = new OvertimeAggregateViewModel();
+        List<TimekeepingAggregate> TimekeepingAggregates = new List<TimekeepingAggregate>();
+        List<TimekeepingAggregateViewModel> TimekeepingAggregateViewModels = new List<TimekeepingAggregateViewModel>();
+        List<TimekeepingAggregate> TimekeepingAggregateExcelModels = new List<TimekeepingAggregate>();
+        TimekeepingAggregateViewModel summary = new TimekeepingAggregateViewModel();
         IEnumerable<UsersViewModel> selectedRows;
         ButtonProps cancelButtonProps;
         Table<UsersViewModel> table;
@@ -55,7 +55,7 @@ namespace DoAnTotNghiep.Timekeeping
                     Disabled = false
                 };
                 usersSearch.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                overtimeAggregateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
+                timekeepingAggregateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadUsersAsync();
             }
             catch (Exception ex)
@@ -98,17 +98,12 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 loading = true;
                 StateHasChanged();
-                summary = new OvertimeAggregateViewModel();
-                var search = Mapper.Map<OvertimeAggregateSearch>(overtimeAggregateFilterModel);
-                var page = await OvertimeAggregateService.GetAllWithFilterAsync(search);
-                OvertimeAggregates = page.Item1;
-                overtimeAggregateFilterModel.Page.Total = page.Item2;
+                summary = new TimekeepingAggregateViewModel();
+                var search = Mapper.Map<TimekeepingAggregateSearch>(timekeepingAggregateFilterModel);
+                var page = await TimekeepingAggregateService.GetAllWithFilterAsync(search);
+                TimekeepingAggregates = page.Item1;
+                timekeepingAggregateFilterModel.Page.Total = page.Item2;
                 GetPageData();
-                summary.DayHourAmount = OvertimeAggregates.Sum(c => c.DayHourAmount);
-                summary.DayHourCoefficientAmount = OvertimeAggregates.Sum(c => c.DayHourCoefficientAmount);
-                summary.NightHourAmount = OvertimeAggregates.Sum(c => c.NightHourAmount);
-                summary.NightHourCoefficientAmount = OvertimeAggregates.Sum(c => c.NightHourCoefficientAmount);
-                summary.Total = OvertimeAggregates.Sum(c => c.Total);
             }
             catch (Exception ex)
             {
@@ -125,22 +120,10 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                var data = OvertimeAggregates.Skip(overtimeAggregateFilterModel.Page.PageSize * (overtimeAggregateFilterModel.Page.PageIndex - 1))
-                    .Take(overtimeAggregateFilterModel.Page.PageSize).ToList();
-                OvertimeAggregateViewModels = Mapper.Map<List<OvertimeAggregateViewModel>>(data ?? new List<OvertimeAggregate>());
-                int stt = overtimeAggregateFilterModel.Page.PageSize * (overtimeAggregateFilterModel.Page.PageIndex - 1) + 1;
-                OvertimeAggregateViewModels.ForEach(c =>
-                {
-                    if (c.StartTime.HasValue && c.EndTime.HasValue)
-                    {
-                        c.WorkTime = $"{c.StartTime?.ToString("HH:mm")} - {c.EndTime?.ToString("HH:mm")}";
-                    }
-                    if (c.StartBreakTime.HasValue && c.EndBreakTime.HasValue)
-                    {
-                        c.BreakTime = $"{c.StartBreakTime?.ToString("HH:mm")} - {c.EndBreakTime?.ToString("HH:mm")}";
-                    }
-                    c.Stt = stt++;
-                });
+                var data = TimekeepingAggregates.Skip(timekeepingAggregateFilterModel.Page.PageSize * (timekeepingAggregateFilterModel.Page.PageIndex - 1))
+                    .Take(timekeepingAggregateFilterModel.Page.PageSize).ToList();
+                TimekeepingAggregateViewModels = Mapper.Map<List<TimekeepingAggregateViewModel>>(data ?? new List<TimekeepingAggregate>());
+                int stt = timekeepingAggregateFilterModel.Page.PageSize * (timekeepingAggregateFilterModel.Page.PageIndex - 1) + 1;
             }
             catch (Exception ex)
             {
@@ -165,7 +148,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                if (overtimeAggregateFilterModel.UsersId.IsNotNullOrEmpty())
+                if (timekeepingAggregateFilterModel.UsersId.IsNotNullOrEmpty())
                 {
                     await LoadDataAsync();
                 }
@@ -180,7 +163,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                overtimeAggregateFilterModel.Year = year;
+                timekeepingAggregateFilterModel.Year = year;
                 await SearchDataAsync();
                 StateHasChanged();
             }
@@ -194,7 +177,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                overtimeAggregateFilterModel.Month = month;
+                timekeepingAggregateFilterModel.Month = month;
                 await SearchDataAsync();
                 StateHasChanged();
             }
@@ -236,7 +219,7 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                overtimeAggregateFilterModel.Page.PageIndex = e.Page;
+                timekeepingAggregateFilterModel.Page.PageIndex = e.Page;
                 GetPageData();
             }
             catch (Exception ex)
@@ -249,8 +232,8 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                overtimeAggregateFilterModel.Page.PageIndex = 1;
-                overtimeAggregateFilterModel.Page.PageSize = e.PageSize;
+                timekeepingAggregateFilterModel.Page.PageIndex = 1;
+                timekeepingAggregateFilterModel.Page.PageSize = e.PageSize;
                 GetPageData();
             }
             catch (Exception ex)
@@ -263,9 +246,9 @@ namespace DoAnTotNghiep.Timekeeping
         {
             try
             {
-                if (overtimeAggregateFilterModel.Year.IsNotNullOrEmpty() && overtimeAggregateFilterModel.Month.IsNotNullOrEmpty() && rowData.IsNotNullOrEmpty())
+                if (timekeepingAggregateFilterModel.Year.IsNotNullOrEmpty() && timekeepingAggregateFilterModel.Month.IsNotNullOrEmpty() && rowData.IsNotNullOrEmpty())
                 {
-                    overtimeAggregateFilterModel.UsersId = rowData.Data.Id;
+                    timekeepingAggregateFilterModel.UsersId = rowData.Data.Id;
                     await LoadDataAsync();
                 }
                 else
@@ -302,27 +285,27 @@ namespace DoAnTotNghiep.Timekeeping
                 bool result;
                 if (ids.Any())
                 {
-                    result = await OvertimeAggregateService.AggregateAsync(new OvertimeAggregateSearch()
+                    result = await TimekeepingAggregateService.AggregateAsync(new TimekeepingAggregateSearch()
                     {
                         UsersIds = ids,
-                        Month = overtimeAggregateFilterModel.Month.ToInt(),
-                        Year = overtimeAggregateFilterModel.Year.ToInt(),
+                        Month = timekeepingAggregateFilterModel.Month.ToInt(),
+                        Year = timekeepingAggregateFilterModel.Year.ToInt(),
                     });
                 }
                 else
                 {
-                    result = await OvertimeAggregateService.AggregateAsync(new OvertimeAggregateSearch()
+                    result = await TimekeepingAggregateService.AggregateAsync(new TimekeepingAggregateSearch()
                     {
-                        CodeOrName = overtimeAggregateFilterModel.CodeOrName,
-                        Month = overtimeAggregateFilterModel.Month.ToInt(),
-                        Year = overtimeAggregateFilterModel.Year.ToInt(),
+                        CodeOrName = timekeepingAggregateFilterModel.CodeOrName,
+                        Month = timekeepingAggregateFilterModel.Month.ToInt(),
+                        Year = timekeepingAggregateFilterModel.Year.ToInt(),
                     });
                 }
                 if (result)
                 {
                     Notice.NotiSuccess("Tổng hợp dữ liệu thành công");
-                    overtimeAggregateFilterModel.Page.PageIndex = 1;
-                    if (overtimeAggregateFilterModel.UsersId != null)
+                    timekeepingAggregateFilterModel.Page.PageIndex = 1;
+                    if (timekeepingAggregateFilterModel.UsersId != null)
                     {
                         await LoadDataAsync();
                     }

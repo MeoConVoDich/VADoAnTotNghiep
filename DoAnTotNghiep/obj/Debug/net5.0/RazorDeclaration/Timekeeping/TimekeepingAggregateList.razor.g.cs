@@ -124,7 +124,7 @@ using DoAnTotNghiep.ViewModel;
 #line default
 #line hidden
 #nullable disable
-    [Microsoft.AspNetCore.Components.RouteAttribute("/cham-cong/xu-ly-du-lieu-lam-them")]
+    [Microsoft.AspNetCore.Components.RouteAttribute("/cham-cong/tong-hop-cong-may")]
     public partial class TimekeepingAggregateList : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
@@ -133,13 +133,13 @@ using DoAnTotNghiep.ViewModel;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 97 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
+#line 94 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
        
     void ShowSummaryConfirm()
     {
         try
         {
-            if (overtimeAggregateFilterModel.Year.IsNotNullOrEmpty() && overtimeAggregateFilterModel.Month.IsNotNullOrEmpty())
+            if (timekeepingAggregateFilterModel.Year.IsNotNullOrEmpty() && timekeepingAggregateFilterModel.Month.IsNotNullOrEmpty())
             {
                 cancelButtonProps.Disabled = false;
                 ModalService.Confirm(new ConfirmOptions()
@@ -154,7 +154,7 @@ using DoAnTotNghiep.ViewModel;
             __builder2.AddMarkupContent(0, "<Icon Type=\"exclamation-circle\" Theme=\"Outline\"></Icon>");
         }
 #nullable restore
-#line 108 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
+#line 105 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
                                                                                   ,
 Content = "Bạn có muốn tổng hợp dữ liệu",
 OkText = "Đồng ý",

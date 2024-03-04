@@ -209,3 +209,4 @@ C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\bin\Debug\net5.0\EPPlus.S
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\OvertimeAggregateList.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Timekeeping\OvertimeAggregateList.razor.g.cs
 C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\RazorDeclaration\Timekeeping\TimekeepingAggregateList.razor.g.cs
+C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\obj\Debug\net5.0\Razor\Timekeeping\TimekeepingAggregateList.razor.g.cs

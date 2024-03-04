@@ -51,6 +51,7 @@ namespace DoAnTotNghiep
             services.AddSingleton<WorkShiftTableService>();
             services.AddSingleton<FingerprintManagementService>();
             services.AddSingleton<OvertimeAggregateService>();
+            services.AddSingleton<TimekeepingAggregateService>();
             services.AddSingleton<ISessionFactory>(NHibernateConfig.BuildSessionFactory());
             services.AddBlazoredSessionStorage();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

@@ -1,17 +1,17 @@
-﻿@page "/cham-cong/xu-ly-du-lieu-lam-them"
-<PageHeader Class="site-page-header" Title="Xử lý dữ liệu làm thêm">
+﻿@page "/cham-cong/tong-hop-cong-may"
+<PageHeader Class="site-page-header" Title="Tổng hợp công máy">
     <PageHeaderExtra>
         <Breadcrumb>
             <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
             <BreadcrumbItem>Chấm công</BreadcrumbItem>
-            <BreadcrumbItem>Xử lý dữ liệu làm thêm</BreadcrumbItem>
+            <BreadcrumbItem>Tổng hợp công máy</BreadcrumbItem>
         </Breadcrumb>
     </PageHeaderExtra>
 </PageHeader>
 <div class="site-content">
     <Row Gutter="8" Style="padding-top: 10px">
         <AntDesign.Col Span="24">
-            <EditForm Model="overtimeAggregateFilterModel" OnValidSubmit="SearchAsync">
+            <EditForm Model="timekeepingAggregateFilterModel" OnValidSubmit="SearchAsync">
                 <Row Gutter="8">
                     <Space Size="@("small")">
                         <SpaceItem>
@@ -20,10 +20,10 @@
                     </Space>
                     <AntDesign.Col Span="2">
                         <Select TItemValue="string" TItem="string"
-                                Value="@overtimeAggregateFilterModel?.Year"
+                                Value="@timekeepingAggregateFilterModel?.Year"
                                 OnSelectedItemChanged="e => YearChangeAsync(e)">
                             <SelectOptions>
-                                @foreach (var item in overtimeAggregateFilterModel.DataSource[overtimeAggregateFilterModel.Property.NameProperty(c => c.Year)])
+                                @foreach (var item in timekeepingAggregateFilterModel.DataSource[timekeepingAggregateFilterModel.Property.NameProperty(c => c.Year)])
                                 {
                                     <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
                                 }
@@ -32,10 +32,10 @@
                     </AntDesign.Col>
                     <AntDesign.Col Span="2">
                         <Select TItemValue="string" TItem="string"
-                                Value="@overtimeAggregateFilterModel?.Month"
+                                Value="@timekeepingAggregateFilterModel?.Month"
                                 OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
                             <SelectOptions>
-                                @foreach (var item in overtimeAggregateFilterModel.DataSource[overtimeAggregateFilterModel.Property.NameProperty(c => c.Month)])
+                                @foreach (var item in timekeepingAggregateFilterModel.DataSource[timekeepingAggregateFilterModel.Property.NameProperty(c => c.Month)])
                                 {
                                     <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
                                 }
@@ -71,24 +71,21 @@
             </Table>
         </AntDesign.Col>
         <AntDesign.Col Span="18">
-            <Table TItem="OvertimeAggregateViewModel" DataSource="@OvertimeAggregateViewModels"
+            <Table TItem="TimekeepingAggregateViewModel" DataSource="@TimekeepingAggregateViewModels"
                    Class="table-striped" ScrollBarWidth="10px"
-                   Total="overtimeAggregateFilterModel.Page.Total"
-                   Loading="loading" ScrollX="1600" ScrollY="500"
-                   PageIndex="overtimeAggregateFilterModel.Page.PageIndex"
-                   PageSize="overtimeAggregateFilterModel.Page.PageSize"
+                   Total="timekeepingAggregateFilterModel.Page.Total"
+                   Loading="loading" ScrollX="1150" ScrollY="500"
+                   PageIndex="timekeepingAggregateFilterModel.Page.PageIndex"
+                   PageSize="timekeepingAggregateFilterModel.Page.PageSize"
                    OnPageIndexChange="PageIndexChange"
                    OnPageSizeChange="PageSizeChange">
-                <Column @bind-Field="@context.RegisterDate" Width="150" Format="dd/MM/yyyy" Fixed="left" />
-                <Column @bind-Field="@context.OvertimeType" Width="150">@context.OvertimeType.GetDescription()</Column>
-                <Column @bind-Field="@context.WorkTime" Width="200" Align="ColumnAlign.Center" />
-                <Column @bind-Field="@context.BreakTime" Width="200" Align="ColumnAlign.Center" />
-                <Column @bind-Field="@context.DayHourAmount" Format="N2" Width="150" />
-                <Column @bind-Field="@context.DayHourCoefficientAmount" Format="N2" Width="150" />
-                <Column @bind-Field="@context.NightHourAmount" Format="N2" Width="150" />
-                <Column @bind-Field="@context.NightHourCoefficientAmount" Format="N2" Width="150" />
-                <Column @bind-Field="@context.Reason" />
-                <Column @bind-Field="@context.Total" Format="N2" Width="150" Fixed="right" />
+                <Column @bind-Field="@context.DateOfPhase" Width="150" Format="dd/MM/yyyy" Fixed="left" />
+                <Column @bind-Field="@context.ShiftOfPhase" Width="150"></Column>
+                <Column @bind-Field="@context.CheckinDate" Width="200" Format="HH:mm" Align="ColumnAlign.Center" />
+                <Column @bind-Field="@context.CheckoutDate" Width="200" Format="HH:mm" Align="ColumnAlign.Center" />
+                <Column @bind-Field="@context.TimekeepingCode" Width="150" />
+                <Column @bind-Field="@context.WorkLateMinutes" Width="150" />
+                <Column @bind-Field="@context.LeaveEarlyMinutes" Width="150" />
             </Table>
         </AntDesign.Col>
     </Row>
@@ -99,7 +96,7 @@
     {
         try
         {
-            if (overtimeAggregateFilterModel.Year.IsNotNullOrEmpty() && overtimeAggregateFilterModel.Month.IsNotNullOrEmpty())
+            if (timekeepingAggregateFilterModel.Year.IsNotNullOrEmpty() && timekeepingAggregateFilterModel.Month.IsNotNullOrEmpty())
             {
                 cancelButtonProps.Disabled = false;
                 ModalService.Confirm(new ConfirmOptions()

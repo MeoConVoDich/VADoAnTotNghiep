@@ -12,7 +12,7 @@
     <EditForm Model="workShiftTableFilterModel" OnSubmit="e => SearchAsync()">
         <DataAnnotationsValidator />
         <InputWatcher @ref="inputWatcher"></InputWatcher>
-        <Row Gutter="8">
+        <Row Gutter="8"  Style="padding-top: 10px">
             <Space Size=@(("8", "8")) Wrap>
                 @if (workShiftTableFilterModel.ReadOnly)
                 {
