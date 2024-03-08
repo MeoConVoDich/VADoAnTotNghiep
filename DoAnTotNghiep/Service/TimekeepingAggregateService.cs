@@ -6,7 +6,9 @@ using NHibernate;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -77,6 +79,8 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         List<TimekeepingAggregate> timekeepingAggregateAdds = new List<TimekeepingAggregate>();
+                        List<TimekeepingProcessing> timekeepingProcessingAdds = new List<TimekeepingProcessing>();
+                        List<SummaryOfTimekeeping> summaryOfTimekeepingAdds = new List<SummaryOfTimekeeping>();
                         List<string> usersIds = new List<string>();
                         if (model.UsersIds?.Any() == true)
                         {
@@ -100,6 +104,8 @@ namespace DoAnTotNghiep.Service
                                .Where(c => c.EffectiveState == EffectiveState.Active).ToListAsync();
                         var timekeepingShifts = await session.Query<TimekeepingShift>()
                                 .Where(c => c.EffectiveState == EffectiveState.Active).ToListAsync();
+                        var timekeepingFormulas = await session.Query<TimekeepingFormula>().ToListAsync();
+
                         int j = 0;
                         int batchSize = 200;
 
@@ -108,10 +114,24 @@ namespace DoAnTotNghiep.Service
                             var usersBatchIds = usersIds.Skip(j * batchSize).Take(batchSize).ToList();
                             j++;
                             await session.Query<TimekeepingAggregate>()
-                             .Where(c => c.Year == model.Year)
-                             .Where(c => c.Month == model.Month)
-                             .Where(c => usersBatchIds.Contains(c.UsersId))
-                             .DeleteAsync();
+                                .Where(c => c.Year == model.Year)
+                                .Where(c => c.Month == model.Month)
+                                .Where(c => usersBatchIds.Contains(c.UsersId))
+                                .DeleteAsync();
+                            await session.Query<TimekeepingProcessing>()
+                                .Where(c => c.Year == model.Year)
+                                .Where(c => c.Month == model.Month)
+                                .Where(c => usersBatchIds.Contains(c.UsersId))
+                                .DeleteAsync();
+                            await session.Query<SummaryOfTimekeeping>()
+                                .Where(c => c.Year == model.Year)
+                                .Where(c => c.Month == model.Month)
+                                .Where(c => usersBatchIds.Contains(c.UsersId))
+                                .DeleteAsync();
+                            var overtimeAggregates = await session.Query<OvertimeAggregate>()
+                                .Where(c => c.Year == model.Year)
+                                .Where(c => c.Month == model.Month)
+                                .Where(c => usersBatchIds.Contains(c.UsersId)).ToListAsync();
                             var workShiftTables = await session.Query<WorkShiftTable>()
                                 .Where(c => c.Year == model.Year)
                                 .Where(c => c.Month == model.Month)
@@ -136,6 +156,9 @@ namespace DoAnTotNghiep.Service
 
                             foreach (var usersId in usersBatchIds)
                             {
+                                List<TimekeepingAggregate> timekeepingAggregateUsersAdds = new List<TimekeepingAggregate>();
+                                var shiftStaff = workShiftTables.FirstOrDefault(c => c.UsersId == usersId);
+                                int standradDay = 0;
                                 foreach (var day in dayOfPhase)
                                 {
                                     TimekeepingAggregate dt;
@@ -161,8 +184,11 @@ namespace DoAnTotNghiep.Service
                                         Month = model.Month.Value,
                                         Year = model.Year.Value,
                                     };
-                                    var shiftStaff = workShiftTables.FirstOrDefault(c => c.UsersId == usersId);
                                     var shiftCodeByDay = GetDataFromShiftStaff(shiftStaff, day.Key);
+                                    if (shiftCodeByDay.IsNotNullOrEmpty())
+                                    {
+                                        standradDay++;
+                                    }
                                     var shift = timekeepingShifts.FirstOrDefault(c => c.Code == shiftCodeByDay);
                                     if (shift != null)
                                     {
@@ -296,11 +322,98 @@ namespace DoAnTotNghiep.Service
                                             dt.LeaveEarlyMinutes = Convert.ToInt32(early.TotalMinutes);
                                         }
                                     }
-                                    timekeepingAggregateAdds.Add(dt);
+                                    timekeepingAggregateUsersAdds.Add(dt);
                                 }
+                                TimekeepingProcessing timekeepingProcessing = new()
+                                {
+                                    Id = ObjectExtentions.GenerateGuid(),
+                                    UsersId = usersId,
+                                    Year = model.Year.Value,
+                                    Month = model.Month.Value,
+                                };
+                                for (int i = 1; i < 32; i++)
+                                {
+                                    var timekeepingAggregate = timekeepingAggregateUsersAdds.FirstOrDefault(c => c.DateOfPhase.Value.Date.Day == i);
+                                    timekeepingProcessing.SetValue($"Day{i:00}", timekeepingAggregate?.TimekeepingCode);
+                                }
+
+                                SummaryOfTimekeeping summaryOfTimekeeping = new()
+                                {
+                                    Id = ObjectExtentions.GenerateGuid(),
+                                    UsersId = usersId,
+                                    Year = model.Year.Value,
+                                    Month = model.Month.Value,
+                                    StandradDay = standradDay,
+                                };
+
+                                Dictionary<string, string> timekeepingData = new Dictionary<string, string>();
+                                Dictionary<string, string> dataFormula = new();
+                                Dictionary<string, string> mappingField = new Dictionary<string, string>();
+                                DataTable table = new DataTable();
+                                foreach (var item in timekeepingTypes)
+                                {
+                                    timekeepingData.TryAdd(item.Code, "0");
+                                    int sum = 0;
+                                    for (int i = 1; i < 32; i++)
+                                    {
+                                        var value = timekeepingProcessing.GetValue($"Day{i:00}")?.ToString();
+                                        if (value == item.Code)
+                                        {
+                                            timekeepingData[item.Code] = (++sum).ToString();
+                                        }
+                                    }
+                                }
+
+                                foreach (var item in timekeepingTypes)
+                                {
+                                    mappingField.TryAdd(item.Code, item.Name.RemoveSpace());
+                                }
+                                foreach (var item in timekeepingFormulas)
+                                {
+                                    decimal sum = 0M;
+                                    var formula = item.Formula;
+                                    if (formula != null)
+                                    {
+                                        dataFormula.TryAdd(item.Code, "0");
+                                        formula = formula.RemoveSpace();
+                                        foreach (var map in mappingField)
+                                        {
+                                            formula = formula.Replace($"[{map.Value}]", $"{GetDataTypeValue(timekeepingData, map.Key)}");
+                                        }
+                                        formula = formula.RemoveSpace().ConvertToDot();
+                                        try
+                                        {
+                                            var abc = table.Compute(formula ?? "0", string.Empty);
+                                            sum = Convert.ToDecimal(abc);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            sum = 0M;
+                                        }
+                                        dataFormula[item.Code] = sum.ToDecimalUnFormat();
+                                    }
+                                }
+
+                                summaryOfTimekeeping.OvertimeHour = overtimeAggregates.Where(c => c.UsersId == usersId).Sum(c => c.Total);
+                                summaryOfTimekeeping.LeaveEarlyMinutes = timekeepingAggregateUsersAdds.Sum(c => c.LeaveEarlyMinutes ?? 0);
+                                summaryOfTimekeeping.WorkLateMinutes = timekeepingAggregateUsersAdds.Sum(c => c.WorkLateMinutes ?? 0);
+                                summaryOfTimekeeping.DataFormula = JsonSerializer.Serialize(dataFormula, AppMappingProfile.options);
+                                summaryOfTimekeeping.DataType = JsonSerializer.Serialize(timekeepingData, AppMappingProfile.options);
+
+                                timekeepingAggregateAdds.AddRange(timekeepingAggregateUsersAdds);
+                                timekeepingProcessingAdds.Add(timekeepingProcessing);
+                                summaryOfTimekeepingAdds.Add(summaryOfTimekeeping);
                             }
                         }
                         foreach (var item in timekeepingAggregateAdds)
+                        {
+                            await session.SaveAsync(item);
+                        }
+                        foreach (var item in timekeepingProcessingAdds)
+                        {
+                            await session.SaveAsync(item);
+                        }
+                        foreach (var item in summaryOfTimekeepingAdds)
                         {
                             await session.SaveAsync(item);
                         }
@@ -319,6 +432,16 @@ namespace DoAnTotNghiep.Service
         string GetDataFromShiftStaff(WorkShiftTable source, string dateNumber)
         {
             return source?.GetValue(dateNumber)?.ToString() ?? string.Empty;
+        }
+
+        public string GetDataTypeValue(Dictionary<string, string> dataType, string nameProperty)
+        {
+            if (nameProperty.IsNotNullOrEmpty() && dataType.ContainsKey(nameProperty) == true)
+            {
+                var a = dataType[nameProperty];
+                return dataType[nameProperty];
+            }
+            return "0";
         }
     }
 }

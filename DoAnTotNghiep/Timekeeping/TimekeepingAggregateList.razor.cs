@@ -30,14 +30,20 @@ namespace DoAnTotNghiep.Timekeeping
         [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] UsersService UsersService { get; set; }
         [Inject] TimekeepingAggregateService TimekeepingAggregateService { get; set; }
+        [Inject] SummaryOfTimekeepingService SummaryOfTimekeepingService { get; set; }
+        [Inject] TimekeepingTypeService TimekeepingTypeService { get; set; }
+        [Inject] TimekeepingFormulaService TimekeepingFormulaService { get; set; }
         [Inject] ModalService ModalService { get; set; }
         TimekeepingAggregateFilterEditModel timekeepingAggregateFilterModel = new TimekeepingAggregateFilterEditModel();
         UsersSearch usersSearch = new UsersSearch();
         List<Users> ListUsers = new List<Users>();
         List<UsersViewModel> UsersViewModels = new List<UsersViewModel>();
         List<TimekeepingAggregate> TimekeepingAggregates = new List<TimekeepingAggregate>();
+        List<TimekeepingType> TimekeepingTypes = new List<TimekeepingType>();
+        List<TimekeepingFormula> TimekeepingFormulas = new List<TimekeepingFormula>();
         List<TimekeepingAggregateViewModel> TimekeepingAggregateViewModels = new List<TimekeepingAggregateViewModel>();
         List<TimekeepingAggregate> TimekeepingAggregateExcelModels = new List<TimekeepingAggregate>();
+        List<TimekeepingSummaryViewModel> TimekeepingSummaryViewModels = new List<TimekeepingSummaryViewModel>();
         TimekeepingAggregateViewModel summary = new TimekeepingAggregateViewModel();
         IEnumerable<UsersViewModel> selectedRows;
         ButtonProps cancelButtonProps;
@@ -57,6 +63,8 @@ namespace DoAnTotNghiep.Timekeeping
                 usersSearch.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 timekeepingAggregateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 await LoadUsersAsync();
+                await LoadTimekeepingTypeAsync();
+                await LoadTimekeepingFormulaAsync();
             }
             catch (Exception ex)
             {
@@ -89,6 +97,35 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 usersLoading = false;
                 StateHasChanged();
+            }
+        }
+
+        async Task LoadTimekeepingTypeAsync()
+        {
+            try
+            {
+                var data = await TimekeepingTypeService.GetAllWithFilterAsync(new TimekeepingTypeSearch()
+                {
+                    EffectiveState = EffectiveState.Active,
+                });
+                TimekeepingTypes = data.Item1;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        async Task LoadTimekeepingFormulaAsync()
+        {
+            try
+            {
+                var data = await TimekeepingFormulaService.GetAllWithFilterAsync(new TimekeepingFormulaSearch());
+                TimekeepingFormulas = data.Item1;
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
 
@@ -131,6 +168,76 @@ namespace DoAnTotNghiep.Timekeeping
             }
         }
 
+        async Task LoadSummaryOfTimekeepingAsync()
+        {
+            try
+            {
+                TimekeepingSummaryViewModels = new List<TimekeepingSummaryViewModel>();
+                var search = Mapper.Map<SummaryOfTimekeepingSearch>(timekeepingAggregateFilterModel);
+                var data = await SummaryOfTimekeepingService.GetWithFilterAsync(search);
+                var summaryOfTimekeepingView = Mapper.Map<SummaryOfTimekeepingViewModel>(data);
+                var dataTypes = summaryOfTimekeepingView.DataType.Where(c => c.Value != "0");
+                TimekeepingSummaryViewModels.Add(new TimekeepingSummaryViewModel(nameof(summaryOfTimekeepingView.StandradDay),"Công chuẩn",
+                                                               $"{summaryOfTimekeepingView.StandradDay} công"));
+                TimekeepingSummaryViewModels.Add(new TimekeepingSummaryViewModel(nameof(summaryOfTimekeepingView.WorkLateMinutes), "Số phút đi muộn",
+                                                                $"{summaryOfTimekeepingView.WorkLateMinutes} phút"));
+                TimekeepingSummaryViewModels.Add(new TimekeepingSummaryViewModel(nameof(summaryOfTimekeepingView.LeaveEarlyMinutes), "Số phút về sớm",
+                                                               $"{summaryOfTimekeepingView.LeaveEarlyMinutes} phút"));
+                TimekeepingSummaryViewModels.Add(new TimekeepingSummaryViewModel(nameof(summaryOfTimekeepingView.OvertimeHour), "Số giờ làm thêm",
+                                                               $"{summaryOfTimekeepingView.OvertimeHour.ToDecimalUnFormatDot()} giờ"));
+                foreach (var dataType in dataTypes)
+                {
+                    TimekeepingSummaryViewModels.Add(new TimekeepingSummaryViewModel(dataType.Key, GetTimekeepingTypeName(dataType.Key), dataType.Value.ToDecimalUnFormat()));
+                }
+                foreach (var dataFormula in summaryOfTimekeepingView.DataFormula)
+                {
+                    TimekeepingSummaryViewModels.Add(new TimekeepingSummaryViewModel(dataFormula.Key, GetFormulaName(dataFormula.Key), dataFormula.Value.ToDecimalUnFormat()));
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        string GetTimekeepingTypeName(string key)
+        {
+            try
+            {
+                var type = TimekeepingTypes?.FirstOrDefault(c => c.Code == key);
+                if (type != null)
+                {
+                    return $"{type.Code} - {type.Name}";
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+                throw;
+            }
+        }
+
+        string GetFormulaName(string key)
+        {
+            try
+            {
+                var formula = TimekeepingFormulas?.FirstOrDefault(c => c.Code == key);
+                if (formula != null)
+                {
+                    return $"{formula.Name}";
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+                throw;
+            }
+        }
+
         async Task SearchAsync()
         {
             try
@@ -151,6 +258,7 @@ namespace DoAnTotNghiep.Timekeeping
                 if (timekeepingAggregateFilterModel.UsersId.IsNotNullOrEmpty())
                 {
                     await LoadDataAsync();
+                    await LoadSummaryOfTimekeepingAsync();
                 }
             }
             catch (Exception ex)
@@ -250,6 +358,7 @@ namespace DoAnTotNghiep.Timekeeping
                 {
                     timekeepingAggregateFilterModel.UsersId = rowData.Data.Id;
                     await LoadDataAsync();
+                    await LoadSummaryOfTimekeepingAsync();
                 }
                 else
                 {
@@ -308,6 +417,7 @@ namespace DoAnTotNghiep.Timekeeping
                     if (timekeepingAggregateFilterModel.UsersId != null)
                     {
                         await LoadDataAsync();
+                        await LoadSummaryOfTimekeepingAsync();
                     }
                 }
                 else

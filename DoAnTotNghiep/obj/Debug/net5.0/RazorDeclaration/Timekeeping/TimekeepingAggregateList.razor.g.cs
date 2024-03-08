@@ -133,7 +133,7 @@ using DoAnTotNghiep.ViewModel;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 94 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
+#line 107 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
        
     void ShowSummaryConfirm()
     {
@@ -154,7 +154,7 @@ using DoAnTotNghiep.ViewModel;
             __builder2.AddMarkupContent(0, "<Icon Type=\"exclamation-circle\" Theme=\"Outline\"></Icon>");
         }
 #nullable restore
-#line 105 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
+#line 118 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Timekeeping\TimekeepingAggregateList.razor"
                                                                                   ,
 Content = "Bạn có muốn tổng hợp dữ liệu",
 OkText = "Đồng ý",

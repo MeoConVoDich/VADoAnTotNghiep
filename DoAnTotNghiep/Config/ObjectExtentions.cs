@@ -852,6 +852,36 @@ namespace DoAnTotNghiep.Config
             return value;
         }
 
+        public static string ToDecimalUnFormatDot(this decimal? d_value)
+        {
+            if (d_value.IsNullOrEmpty())
+            {
+                return string.Empty;
+            }
+            var value = d_value.ToString();
+            if (value.Contains("."))
+            {
+                return value.Replace(".", ",").TrimEnd('0').TrimEnd(',');
+            }
+            return value;
+        }
+
+        public static string ToDecimalUnFormat(this string value)
+        {
+            if (value.IsNullOrEmpty())
+            {
+                return string.Empty;
+            }
+            if (value.Contains("."))
+            {
+                return value.Replace(".", ",").TrimEnd('0').TrimEnd(',');
+            }
+            else
+            {
+                return value;
+            }
+        }
+
         public static void AddExist(this Dictionary<string, List<string>> dictionary, string key, string value)
         {
             if (dictionary.ContainsKey(key))

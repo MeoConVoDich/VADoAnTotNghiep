@@ -130,7 +130,7 @@ namespace DoAnTotNghiep.Service
                                             dt.DayHourCoefficientAmount = dt.DayHourAmount * (overtimeRate.Day ?? 100.0M) / 100.0M;
                                             dt.NightHourCoefficientAmount = dt.NightHourAmount * (overtimeRate.Night ?? 100.0M) / 100.0M;
                                         }
-                                        else if(dt.OvertimeType == OvertimeType.WeeklyRestDay)
+                                        else if (dt.OvertimeType == OvertimeType.WeeklyRestDay)
                                         {
                                             dt.DayHourCoefficientAmount = dt.DayHourAmount * (overtimeRate.DayOff ?? 100.0M) / 100.0M;
                                             dt.NightHourCoefficientAmount = dt.NightHourAmount * (overtimeRate.NightOff ?? 100.0M) / 100.0M;

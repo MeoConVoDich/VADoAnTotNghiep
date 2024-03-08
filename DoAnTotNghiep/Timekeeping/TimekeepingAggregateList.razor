@@ -70,7 +70,7 @@
                 <Column @bind-Field="@context.Name"></Column>
             </Table>
         </AntDesign.Col>
-        <AntDesign.Col Span="18">
+        <AntDesign.Col Span="14">
             <Table TItem="TimekeepingAggregateViewModel" DataSource="@TimekeepingAggregateViewModels"
                    Class="table-striped" ScrollBarWidth="10px"
                    Total="timekeepingAggregateFilterModel.Page.Total"
@@ -87,6 +87,19 @@
                 <Column @bind-Field="@context.WorkLateMinutes" Width="150" />
                 <Column @bind-Field="@context.LeaveEarlyMinutes" Width="150" />
             </Table>
+        </AntDesign.Col>
+        <AntDesign.Col Span="4">
+            <AntList Bordered DataSource="@TimekeepingSummaryViewModels" Size="small" Loading="loading">
+                <Header>
+                    <Text Strong>THÔNG TIN TỔNG HỢP</Text>
+                </Header>
+                <ChildContent Context="summary">
+                    <ListItem>
+                        <span><Text Ellipsis>@summary.Name</Text></span>
+                        @summary.Value
+                    </ListItem>
+                </ChildContent>
+            </AntList>
         </AntDesign.Col>
     </Row>
 </div>

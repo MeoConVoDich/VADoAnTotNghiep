@@ -47,6 +47,8 @@ namespace DoAnTotNghiep.Config
             mapper.AddMapping(typeof(FingerprintManagementMap));
             mapper.AddMapping(typeof(OvertimeAggregateMap));
             mapper.AddMapping(typeof(TimekeepingAggregateMap));
+            mapper.AddMapping(typeof(TimekeepingProcessingMap));
+            mapper.AddMapping(typeof(SummaryOfTimekeepingMap));
             HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
             cfg.AddMapping(domainMapping);
             return cfg.BuildSessionFactory();

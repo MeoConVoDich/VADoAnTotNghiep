@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using DoAnTotNghiep.Domain;
+using DoAnTotNghiep.EditModel;
+using DoAnTotNghiep.SearchModel;
+using DoAnTotNghiep.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +77,13 @@ namespace DoAnTotNghiep.Config
             #endregion
 
             CreateMap<Overtime, OvertimeAggregate>().ReverseMap();
+            CreateMap<SummaryOfTimekeepingSearch, TimekeepingAggregateFilterEditModel>().ReverseMap();
+            CreateMap<SummaryOfTimekeeping, SummaryOfTimekeepingViewModel>()
+                .ForMember(src => src.DataType, dest => dest.MapFrom(c => JsonSerializer.Deserialize<Dictionary<string, string>>(c.DataType, options)))
+                .ForMember(src => src.DataFormula, dest => dest.MapFrom(c => JsonSerializer.Deserialize<Dictionary<string, string>>(c.DataFormula, options)))
+                .ReverseMap()
+                .ForMember(src => src.DataType, dest => dest.MapFrom(c => JsonSerializer.Serialize(c.DataType, options)))
+                .ForMember(src => src.DataFormula, dest => dest.MapFrom(c => JsonSerializer.Serialize(c.DataFormula, options)));
         }
     }
 }
