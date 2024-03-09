@@ -66,12 +66,25 @@ namespace DoAnTotNghiep.Pages
                 }
                 else
                 {
-                    await Notice.Open(new NotificationConfig()
+                    var users = await UsersService.GetUsersByUserNameAsync(login.UserName);
+                    if (users != null)
                     {
-                        NotificationType = NotificationType.Error,
-                        Message = "Thông báo",
-                        Description = "Tài khoản hoặc mật khẩu không đúng"
-                    });
+                        await Notice.Open(new NotificationConfig()
+                        {
+                            NotificationType = NotificationType.Error,
+                            Message = "Thông báo",
+                            Description = "Mật khẩu không đúng!"
+                        });
+                    }
+                    else
+                    {
+                        await Notice.Open(new NotificationConfig()
+                        {
+                            NotificationType = NotificationType.Error,
+                            Message = "Thông báo",
+                            Description = "Tài khoản không tồn tại"
+                        });
+                    }
                     return await Task.FromResult(false);
                 }
             }

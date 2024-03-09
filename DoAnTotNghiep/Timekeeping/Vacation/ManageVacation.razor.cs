@@ -530,8 +530,8 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
                     if (result)
                     {
                         Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
-                        approvedModalVisible = false;
                         detailVisible = false;
+                        disapprovedModalVisible = false;
                         await LoadDataAsync();
                     }
                     else

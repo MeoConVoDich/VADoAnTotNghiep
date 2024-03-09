@@ -531,7 +531,7 @@ namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
                     if (result)
                     {
                         Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
-                        approvedModalVisible = false;
+                        disapprovedModalVisible = false;
                         detailVisible = false;
                         await LoadDataAsync();
                     }

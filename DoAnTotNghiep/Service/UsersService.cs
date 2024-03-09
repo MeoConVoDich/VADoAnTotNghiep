@@ -241,5 +241,29 @@ namespace DoAnTotNghiep.Service
 
             }
         }
+
+        public async Task<Users> GetUsersByUserNameAsync(string userName)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        var data = await session.Query<Users>()
+                            .Where(c => c.UserName == userName)
+                            .FirstOrDefaultAsync();
+                        transaction.Commit();
+                        return data;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+
+            }
+        }
     }
 }

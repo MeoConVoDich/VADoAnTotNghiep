@@ -513,7 +513,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
                     if (result)
                     {
                         Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
-                        approvedModalVisible = false;
+                        disapprovedModalVisible = false;
                         detailVisible = false;
                         await LoadDataAsync();
                     }

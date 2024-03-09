@@ -16,6 +16,7 @@ namespace DoAnTotNghiep.EditModel
 
         [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Mật khẩu")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 

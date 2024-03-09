@@ -93,12 +93,12 @@
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <LabelFor For="() => editModel.Name"></LabelFor>
-                    <Input @bind-Value="editModel.Name" Disabled="editModel.ReadOnly" />
+                    <Input @bind-Value="editModel.Name" Disabled="editModel.ReadOnly" />    
                     <ValidationMessage For="() => editModel.Name"></ValidationMessage>
                 </AntDesign.Col>
                 <AntDesign.Col Span="24">
                     <LabelFor For="() => editModel.Formula"></LabelFor>
-                    <TextArea AllowClear ShowCount Style="width: 100%;" MinRows="4" @bind-Value="editModel.Formula" Disabled="editModel.ReadOnly"></TextArea>
+                    <TextArea AllowClear="!editModel.ReadOnly" ShowCount Style="width: 100%;" MinRows="4" @bind-Value="editModel.Formula" Disabled="editModel.ReadOnly"></TextArea>
                     <ValidationMessage For="() => editModel.Formula"></ValidationMessage>
                 </AntDesign.Col>
             </Row>

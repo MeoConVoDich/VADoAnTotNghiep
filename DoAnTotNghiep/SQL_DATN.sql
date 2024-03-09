@@ -349,16 +349,20 @@ VALUES
 
 INSERT INTO TimekeepingType (Id, Code, Name, Note, EffectiveState, CreateDate)
 VALUES
-('1', 'X', N'Làm cả ngày', 'SQL tạo', '2', '2024-03-06 12:00:00');
+('1', 'X', N'Làm cả ngày', N'SQL tạo', '2', '2024-03-06 12:00:00');
 
 INSERT INTO TimekeepingType (Id, Code, Name, Note, EffectiveState, CreateDate)
 VALUES
-('2', 'KL', N'Nghỉ không lương', 'SQL tạo', '2', '2024-03-06 12:00:00');
+('2', 'KL', N'Nghỉ không lương', N'SQL tạo', '2', '2024-03-06 12:00:00');
 
 INSERT INTO TimekeepingType (Id, Code, Name, Note, EffectiveState, CreateDate)
 VALUES
-('3', 'X/KL', N'Nửa ngày làm, nửa ngày nghỉ không lương', 'SQL tạo', '2', '2024-03-06 12:00:00');
+('3', 'X/KL', N'Nửa ngày làm, nửa ngày nghỉ không lương', N'SQL tạo', '2', '2024-03-06 12:00:00');
 
 INSERT INTO TimekeepingType (Id, Code, Name, Note, EffectiveState, CreateDate)
 VALUES
-('4', 'X/P', N'Nửa ngày làm, nửa ngày nghỉ phép', 'SQL tạo', '2', '2024-03-06 12:00:00');
+('4', 'X/P', N'Nửa ngày làm, nửa ngày nghỉ phép', N'SQL tạo', '2', '2024-03-06 12:00:00');
+
+INSERT INTO TimekeepingType (Id, Code, Name, Note, EffectiveState, CreateDate)
+VALUES
+('5', 'OFF', N'Ngày nghỉ tuần', N'SQL tạo', '2', '2024-03-06 12:00:00');

@@ -21,6 +21,7 @@ namespace DoAnTotNghiep.EditModel
         [Display(Name = "Tên kiểu công")]
         public virtual string Name { get; set; }
 
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
         [Display(Name = "Trạng thái")]
         public virtual EffectiveState EffectiveState { get; set; }
 

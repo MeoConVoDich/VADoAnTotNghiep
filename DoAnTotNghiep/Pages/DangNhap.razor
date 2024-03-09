@@ -19,7 +19,7 @@
     <AntDesign.Row Gutter="8" Justify="center" Style="margin-top: 20px">
         <AntDesign.Col Span="6">
             <LabelFor For="() => login.Password"></LabelFor>
-            <Input @bind-Value="login.Password" />
+            <InputPassword  @bind-Value="login.Password" />
             <ValidationMessage For="() => login.Password"></ValidationMessage>
         </AntDesign.Col>
     </AntDesign.Row>
