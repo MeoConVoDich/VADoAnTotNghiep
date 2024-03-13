@@ -278,6 +278,20 @@ CREATE TABLE SummaryOfTimekeeping
 	DataFormula VARCHAR(Max),
 );
 
+CREATE TABLE TimekeepingAggregate
+(
+    Id VARCHAR(32) PRIMARY KEY,	
+	UsersId VARCHAR(256),
+	DateOfPhase DateTime,
+	CheckoutDate DateTime2,
+	CheckinDate DateTime2,
+	Year int, 
+	Month int,
+	ShiftOfPhase VARCHAR(256),
+	TimekeepingCode VARCHAR(256),
+	WorkLateMinutes int, 
+	LeaveEarlyMinutes int,
+);
 
 INSERT INTO Users (Id, UserName, Password, IsAdmin, Name, Code, Gender, IdentityNumber, DateOfBirth, PhoneHouseholder, Email, Address, Salary)
 VALUES 

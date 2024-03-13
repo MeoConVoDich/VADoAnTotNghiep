@@ -1,7 +1,7 @@
 ﻿@if (PermissionClaim.IsTimekeepingMenuVisible())
 {
 <Menu Theme="MenuTheme.Dark" Class="main_menu" Mode="MenuMode.Horizontal"
-      DefaultSelectedKeys=@(new[]{"/cham-cong/quan-ly/xep-ca-lam-viec"}) TriggerSubMenuAction="@Trigger.Hover">
+      DefaultSelectedKeys=@(new[]{"/cham-cong/xep-ca-lam-viec"}) TriggerSubMenuAction="@Trigger.Hover">
 
 
     @if (PermissionClaim?.TIMEKEEPINGSHIFTSTAFF_VIEW == true)
@@ -34,10 +34,6 @@
         <MenuItem Key="/cham-cong/tong-hop-cong-may" RouterLink="/cham-cong/tong-hop-cong-may"
                   RouterMatch="NavLinkMatch.All">
             Tổng hợp công máy
-        </MenuItem>
-        <MenuItem Key="/cham-cong/bang-cong-tong-hop" RouterLink="/cham-cong/bang-cong-tong-hop"
-                  RouterMatch="NavLinkMatch.All">
-            Bảng công tổng hợp
         </MenuItem>
     }
     @if (PermissionClaim?.SETUP_TIMEKEEPING == true)
