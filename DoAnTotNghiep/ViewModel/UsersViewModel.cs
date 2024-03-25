@@ -32,5 +32,10 @@ namespace DoAnTotNghiep.ViewModel
         public string Address { get; set; }
         [Display(Name = "Lương")]
         public int Salary { get; set; }
+        public string PermissionGroup { get; set; }
+        public string Permission { get; set; }
+        public bool IsAdmin { get; set; }
+
+
     }
 }

@@ -20,6 +20,41 @@ namespace DoAnTotNghiep.EditModel
         public string Password { get; set; }
     }
 
+    public class CreateUsers : EditBaseModel
+    {
+        public string Id { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Tên đăng nhập")]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Mật khẩu")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Nhập lại mật khẩu")]
+        [DataType(DataType.Password)]
+        public string RePassword { get; set; }
+
+        [Display(Name = "Tên nhân viên")]
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [MaxLength(255, ErrorMessage = "{0} không được dài hơn {1} ký tự")]
+        public string Name { get; set; }
+
+        [Display(Name = "Mã nhân viên")]
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [MaxLength(20, ErrorMessage = "{0} không được dài hơn {1} ký tự")]
+        public string Code { get; set; }
+
+        public Property<CreateUsers> Property { get; set; } = new Property<CreateUsers>();
+
+        public CreateUsers(bool isEdit = true)
+        {
+        }
+    }
+
     public class UsersEditModel : EditBaseModel
     {
         public string Id { get; set; }

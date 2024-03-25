@@ -152,4 +152,12 @@ namespace DoAnTotNghiep.Config
         OFF,
         KL,
     }
+
+    public enum SetClaimType
+    {
+        [Display(Name = "Nhóm tài khoản")]
+        PermissionGroup = 0,
+        [Display(Name = "Tài khoản")]
+        Users = 1
+    }
 }

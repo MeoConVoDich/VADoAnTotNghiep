@@ -53,7 +53,7 @@ namespace DoAnTotNghiep.Shared
 
         public static string TIMEKEEPINGAGGREGATE_VIEW = "17";
         public static string TIMEKEEPINGAGGREGATE_DELETE = "18";
-        public static string TIMEKEEPINGAGGREGATE_ALL = "19";
+        public static string TIMEKEEPINGAGGREGATE = "19";
 
         public static string MANAGETIMEKEEPINGEXPLANATION_VIEW = "20";
         public static string MANAGETIMEKEEPINGEXPLANATION_ADD = "21";
@@ -69,6 +69,27 @@ namespace DoAnTotNghiep.Shared
         public static string MANAGEOVERTIMEREGISTER_ADD = "29";
         public static string MANAGEOVERTIMEREGISTER_EDIT = "30";
         public static string MANAGEOVERTIMEREGISTER_DELETE = "31";
+
+        public static string ROLE_VIEW = "32";
+        public static string ROLE_ADD = "33";
+        public static string ROLE_EDIT = "34";
+        public static string ROLE_DELETE = "35";
+        public static string ROLE_SETCLAIM = "36";
+
+        public static string ACCOUNT_VIEW = "37";
+        public static string ACCOUNT_ADD = "38";
+        public static string ACCOUNT_EDIT = "39";
+        public static string ACCOUNT_DELETE = "40";
+        public static string ACCOUNT_SETROLE = "41";
+        public static string ACCOUNT_SETCLAIM = "42";
+        public static string ACCOUNT_CHANGEPASSWORD = "43";
+
+        public static string STAFFRELATIONSHIP_VIEW = "44";
+        public static string STAFFRELATIONSHIP_ADD = "45";
+        public static string STAFFRELATIONSHIP_EDIT = "46";
+        public static string STAFFRELATIONSHIP_DELETE = "47";
+
+
 
     }
 
@@ -130,7 +151,7 @@ namespace DoAnTotNghiep.Shared
 
         public bool TIMEKEEPINGAGGREGATE_VIEW;
         public bool TIMEKEEPINGAGGREGATE_DELETE;
-        public bool TIMEKEEPINGAGGREGATE_ALL;
+        public bool TIMEKEEPINGAGGREGATE;
 
         public bool MANAGETIMEKEEPINGEXPLANATION_VIEW;
         public bool MANAGETIMEKEEPINGEXPLANATION_ADD;
@@ -146,5 +167,24 @@ namespace DoAnTotNghiep.Shared
         public bool MANAGEOVERTIMEREGISTER_ADD;
         public bool MANAGEOVERTIMEREGISTER_EDIT;
         public bool MANAGEOVERTIMEREGISTER_DELETE;
+
+        public bool ROLE_VIEW;
+        public bool ROLE_ADD;
+        public bool ROLE_EDIT;
+        public bool ROLE_DELETE;
+        public bool ROLE_SETCLAIM;
+
+        public bool ACCOUNT_VIEW;
+        public bool ACCOUNT_ADD;
+        public bool ACCOUNT_EDIT;
+        public bool ACCOUNT_DELETE;
+        public bool ACCOUNT_SETROLE;
+        public bool ACCOUNT_SETCLAIM;
+        public bool ACCOUNT_CHANGEPASSWORD;
+
+        public bool STAFFRELATIONSHIP_VIEW;
+        public bool STAFFRELATIONSHIP_ADD;
+        public bool STAFFRELATIONSHIP_EDIT;
+        public bool STAFFRELATIONSHIP_DELETE;
     }
 }

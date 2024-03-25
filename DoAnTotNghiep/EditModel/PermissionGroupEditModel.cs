@@ -20,6 +20,8 @@ namespace DoAnTotNghiep.EditModel
         [Display(Name = "Ghi chú")]
         public virtual string Note { get; set; }
 
+        public virtual DateTime CreateDate { get; set; }
+
         public Property<PermissionGroupEditModel> Property { get; set; } = new Property<PermissionGroupEditModel>();
 
         public PermissionGroupEditModel(bool isEdit = true)

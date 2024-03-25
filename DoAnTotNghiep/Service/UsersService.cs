@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DoAnTotNghiep.Service
@@ -46,7 +47,7 @@ namespace DoAnTotNghiep.Service
             if (model.CheckExist.HasValue && model.CheckExist == true)
             {
                 List<Expression<Func<Users, bool>>> compareExpressions = new List<Expression<Func<Users, bool>>>();
-                if (model.IdentityNumber.IsNotNullOrEmpty() )
+                if (model.IdentityNumber.IsNotNullOrEmpty())
                 {
                     compareExpressions.Add(c => c.IdentityNumber == model.IdentityNumber);
                 }
@@ -79,6 +80,10 @@ namespace DoAnTotNghiep.Service
                 {
                     query = query.Where(c => c.UserName.Contains(model.UserName));
                 }
+            }
+            if (model.GetOnlyNoUserName == true)
+            {
+                query = query.Where(c => c.UserName.IsNotNullOrEmpty());
             }
             return query;
         }
@@ -263,6 +268,30 @@ namespace DoAnTotNghiep.Service
                     }
                 }
 
+            }
+        }
+
+        public async Task<bool> UpdatePermissionAsync(string id, List<string> permissions)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        var model = await session.Query<Users>()
+                            .FirstOrDefaultAsync(c => c.Id == id);
+                        model.Permission = JsonSerializer.Serialize(permissions);
+                        await session.UpdateAsync(model);
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
     }

@@ -15,5 +15,16 @@ namespace DoAnTotNghiep.ViewModel
 
         [Display(Name = "Ghi chú")]
         public virtual string Note { get; set; }
+
+        public virtual string Permission { get; set; }
+    }
+
+    public class ClaimViewModel
+    {
+        public string Id { get; set; }
+        public string Group { get; set; }
+        public bool Checked { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
     }
 }

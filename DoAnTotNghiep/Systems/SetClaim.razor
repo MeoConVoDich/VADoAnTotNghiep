@@ -1,0 +1,134 @@
+﻿@if (claimTemplates != null && claimViewModels != null)
+{
+    <div>
+        <Search Value="@searchKey" ValueChanged="Search" />
+        <Divider></Divider>
+        <Row Gutter="16">
+            <AntDesign.Col Span="24">
+                <Checkbox Checked="claimTemplates.All(c => c.Checked)" CheckedChange="CheckAllChanged" Disabled="isAdmin">Tất cả</Checkbox>
+            </AntDesign.Col>
+        </Row>
+        <Row Gutter="16">
+            <AntDesign.Col Span="6">
+                <Tree Checkable BlockNode TItem="string" @ref="treeOne" OnCheck="OnCheckBoxChanged">
+                     <Nodes>
+                         <TreeNode Title=@typeSystem TItem="string" Checked="claimTemplates.Where(c => c.Type == typeSystem).All(c => c.Checked)" DisableCheckbox="isAdmin">
+                             <Nodes>
+                                 @foreach (var group in claimSystemViewModels)
+                                {
+                                    if (group.Key.Contains(searchKey ?? "", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        <TreeNode Title="@group.Key" TItem="string" Checked="claimTemplates.Where(c => c.Group == group.Key).All(c=>c.Checked)" DisableCheckbox="isAdmin">
+                                            <Nodes>
+                                                @foreach (var item in group)
+                                                {
+                                                    <TreeNode Id="@item.Id" Title="@item.Name" TItem="string" Key="@item.Id" Checked="@item.Checked" DisableCheckbox="isAdmin"></TreeNode>
+                                                }
+                                            </Nodes>
+                                        </TreeNode>
+                                    }
+                                }
+                            </Nodes>
+                        </TreeNode>
+                     </Nodes>
+                 </Tree>
+            </AntDesign.Col>
+             <AntDesign.Col Span="6">
+                <Tree Checkable BlockNode TItem="string" @ref="treeTwo" OnCheck="OnCheckBoxChanged">
+                     <Nodes>
+                         <TreeNode Title=@typeStaff TItem="string" Checked="claimTemplates.Where(c => c.Type == typeStaff).All(c => c.Checked)" DisableCheckbox="isAdmin">
+                             <Nodes>
+                                 @foreach (var group in claimStaffViewModels)
+                                {
+                                    if (group.Key.Contains(searchKey ?? "", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        <TreeNode Title="@group.Key" TItem="string" Checked="claimTemplates.Where(c => c.Group == group.Key).All(c=>c.Checked)" DisableCheckbox="isAdmin">
+                                            <Nodes>
+                                                @foreach (var item in group)
+                                                {
+                                                    <TreeNode Id="@item.Id" Title="@item.Name" TItem="string" Key="@item.Id" Checked="@item.Checked" DisableCheckbox="isAdmin"></TreeNode>
+                                                }
+                                            </Nodes>
+                                        </TreeNode>
+                                    }
+                                }
+                            </Nodes>
+                        </TreeNode>
+                     </Nodes>
+                 </Tree>
+            </AntDesign.Col>
+             <AntDesign.Col Span="6">
+                <Tree Checkable BlockNode TItem="string" @ref="treeThree" OnCheck="OnCheckBoxChanged">
+                     <Nodes>
+                         <TreeNode Title=@typeTimekeeping TItem="string" Checked="claimTemplates.Where(c => c.Type == typeTimekeeping).All(c => c.Checked)" DisableCheckbox="isAdmin">
+                             <Nodes>
+                                 @foreach (var group in claimTimekeepingViewModels)
+                                {
+                                    if (group.Key.Contains(searchKey ?? "", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        <TreeNode Title="@group.Key" TItem="string" Checked="claimTemplates.Where(c => c.Group == group.Key).All(c=>c.Checked)" DisableCheckbox="isAdmin">
+                                            <Nodes>
+                                                @foreach (var item in group)
+                                                {
+                                                    <TreeNode Id="@item.Id" Title="@item.Name" TItem="string" Key="@item.Id" Checked="@item.Checked" DisableCheckbox="isAdmin"></TreeNode>
+                                                }
+                                            </Nodes>
+                                        </TreeNode>
+                                    }
+                                }
+                            </Nodes>
+                        </TreeNode>
+                     </Nodes>
+                 </Tree>
+            </AntDesign.Col>
+            <AntDesign.Col Span="6">
+                <Tree Checkable BlockNode TItem="string" @ref="treeFour" OnCheck="OnCheckBoxChanged">
+                     <Nodes>
+                         <TreeNode Title=@typeSalary TItem="string" Checked="claimTemplates.Where(c => c.Type == typeSalary).All(c => c.Checked)" DisableCheckbox="isAdmin">
+                             <Nodes>
+                                 @foreach (var group in claimSalaryViewModels)
+                                {
+                                    if (group.Key.Contains(searchKey ?? "", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        <TreeNode Title="@group.Key" TItem="string" Checked="claimTemplates.Where(c => c.Group == group.Key).All(c=>c.Checked)" DisableCheckbox="isAdmin">
+                                            <Nodes>
+                                                @foreach (var item in group)
+                                                {
+                                                    <TreeNode Id="@item.Id" Title="@item.Name" TItem="string" Key="@item.Id" Checked="@item.Checked" DisableCheckbox="isAdmin"></TreeNode>
+                                                }
+                                            </Nodes>
+                                        </TreeNode>
+                                    }
+                                }
+                            </Nodes>
+                        </TreeNode>
+                    </Nodes>
+                </Tree>
+            </AntDesign.Col>
+        </Row>
+    </div>
+    <Divider></Divider>
+
+    <div style="display:flex;">
+        <Space Size=@("small")>
+            @if (!isAdmin)
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" Icon="save" HtmlType="button"
+                            @onclick="HandleAddRoleValidSubmitAsync" Class="btn-add-new">
+                        Lưu
+                    </Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Icon="cancel" HtmlType="button" @onclick="() => OnCancel.InvokeAsync()" Type="@ButtonType.Primary" Danger>Đóng</Button>
+             </SpaceItem>
+            }
+            else
+            {
+                <SpaceItem>
+                    <Button Icon="cancel" HtmlType="button" @onclick="() => OnCancel.InvokeAsync()" Type="@ButtonType.Primary" Danger>Đóng</Button>
+             </SpaceItem>
+            }
+        </Space>
+    </div>
+}

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace DoAnTotNghiep.Service
 {
@@ -160,6 +161,30 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         await session.SaveAsync(model);
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdatePermissionAsync(string id, List<string> permissions)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        var model = await session.Query<PermissionGroup>()
+                            .FirstOrDefaultAsync(c => c.Id == id);
+                        model.Permission = JsonSerializer.Serialize(permissions);
+                        await session.UpdateAsync(model);
                         transaction.Commit();
                         return true;
                     }

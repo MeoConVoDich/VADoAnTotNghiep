@@ -19,6 +19,7 @@ using DoAnTotNghiep.SearchModel;
 using AntDesign.TableModels;
 using System.Linq;
 using DoAnTotNghiep.Config;
+using System.Text.Json;
 
 namespace DoAnTotNghiep.Systems
 {
@@ -35,12 +36,11 @@ namespace DoAnTotNghiep.Systems
         IEnumerable<PermissionGroupViewModel> selectedRows;
         Table<PermissionGroupViewModel> table;
         PermissionGroupEditModel editModel = new PermissionGroupEditModel();
+        SetClaim setClaimComponent;
         InputWatcher inputWatcher;
         bool detailVisible;
         bool loading;
         bool setClaimVisible;
-        ClaimsPrincipal User;
-        string titleAppRoleDetail, titleSetClaim;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -229,6 +229,7 @@ namespace DoAnTotNghiep.Systems
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
                     detailVisible = false;
+                    await LoadDataAsync();
                 }
                 else
                 {
@@ -237,17 +238,17 @@ namespace DoAnTotNghiep.Systems
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
 
-        async Task OpenSetClaimAsync(PermissionGroupViewModel appRoleViewModel)
+        void OpenSetClaim(PermissionGroupViewModel appRoleViewModel)
         {
             try
             {
-                //await setClaimComponent.LoadClaimAsync(appRoleViewModel.Id, appRoleViewModel.Name);
-                //setClaimVisible = true;
+                var permissions = JsonSerializer.Deserialize<List<string>>(appRoleViewModel.Permission ?? "[]");
+                setClaimComponent.LoadClaim(permissions, false, appRoleViewModel.Id);
+                setClaimVisible = true;
             }
             catch (Exception ex)
             {
@@ -298,9 +299,17 @@ namespace DoAnTotNghiep.Systems
             setClaimVisible = false;
         }
 
-        void ClaimChanged()
+        async Task ClaimChangedAsync()
         {
-            setClaimVisible = false;
+            try
+            {
+                setClaimVisible = false;
+                await LoadDataAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         void Edit()
