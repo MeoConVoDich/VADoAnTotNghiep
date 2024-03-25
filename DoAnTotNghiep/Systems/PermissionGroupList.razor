@@ -1,0 +1,147 @@
+﻿@page "/he-thong/nhom-tai-khoan"
+<PageHeader Class="site-page-header" Title="Nhóm tài khoản">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Hệ thống</BreadcrumbItem>
+            <BreadcrumbItem>Nhóm tài khoản</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<div class="site-content" style="padding-top: 4px;">
+    <Row Wrap="false" Style="">
+        <AntDesign.Col Span="6" Class="flex-center">
+            <Search Placeholder="Nhập tên, mã nhóm tài khoản" OnChange="SearchAsync" EnterButton="true" Value="@permissionGroupEditFilterModel.CodeOrName" DebounceMilliseconds="500" AllowClear />
+        </AntDesign.Col>
+        <AntDesign.Col Flex=@("auto")>
+            <Row Justify="end">
+                <Button Icon="plus" OnClick="Add" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
+                 @if (selectedRows?.Any() == true)
+                {
+                    <Popconfirm Placement="@Placement.BottomRight"
+                                OnConfirm="() => DeleteAsync()"
+                                OkText="Đồng ý"
+                                CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn xóa?
+                        </TitleTemplate>
+                    </Popconfirm>
+                }
+            </Row>
+        </AntDesign.Col>
+    </Row>
+    <Row Gutter="8" Style="padding-top:10px">
+        <Table @ref="table" TItem="PermissionGroupViewModel" DataSource="@PermissionGroupViewModels" Class="table-striped"
+               Total="permissionGroupEditFilterModel.Page.Total"
+               Loading="loading" ScrollY="500px" ScrollX="1500"
+               PageIndex="permissionGroupEditFilterModel.Page.PageIndex"
+               PageSize="permissionGroupEditFilterModel.Page.PageSize"
+               OnPageSizeChange="PageSizeChangeAsync"
+               OnPageIndexChange="PageIndexChangeAsync"
+               OnRowClick="OnRowClick"
+               @bind-SelectedRows="selectedRows">
+            <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+            <Column @bind-Field="@context.Stt" Width="50"></Column>
+            <Column @bind-Field="@context.CodeGroup"></Column>
+            <Column @bind-Field="@context.NameGroup"></Column>
+            <Column @bind-Field="@context.Note"></Column>
+            <ActionColumn Title="Thao tác" Class="action-column-center" Width="100">
+                <Space Size=@("small")>
+                    <SpaceItem>
+                        <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
+                            <Icon Type="eye" Theme="fill" OnClick="() => OpenDetail(context, true)" Class="btn-icon-edit" />
+                        </Tooltip>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Tooltip Placement="@Placement.Top" Title="Sửa">
+                            <Icon Type="edit" Theme="fill" OnClick="() => OpenDetail(context, false)" Class="btn-icon-edit" StopPropagation />
+                        </Tooltip>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Tooltip Placement="@Placement.Top" Title="Phân quyền">
+                            <Icon Type="control" Theme="fill" OnClick="() => OpenSetClaimAsync(context)" Class="btn-icon-edit" />
+                        </Tooltip>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Tooltip Placement="@Placement.Top" Title="Xóa">
+                            <Popconfirm Placement="@Placement.LeftBottom"
+                                        OnConfirm="() => DeleteAsync(context)"
+                                        OkText="Đồng ý"
+                                        CancelText="Huỷ">
+                                <ChildContent>
+                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete"></Icon>
+                                </ChildContent>
+                                <TitleTemplate>
+                                    Bạn có chắc chắn muốn xóa?
+                                </TitleTemplate>
+                            </Popconfirm>
+                        </Tooltip>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </Table>
+    </Row>
+</div>
+
+<Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
+        Width="600"
+        Placement="right" BodyStyle="padding-top:0px"
+        Title="@("Thông tin nhóm tài khoản")" OnClose="CloseDetail">
+    <Template>
+        <EditForm Model="editModel">
+            <DataAnnotationsValidator />
+            <InputWatcher @ref="inputWatcher"></InputWatcher>
+            <Row Gutter="8" Justify="end">
+                <Space Size="@("small")" Style="margin-right: 10px">
+                    @if (editModel.ReadOnly)
+                    {
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" OnClick="Edit" Class="btn-edit">Sửa</Button>
+                        </SpaceItem>
+                    }
+                    <SpaceItem>
+                        @if (!editModel.ReadOnly)
+                        {
+                            <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7" Class="btn-add-new">Lưu</Button>
+                        }
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (!editModel.ReadOnly)
+                        {
+                            <Popconfirm OnConfirm="() => CancelClick()"
+                                        OkText="Đồng ý"
+                                        CancelText="Hủy">
+                                <ChildContent>
+                                    <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                                </ChildContent>
+                                <TitleTemplate>
+                                    Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                                </TitleTemplate>
+                            </Popconfirm>
+                        }
+                    </SpaceItem>
+                </Space>
+            </Row>
+            <Row Gutter="8">
+                <AntDesign.Col Span="24">
+                    <LabelFor For="() => editModel.CodeGroup" HasRequired="true"></LabelFor>
+                    <Input @bind-Value="editModel.CodeGroup" Disabled="editModel.ReadOnly" />
+                    <ValidationMessage For="() => editModel.CodeGroup"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="24">
+                    <LabelFor For="() => editModel.NameGroup" HasRequired="true"></LabelFor>
+                    <Input @bind-Value="editModel.NameGroup" Disabled="editModel.ReadOnly" />
+                    <ValidationMessage For="() => editModel.NameGroup"></ValidationMessage>
+                </AntDesign.Col>
+                <AntDesign.Col Span="24">
+                    <LabelFor For="() => editModel.Note" HasRequired="true"></LabelFor>
+                    <Input @bind-Value="editModel.Note" Disabled="editModel.ReadOnly" />
+                    <ValidationMessage For="() => editModel.Note"></ValidationMessage>
+                </AntDesign.Col>
+            </Row>
+        </EditForm>
+    </Template>
+</Drawer>

@@ -53,6 +53,7 @@ namespace DoAnTotNghiep
             services.AddSingleton<OvertimeAggregateService>();
             services.AddSingleton<TimekeepingAggregateService>();
             services.AddSingleton<SummaryOfTimekeepingService>();
+            services.AddSingleton<PermissionGroupService>();
             services.AddSingleton<ISessionFactory>(NHibernateConfig.BuildSessionFactory());
             services.AddBlazoredSessionStorage();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

@@ -287,3 +287,12 @@ input[disabled] {
 .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
     color: rgb(0 0 0) !important;
 }
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}

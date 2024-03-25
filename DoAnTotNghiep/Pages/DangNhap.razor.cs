@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
 using Blazored.SessionStorage;
+using Microsoft.AspNetCore.Components.Web;
+using NHibernate.Mapping;
 
 namespace DoAnTotNghiep.Pages
 {

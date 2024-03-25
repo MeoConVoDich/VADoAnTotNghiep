@@ -49,6 +49,7 @@ namespace DoAnTotNghiep.Config
             mapper.AddMapping(typeof(TimekeepingAggregateMap));
             mapper.AddMapping(typeof(TimekeepingProcessingMap));
             mapper.AddMapping(typeof(SummaryOfTimekeepingMap));
+            mapper.AddMapping(typeof(PermissionGroupMap));
             HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
             cfg.AddMapping(domainMapping);
             return cfg.BuildSessionFactory();

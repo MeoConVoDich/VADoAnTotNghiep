@@ -1,0 +1,12 @@
+﻿@if (PermissionClaim.IsBusinessProfileMenuVisible())
+{
+    <Menu Theme="MenuTheme.Dark" Class="main_menu" Mode="MenuMode.Horizontal"
+          DefaultSelectedKeys=@(new[] { "/he-thong/nhom-tai-khoan" }) TriggerSubMenuAction="@Trigger.Hover">
+        <MenuItem Key="/he-thong/nhom-tai-khoan" RouterLink="/he-thong/nhom-tai-khoan" RouterMatch="NavLinkMatch.All">
+            Nhóm tài khoản
+        </MenuItem>
+        <MenuItem Key="/he-thong/tai-khoan" RouterLink="/he-thong/tai-khoan" RouterMatch="NavLinkMatch.All">
+            Tài khoản
+        </MenuItem>
+    </Menu>
+}

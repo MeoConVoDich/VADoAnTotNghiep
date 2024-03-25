@@ -380,3 +380,9 @@ VALUES
 INSERT INTO TimekeepingType (Id, Code, Name, Note, EffectiveState, CreateDate)
 VALUES
 ('5', 'OFF', N'Ngày nghỉ tuần', N'SQL tạo', '2', '2024-03-06 12:00:00');
+
+ALTER TABLE PermissionGroup
+ADD Note NVARCHAR(256);
+
+ALTER TABLE PermissionGroup
+ADD CreateDate datetime;
