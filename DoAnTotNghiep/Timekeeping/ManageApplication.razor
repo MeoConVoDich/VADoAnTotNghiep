@@ -1,23 +1,35 @@
 ﻿@page "/cham-cong/quan-ly-don"
-<PageHeader Class="site-page-header" Title="Quản lý đơn">
-    <PageHeaderExtra>
-        <Breadcrumb>
-            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
-            <BreadcrumbItem>Chấm công</BreadcrumbItem>
-            <BreadcrumbItem>Quản lý đơn</BreadcrumbItem>
-        </Breadcrumb>
-    </PageHeaderExtra>
-</PageHeader>
-<div class="site-content">
-    <Tabs DefaultActiveKey="0" @bind-ActiveKey=activeKey>
-        <TabPane Tab="Đơn nghỉ phép" Key="0">
-            <DoAnTotNghiep.Timekeeping.Vacation.ManageVacation></DoAnTotNghiep.Timekeeping.Vacation.ManageVacation>
-        </TabPane>
-        <TabPane Tab="Đơn làm thêm giờ" Key="1">
-            <DoAnTotNghiep.Timekeeping.Overtime.ManageOvertime></DoAnTotNghiep.Timekeeping.Overtime.ManageOvertime>
-        </TabPane>
-        <TabPane Tab="Giải trình chấm công" Key="2">
-            <DoAnTotNghiep.Timekeeping.TimekeepingExplanation.ManageTimekeepingExplanation></DoAnTotNghiep.Timekeeping.TimekeepingExplanation.ManageTimekeepingExplanation>
-        </TabPane>
-    </Tabs>
-</div>
+@if(PermissionClaim.IsTimekeepingManagementMenuVisible())
+{
+    <PageHeader Class="site-page-header" Title="Quản lý đơn">
+        <PageHeaderExtra>
+            <Breadcrumb>
+                <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+                <BreadcrumbItem>Chấm công</BreadcrumbItem>
+                <BreadcrumbItem>Quản lý đơn</BreadcrumbItem>
+            </Breadcrumb>
+        </PageHeaderExtra>
+    </PageHeader>
+    <div class="site-content">
+        <Tabs DefaultActiveKey="0" @bind-ActiveKey=activeKey>
+            @if (PermissionClaim.MANAGEVACATIONREGISTRATION_VIEW)
+            {
+                <TabPane Tab="Đơn nghỉ phép" Key="0">
+                    <DoAnTotNghiep.Timekeeping.Vacation.ManageVacation></DoAnTotNghiep.Timekeeping.Vacation.ManageVacation>
+                </TabPane>
+            }
+            @if (PermissionClaim.MANAGEOVERTIMEREGISTER_VIEW)
+            {
+                <TabPane Tab="Đơn làm thêm giờ" Key="1">
+                    <DoAnTotNghiep.Timekeeping.Overtime.ManageOvertime></DoAnTotNghiep.Timekeeping.Overtime.ManageOvertime>
+                </TabPane>
+            }
+            @if (PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_VIEW)
+            {
+                <TabPane Tab="Giải trình chấm công" Key="2">
+                    <DoAnTotNghiep.Timekeeping.TimekeepingExplanation.ManageTimekeepingExplanation></DoAnTotNghiep.Timekeeping.TimekeepingExplanation.ManageTimekeepingExplanation>
+                </TabPane>
+            }
+        </Tabs>
+    </div>
+}

@@ -39,7 +39,10 @@ namespace DoAnTotNghiep.Staff
             try
             {
                 usersFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadDataAsync();
+                if (PermissionClaim.STAFFPROFILE_VIEW)
+                {
+                    await LoadDataAsync();
+                }
             }
             catch (Exception ex)
             {

@@ -37,6 +37,10 @@ namespace DoAnTotNghiep.Service
                 }
                 query = query.Take(2);
             }
+            if (model.Ids?.Any() == true)
+            {
+                query = query.Where(c => model.Ids.Contains(c.Id));
+            }
             return query;
         }
 

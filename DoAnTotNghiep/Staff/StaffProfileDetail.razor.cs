@@ -6,6 +6,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -23,6 +24,8 @@ namespace DoAnTotNghiep.Staff
         [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] UsersService UsersService { get; set; }
         [Inject] BonusDisciplineService BonusDisciplineService { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
+
         [CascadingParameter] StaffProfileViewMode StaffProfileViewMode { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback ValueChanged { get; set; }

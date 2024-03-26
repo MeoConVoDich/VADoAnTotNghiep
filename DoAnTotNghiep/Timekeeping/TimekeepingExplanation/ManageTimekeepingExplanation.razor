@@ -1,212 +1,230 @@
-﻿<EditForm Model="timekeepingExplanationFilterModel" OnSubmit="e => SearchAsync()">
+﻿@if (PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_VIEW)
+{
+    <EditForm Model="timekeepingExplanationFilterModel" OnSubmit="e => SearchAsync()">
+        <Row Gutter="8">
+            <Space Size=@(("8", "8")) Wrap>
+                @if(PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_ADD)
+                {
+             <SpaceItem><Button Icon="plus" OnClick="AddNew" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
+                }
+                @if (selectedRows?.Any() == true && PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_DELETE)
+                {
+                    <SpaceItem>
+                        <Popconfirm Placement="@Placement.BottomRight"
+                                    OnConfirm="() => DeleteAsync()"
+                                    OkText="Đồng ý"
+                                    CancelText="Hủy">
+                            <ChildContent>
+                                <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                         </ChildContent>
+                         <TitleTemplate>
+                             Bạn có chắc chắn muốn xóa?
+                         </TitleTemplate>
+                     </Popconfirm>
+                 </SpaceItem>
+                }
+            </Space>
+            <AntDesign.Col Span="4">
+                <Select TItemValue="string" TItem="string"
+                        Value="@timekeepingExplanationFilterModel?.ApprovalStatus.ToString()" EnableSearch
+                         OnSelectedItemChanged="e => ApprovalStatusChangeAsync(e)">
+                     <SelectOptions>
+                         @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.ApprovalStatus)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+            </AntDesign.Col>
+            <AntDesign.Col Span="2">
+                <Select TItemValue="string" TItem="string"
+                        Value="@timekeepingExplanationFilterModel?.Year"
+                        OnSelectedItemChanged="e => YearChangeAsync(e)">
+                    <SelectOptions>
+                        @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.Year)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+            </AntDesign.Col>
+            <AntDesign.Col Span="2">
+                <Select TItemValue="string" TItem="string"
+                        Value="@timekeepingExplanationFilterModel?.Month"
+                        OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                    <SelectOptions>
+                        @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.Month)])
+                        {
+                            <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                        }
+                    </SelectOptions>
+                </Select>
+            </AntDesign.Col>
+            <AntDesign.Col Span="4">
+                <Input TValue="string" Value="timekeepingExplanationFilterModel.CodeOrName"
+                       ValueChanged="e => timekeepingExplanationFilterModel.Change(nameof(timekeepingExplanationFilterModel.CodeOrName), e)"
+                       Placeholder="Nhập họ tên, mã nhân viên" />
+            </AntDesign.Col>
+            <AntDesign.Col Span="2" Class="flex-start-end">
+                <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+            </AntDesign.Col>
+        </Row>
+    </EditForm>
     <Row Gutter="8">
-        <Space Size=@(("8", "8")) Wrap>
-            <SpaceItem><Button Icon="plus" OnClick="AddNew" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button></SpaceItem>
-            @if (selectedRows?.Any() == true)
-            {
-                <SpaceItem>
-                    <Popconfirm Placement="@Placement.BottomRight"
-                                OnConfirm="() => DeleteAsync()"
-                                OkText="Đồng ý"
-                                CancelText="Hủy">
+        <AntDesign.Col Span="24">
+            <Table @ref="table" TItem="TimekeepingExplanationViewModel" DataSource="@TimekeepingExplanationViewModels"
+                   ScrollBarWidth="10px"
+                   Total="timekeepingExplanationFilterModel.Page.Total" ScrollY="500px" ScrollX="2000"
+                   Loading="loading"
+                   PageIndex="timekeepingExplanationFilterModel.Page.PageIndex"
+                   PageSize="timekeepingExplanationFilterModel.Page.PageSize"
+                   OnPageIndexChange="PageIndexChangeAsync"
+                   OnPageSizeChange="PageSizeChangeAsync"
+                   OnRowClick="OnRowClick"
+                   @bind-SelectedRows="selectedRows">
+                <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+                <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
+                <Column @bind-Field="@context.StaffCode" Width="150" Fixed="left"></Column>
+                <Column @bind-Field="@context.StaffName" Width="150" Fixed="left"></Column>
+                <Column @bind-Field="@context.RegisterDate" Format="dd/MM/yyyy"></Column>
+                <Column @bind-Field="@context.ViolationType">@context.ViolationType.GetDescription()</Column>
+                    <Column @bind-Field="@context.StartTime" Format="HH:mm"></Column>
+                    <Column @bind-Field="@context.EndTime" Format="HH:mm"></Column>
+                    <Column @bind-Field="@context.TimekeepingTypeName"></Column>
+                    <Column @bind-Field="@context.Reason"></Column>
+                    <Column @bind-Field="@context.ApprovalStatus">
+                        <Template>
+                            @if (context.ApprovalStatus == ApprovalStatus.Pending)
+                        {
+                            <AntDesign.Text Copyable="false" Class="primary-text">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                        }
+                        else if (context.ApprovalStatus == ApprovalStatus.Approved)
+                        {
+                            <AntDesign.Text Copyable="false" Type="success">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                        }
+                        else
+                        {
+                            <AntDesign.Text Copyable="false" Type="danger">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
+                        }
+                    </Template>
+                </Column>
+                <Column @bind-Field="@context.CreatorObject">
+                    <AntDesign.Text Copyable="false">@context.CreatorObject.GetDescription()</AntDesign.Text>
+                    </Column>
+                    <Column @bind-Field="@context.CreateDate" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.ApprovedDate" Format="dd/MM/yyyy"></Column>
+                    <Column @bind-Field="@context.NotApprovedReason"></Column>
+                    <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
                         <ChildContent>
-                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
-                        </ChildContent>
-                        <TitleTemplate>
-                            Bạn có chắc chắn muốn xóa?
-                        </TitleTemplate>
-                    </Popconfirm>
-                </SpaceItem>
-            }
-        </Space>
-        <AntDesign.Col Span="4">
-            <Select TItemValue="string" TItem="string"
-                    Value="@timekeepingExplanationFilterModel?.ApprovalStatus.ToString()" EnableSearch
-                    OnSelectedItemChanged="e => ApprovalStatusChangeAsync(e)">
-                <SelectOptions>
-                    @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.ApprovalStatus)])
-                    {
-                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
-                    }
-                </SelectOptions>
-            </Select>
-        </AntDesign.Col>
-        <AntDesign.Col Span="2">
-            <Select TItemValue="string" TItem="string"
-                    Value="@timekeepingExplanationFilterModel?.Year"
-                    OnSelectedItemChanged="e => YearChangeAsync(e)">
-                <SelectOptions>
-                    @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.Year)])
-                    {
-                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
-                    }
-                </SelectOptions>
-            </Select>
-        </AntDesign.Col>
-        <AntDesign.Col Span="2">
-            <Select TItemValue="string" TItem="string"
-                    Value="@timekeepingExplanationFilterModel?.Month"
-                    OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
-                <SelectOptions>
-                    @foreach (var item in timekeepingExplanationFilterModel.DataSource[timekeepingExplanationFilterModel.Property.NameProperty(c => c.Month)])
-                    {
-                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
-                    }
-                </SelectOptions>
-            </Select>
-        </AntDesign.Col>
-        <AntDesign.Col Span="4">
-            <Input TValue="string" Value="timekeepingExplanationFilterModel.CodeOrName"
-                   ValueChanged="e => timekeepingExplanationFilterModel.Change(nameof(timekeepingExplanationFilterModel.CodeOrName), e)"
-                   Placeholder="Nhập họ tên, mã nhân viên" />
-        </AntDesign.Col>
-        <AntDesign.Col Span="2" Class="flex-start-end">
-            <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
-        </AntDesign.Col>
-    </Row>
-</EditForm>
-<Row Gutter="8">
-    <AntDesign.Col Span="24">
-        <Table @ref="table" TItem="TimekeepingExplanationViewModel" DataSource="@TimekeepingExplanationViewModels"
-               ScrollBarWidth="10px"
-               Total="timekeepingExplanationFilterModel.Page.Total" ScrollY="500px" ScrollX="2000"
-               Loading="loading"
-               PageIndex="timekeepingExplanationFilterModel.Page.PageIndex"
-               PageSize="timekeepingExplanationFilterModel.Page.PageSize"
-               OnPageIndexChange="PageIndexChangeAsync"
-               OnPageSizeChange="PageSizeChangeAsync"
-               OnRowClick="OnRowClick"
-               @bind-SelectedRows="selectedRows">
-            <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
-            <Column @bind-Field="@context.Stt" Width="50" Fixed="left"></Column>
-            <Column @bind-Field="@context.StaffCode" Width="150" Fixed="left"></Column>
-            <Column @bind-Field="@context.StaffName" Width="150" Fixed="left"></Column>
-            <Column @bind-Field="@context.RegisterDate" Format="dd/MM/yyyy"></Column>
-            <Column @bind-Field="@context.ViolationType">@context.ViolationType.GetDescription()</Column>
-            <Column @bind-Field="@context.StartTime" Format="HH:mm"></Column>
-            <Column @bind-Field="@context.EndTime" Format="HH:mm"></Column>
-            <Column @bind-Field="@context.TimekeepingTypeName"></Column>
-            <Column @bind-Field="@context.Reason"></Column>
-            <Column @bind-Field="@context.ApprovalStatus">
-                <Template>
-                    @if (context.ApprovalStatus == ApprovalStatus.Pending)
-                    {
-                        <AntDesign.Text Copyable="false" Class="primary-text">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
-                    }
-                    else if (context.ApprovalStatus == ApprovalStatus.Approved)
-                    {
-                        <AntDesign.Text Copyable="false" Type="success">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
-                    }
-                    else
-                    {
-                        <AntDesign.Text Copyable="false" Type="danger">@context.ApprovalStatus.GetDescription()</AntDesign.Text>
-                    }
-                </Template>
-            </Column>
-            <Column @bind-Field="@context.CreatorObject">
-                <AntDesign.Text Copyable="false">@context.CreatorObject.GetDescription()</AntDesign.Text>
-            </Column>
-            <Column @bind-Field="@context.CreateDate" Format="dd/MM/yyyy"></Column>
-            <Column @bind-Field="@context.ApprovedDate" Format="dd/MM/yyyy"></Column>
-            <Column @bind-Field="@context.NotApprovedReason"></Column>
-            <ActionColumn Class="action-column-center" Title="Thao tác" Fixed="right" Width="120">
-                <ChildContent>
-                    <Row Justify="center">
-                        <Space>
-                            <SpaceItem>
-                                <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
-                                    <Icon Type="eye" Theme="fill" OnClick="() => ViewDetail(context)" Class="btn-icon-edit" StopPropagation />
-                                </Tooltip>
-                            </SpaceItem>
-                            <SpaceItem>
-                                <Tooltip Placement="@Placement.Top" Title="Sửa">
-                                    <Icon Type="edit" Theme="fill" OnClick="() => Edit(context)" Class="btn-icon-edit" StopPropagation />
-                                </Tooltip>
-                            </SpaceItem>
-                            <SpaceItem>
-                                <Tooltip Placement="@Placement.Top" Title="Xóa">
-                                    <Popconfirm Placement="@Placement.LeftBottom"
-                                                OnConfirm="() => DeleteAsync(context)"
-                                                OkText="Đồng ý"
-                                                CancelText="Huỷ">
-                                        <ChildContent>
-                                            <Icon Type="delete" Theme="fill" Class="btn-icon-delete"></Icon>
-                                        </ChildContent>
-                                        <TitleTemplate>
-                                            Bạn có chắc chắn muốn xóa?
-                                        </TitleTemplate>
-                                    </Popconfirm>
-                                </Tooltip>
-                            </SpaceItem>
-                        </Space>
-                    </Row>
-                </ChildContent>
-            </ActionColumn>
-        </Table>
-    </AntDesign.Col>
-</Row>
-<Row Justify="center">
-    <Space>
-        @if (timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.Pending.ToString() || timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.All.ToString())
-        {
-            <SpaceItem>
-                <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => ApprovedCheck(null)" Disabled=IsDisableApprovalButton()>Phê duyệt</Button>
-            </SpaceItem>
-            <SpaceItem>
-                <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => DeclinedCheck(null)" Disabled=IsDisableApprovalButton() Danger>Không phê duyệt</Button>
-            </SpaceItem>
-        }
-        @if (timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.Approved.ToString() || timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.All.ToString())
-        {
-            <SpaceItem>
-                <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => CancelApproveCheck(null)" Disabled=IsDisableApprovalButton() Danger>Huỷ phê duyệt</Button>
-            </SpaceItem>
-        }
-    </Space>
-</Row>
-
-<Modal Title="Đồng ý phê duyệt"
-       Visible="@approvedModalVisible" ConfirmLoading=approving
-       OnOk="@ApprovedAsync"
-       OnCancel="@CloseApprovedModal"
-       OkText=@("Đồng ý")>
-    <Spin Spinning=approving>
+                            <Row Justify="center">
+                                <Space>
+                                    <SpaceItem>
+                                        <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
+                                            <Icon Type="eye" Theme="fill" OnClick="() => ViewDetail(context)" Class="btn-icon-edit" StopPropagation />
+                                     </Tooltip>
+                                 </SpaceItem>
+                                 @if (PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_EDIT)
+                                 {
+                                    <SpaceItem>
+                                        <Tooltip Placement="@Placement.Top" Title="Sửa">
+                                            <Icon Type="edit" Theme="fill" OnClick="() => Edit(context)" Class="btn-icon-edit" StopPropagation />
+                                         </Tooltip>
+                                     </SpaceItem>
+                                 }
+                                 @if(PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_DELETE)
+                                 {
+                                     <SpaceItem>
+                                     <Tooltip Placement="@Placement.Top" Title="Xóa">
+                                         <Popconfirm Placement="@Placement.LeftBottom"
+                                                     OnConfirm="() => DeleteAsync(context)"
+                                                     OkText="Đồng ý"
+                                                     CancelText="Huỷ">
+                                             <ChildContent>
+                                                 <Icon Type="delete" Theme="fill" Class="btn-icon-delete"></Icon>
+                                             </ChildContent>
+                                             <TitleTemplate>
+                                                 Bạn có chắc chắn muốn xóa?
+                                             </TitleTemplate>
+                                         </Popconfirm>
+                                     </Tooltip>
+                                 </SpaceItem>
+                                 }
+                             </Space>
+                         </Row>
+                     </ChildContent>
+                 </ActionColumn>
+             </Table>
+         </AntDesign.Col>
+     </Row>
+    @if (PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_APPROVE)
+     {
         <Row Justify="center">
-            <Text Strong>Phê duyệt các yêu cầu đã chọn?</Text>
+            <Space>
+                @if (timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.Pending.ToString() || timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.All.ToString())
+                {
+                    <SpaceItem>
+                        <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => ApprovedCheck(null)" Disabled=IsDisableApprovalButton()>Phê duyệt</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => DeclinedCheck(null)" Disabled=IsDisableApprovalButton() Danger>Không phê duyệt</Button>
+                 </SpaceItem>
+                }
+                @if (timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.Approved.ToString() || timekeepingExplanationFilterModel.ApprovalStatus == ApprovalStatus.All.ToString())
+                {
+                    <SpaceItem>
+                        <Button Icon="save" Type="@ButtonType.Primary" OnClick="() => CancelApproveCheck(null)" Disabled=IsDisableApprovalButton() Danger>Huỷ phê duyệt</Button>
+                 </SpaceItem>
+                }
+            </Space>
         </Row>
-    </Spin>
-</Modal>
-<Modal Title="Lý do từ chối" Width="500" Style="top: 50px"
-       Visible="@disapprovedModalVisible" ConfirmLoading=disapproving
-       OnOk="@DisapprovedAsync"
-       OnCancel="@CloseDisapprovedModal"
-       OkText="@("Đồng ý")">
-    <Spin Spinning=disapproving>
-        <Row Style="margin-left: 16px;">
-            <TextArea AllowClear ShowCount MaxLength="1000" Style="width: 100%;" MinRows="3" MaxRows="3" @bind-Value="disapprovedReason"></TextArea>
-        </Row>
-    </Spin>
-</Modal>
+     }
+    
 
-<Modal Title="Lý do huỷ phê duyệt" Width="500" Style="top: 50px"
-       Visible="@cancelApproveModalVisible" ConfirmLoading=cancelApproving
-       OnOk="@CancelApproveAsync"
-       OnCancel="@CloseCancelApproveModal"
-       OkText="@("Đồng ý")">
-    <Spin Spinning=cancelApproving>
-        <Row Style="margin-left: 16px;">
-            <TextArea AllowClear ShowCount MaxLength="1000" Style="width: 100%;" MinRows="3" MaxRows="3" @bind-Value="disapprovedReason"></TextArea>
-        </Row>
-    </Spin>
-</Modal>
-<Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
-        Width="1000"
-        Placement="right" BodyStyle="padding-top:0px"
-        Title="@("Thông tin đơn làm thêm")" OnClose="CloseDetail">
-    <Template>
-        <TimekeepingExplanationDetail @ref="timekeepingExplanationDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync" CreatorObject="CreatorObject.HRStaff"
-                        OpenApprovedModal="() => ApprovedCheck()" OpenCancelApproveModal="() => CancelApproveCheck()" TimekeepingTypes="TimekeepingTypes"
-                        OpenDeclinedModal="() => DeclinedCheck()" />
-    </Template>
-</Drawer>
+    <Modal Title="Đồng ý phê duyệt"
+           Visible="@approvedModalVisible" ConfirmLoading=approving
+           OnOk="@ApprovedAsync"
+           OnCancel="@CloseApprovedModal"
+           OkText=@("Đồng ý")>
+        <Spin Spinning=approving>
+            <Row Justify="center">
+                <Text Strong>Phê duyệt các yêu cầu đã chọn?</Text>
+         </Row>
+     </Spin>
+ </Modal>
+    <Modal Title="Lý do từ chối" Width="500" Style="top: 50px"
+           Visible="@disapprovedModalVisible" ConfirmLoading=disapproving
+           OnOk="@DisapprovedAsync"
+           OnCancel="@CloseDisapprovedModal"
+           OkText="@("Đồng ý")">
+        <Spin Spinning=disapproving>
+            <Row Style="margin-left: 16px;">
+                <TextArea AllowClear ShowCount MaxLength="1000" Style="width: 100%;" MinRows="3" MaxRows="3" @bind-Value="disapprovedReason"></TextArea>
+             </Row>
+         </Spin>
+     </Modal>
+
+    <Modal Title="Lý do huỷ phê duyệt" Width="500" Style="top: 50px"
+           Visible="@cancelApproveModalVisible" ConfirmLoading=cancelApproving
+           OnOk="@CancelApproveAsync"
+           OnCancel="@CloseCancelApproveModal"
+           OkText="@("Đồng ý")">
+        <Spin Spinning=cancelApproving>
+            <Row Style="margin-left: 16px;">
+                <TextArea AllowClear ShowCount MaxLength="1000" Style="width: 100%;" MinRows="3" MaxRows="3" @bind-Value="disapprovedReason"></TextArea>
+             </Row>
+         </Spin>
+     </Modal>
+    <Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
+            Width="1000"
+            Placement="right" BodyStyle="padding-top:0px"
+            Title="@("Thông tin đơn làm thêm")" OnClose="CloseDetail">
+        <Template>
+            <TimekeepingExplanationDetail @ref="timekeepingExplanationDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync" CreatorObject="CreatorObject.HRStaff"
+                                          OpenApprovedModal="() => ApprovedCheck()" OpenCancelApproveModal="() => CancelApproveCheck()" TimekeepingTypes="TimekeepingTypes"
+                                          OpenDeclinedModal="() => DeclinedCheck()" />
+        </Template>
+    </Drawer>
+
+}
+
 

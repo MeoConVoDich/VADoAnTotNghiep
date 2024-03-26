@@ -1,4 +1,5 @@
 ﻿@inject NavigationManager NavigationManager
+@inject PermissionClaim PermissionClaim
 
 
 <div class="top-row pl-4 navbar navbar-dark">
@@ -22,15 +23,18 @@
 <Menu Theme="MenuTheme.Dark"
       Mode=MenuMode.Inline
       InlineCollapsed=collapsed>
-    <MenuItem Key="1" OnClick="@(() => Go("/he-thong/nhom-tai-khoan"))">
-        <IconTemplate>
-            <Icon Type="setting" Theme="outline" />
-        </IconTemplate>
-        <ChildContent>
-            <Button Type="@ButtonType.Text" Style="color: white">Hệ thống</Button>
-        </ChildContent>
-    </MenuItem>
-    <MenuItem Key="2"  OnClick="@(() => Go("/ca-nhan/thong-tin-ca-nhan"))">
+    @if (PermissionClaim.IsSystemMenuVisible())
+    {
+        <MenuItem Key="1" OnClick="@(() => Go("/he-thong/nhom-tai-khoan"))">
+            <IconTemplate>
+                <Icon Type="setting" Theme="outline" />
+            </IconTemplate>
+            <ChildContent>
+                <Button Type="@ButtonType.Text" Style="color: white">Hệ thống</Button>
+            </ChildContent>
+        </MenuItem>
+    }
+    <MenuItem Key="2" OnClick="@(() => Go("/ca-nhan/thong-tin-ca-nhan"))">
         <IconTemplate>
             <Icon Type="team" Theme="outline" />
         </IconTemplate>
@@ -38,30 +42,44 @@
             <Button Type="@ButtonType.Text" Style="color: white">Cá nhân</Button>
         </ChildContent>
     </MenuItem>
-    <MenuItem Key="3"  OnClick="@(() => Go("/thong-tin-nhan-su/ho-so-nhan-vien"))">
-        <IconTemplate>
-            <Icon Type="solution" Theme="outline" />
-        </IconTemplate>
-        <ChildContent>
-            <Button Type="@ButtonType.Text" Style="color: white">Quản ký nhân sự</Button>
-        </ChildContent>
-    </MenuItem>
-    <MenuItem Key="4" OnClick="@(() => Go("/cham-cong/xep-ca-lam-viec"))">
-        <IconTemplate>
-            <Icon Type="qrcode" Theme="outline" />
-        </IconTemplate>
-        <ChildContent>
-            <Button Type="@ButtonType.Text" Style="color: white">Quản lý chấm công</Button>
-        </ChildContent>
-    </MenuItem>
-    <MenuItem Key="5"  OnClick="@(() => Go("/cham-cong/xep-ca-lam-viec"))">
-        <IconTemplate>
-            <Icon Type="dollar" Theme="outline" />
-        </IconTemplate>
-        <ChildContent>
-            <Button Type="@ButtonType.Text" Style="color: white">Quản lý lương</Button>
-        </ChildContent>
-    </MenuItem>
+    @if (PermissionClaim.IsProfileMenuVisible())
+    {
+        <MenuItem Key="3" OnClick="@(() => Go("/thong-tin-nhan-su/ho-so-nhan-vien"))">
+            <IconTemplate>
+                <Icon Type="solution" Theme="outline" />
+            </IconTemplate>
+            <ChildContent>
+                <Button Type="@ButtonType.Text" Style="color: white">Quản ký nhân sự</Button>
+            </ChildContent>
+        </MenuItem>
+    }
+    @if (PermissionClaim.IsTimekeepingMenuVisible())
+    {
+        <MenuItem Key="4" OnClick="@(() => Go("/cham-cong/xep-ca-lam-viec"))">
+            <IconTemplate>
+                <Icon Type="qrcode" Theme="outline" />
+            </IconTemplate>
+            <ChildContent>
+                <Button Type="@ButtonType.Text" Style="color: white">Quản lý chấm công</Button>
+            </ChildContent>
+        </MenuItem>
+    }
+    @if (PermissionClaim.IsTimekeepingMenuVisible())
+    {
+        <MenuItem Key="5" OnClick="@(() => Go("/cham-cong/xep-ca-lam-viec"))">
+            <IconTemplate>
+                <Icon Type="dollar" Theme="outline" />
+            </IconTemplate>
+            <ChildContent>
+                <Button Type="@ButtonType.Text" Style="color: white">Quản lý lương</Button>
+            </ChildContent>
+        </MenuItem>
+    }
+    
+    
+    
+    
+    
 </Menu>
 @code {
 

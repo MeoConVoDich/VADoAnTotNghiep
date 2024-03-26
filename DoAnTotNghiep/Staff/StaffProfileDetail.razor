@@ -29,7 +29,7 @@
             {
                 <Row Gutter="8" Justify="end">
                     <Space Size="@("small")" Style="margin-right: 10px">
-                        @if (editModel.ReadOnly)
+                        @if (editModel.ReadOnly && PermissionClaim.STAFFPROFILE_EDIT)
                         {
                             <SpaceItem>
                                 <Button Type="@ButtonType.Primary" OnClick="Edit" Class="btn-edit">Sửa</Button>

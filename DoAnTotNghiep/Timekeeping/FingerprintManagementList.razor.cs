@@ -7,6 +7,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -29,6 +30,7 @@ namespace DoAnTotNghiep.Timekeeping
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] UsersService UsersService { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
         [Inject] FingerprintManagementService FingerprintManagementService { get; set; }
         FingerprintManagementFilterEditModel fingerprintManagementFilterModel = new FingerprintManagementFilterEditModel();
         FingerprintManagementFilterEditModel excelFilterModel = new FingerprintManagementFilterEditModel();
@@ -53,7 +55,10 @@ namespace DoAnTotNghiep.Timekeeping
             {
                 usersSearch.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 fingerprintManagementFilterModel.Page = new Page() { PageIndex = 1, PageSize = 31 };
-                await LoadUsersAsync();
+                if (PermissionClaim.FINGERPRINT_VIEW)
+                {
+                    await LoadUsersAsync();
+                }
             }
             catch (Exception ex)
             {

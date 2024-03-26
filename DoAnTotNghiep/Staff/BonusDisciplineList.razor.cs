@@ -39,7 +39,10 @@ namespace DoAnTotNghiep.Staff
             try
             {
                 bonusDisciplineFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadDataAsync();
+                if (PermissionClaim.DISCIPLINE_BONUS_VIEW)
+                {
+                    await LoadDataAsync();
+                }
             }
             catch (Exception ex)
             {

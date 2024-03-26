@@ -51,10 +51,9 @@ namespace DoAnTotNghiep.Systems
                 {
                     new ClaimViewModel{ Id = PermissionKey.ACCOUNT_VIEW, Group = "Quản lý tài khoản", Name ="Xem danh sách", Type = typeSystem},
                     new ClaimViewModel{ Id = PermissionKey.ACCOUNT_ADD, Group = "Quản lý tài khoản", Name ="Thêm mới", Type = typeSystem},
-                    new ClaimViewModel{ Id = PermissionKey.ACCOUNT_EDIT, Group = "Quản lý tài khoản", Name ="Chỉnh sửa", Type = typeSystem},
                     new ClaimViewModel{ Id = PermissionKey.ACCOUNT_DELETE, Group = "Quản lý tài khoản", Name ="Xóa", Type = typeSystem},
                     new ClaimViewModel{ Id = PermissionKey.ACCOUNT_SETROLE, Group = "Quản lý tài khoản", Name ="Gán nhóm tài khoản", Type = typeSystem},
-                    new ClaimViewModel{ Id = PermissionKey.ACCOUNT_SETCLAIM, Group = "Quản lý tài khoản", Name ="Phân quyền tài khoản", Type = typeSystem},
+                    new ClaimViewModel{ Id = PermissionKey.ACCOUNT_SETCLAIM, Group = "Quản lý tài khoản", Name ="Phân quyền", Type = typeSystem},
                     new ClaimViewModel{ Id = PermissionKey.ACCOUNT_CHANGEPASSWORD, Group = "Quản lý tài khoản",Name = "Đổi mật khẩu", Type = typeSystem},
 
                     new ClaimViewModel{ Id = PermissionKey.ROLE_VIEW, Group = "Quản lý nhóm tài khoản", Name ="Xem danh sách", Type = typeSystem},
@@ -63,7 +62,7 @@ namespace DoAnTotNghiep.Systems
                     new ClaimViewModel{ Id = PermissionKey.ROLE_DELETE, Group = "Quản lý nhóm tài khoản", Name ="Xóa", Type = typeSystem},
                     new ClaimViewModel{ Id = PermissionKey.ROLE_SETCLAIM, Group = "Quản lý nhóm tài khoản", Name ="Phân quyền", Type = typeSystem},
 
-                    new ClaimViewModel{ Id = PermissionKey.STAFFPROFILE_VIEW, Group = "Quản lý hồ sơ nhân viên", Name ="Xem danh sách toàn đơn vị", Type = typeStaff},
+                    new ClaimViewModel{ Id = PermissionKey.STAFFPROFILE_VIEW, Group = "Quản lý hồ sơ nhân viên", Name ="Xem danh sách", Type = typeStaff},
                     new ClaimViewModel{ Id = PermissionKey.STAFFPROFILE_ADD, Group = "Quản lý hồ sơ nhân viên", Name ="Thêm mới", Type = typeStaff},
                     new ClaimViewModel{ Id = PermissionKey.STAFFPROFILE_EDIT, Group = "Quản lý hồ sơ nhân viên", Name ="Chỉnh sửa", Type = typeStaff},
                     new ClaimViewModel{ Id = PermissionKey.STAFFPROFILE_DELETE, Group = "Quản lý hồ sơ nhân viên", Name ="Xóa", Type = typeStaff},
@@ -78,7 +77,7 @@ namespace DoAnTotNghiep.Systems
                     new ClaimViewModel{ Id = PermissionKey.STAFFRELATIONSHIP_EDIT, Group = "Quản lý quan hệ nhân thân", Name ="Chỉnh sửa", Type = typeStaff},
                     new ClaimViewModel{ Id = PermissionKey.STAFFRELATIONSHIP_DELETE, Group = "Quản lý quan hệ nhân thân", Name ="Xóa", Type = typeStaff},
 
-                    new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGSHIFTSTAFF_VIEW, Group = "Quản lý xếp ca làm việc", Name ="Xem toàn đơn vị", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGSHIFTSTAFF_VIEW, Group = "Quản lý xếp ca làm việc", Name ="Xem danh sách", Type = typeTimekeeping},
                     new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGSHIFTSTAFF_EDIT, Group ="Quản lý xếp ca làm việc" , Name ="Chỉnh sửa", Type = typeTimekeeping},
                     new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGSHIFTSTAFF_DELETE, Group = "Quản lý xếp ca làm việc", Name  ="Xóa", Type = typeTimekeeping},
 
@@ -89,22 +88,27 @@ namespace DoAnTotNghiep.Systems
                     new ClaimViewModel{ Id = PermissionKey.MANAGEVACATIONREGISTRATION_ADD, Group = "Quản lý đăng ký nghỉ", Name ="Thêm mới", Type = typeTimekeeping},
                     new ClaimViewModel{ Id = PermissionKey.MANAGEVACATIONREGISTRATION_EDIT, Group = "Quản lý đăng ký nghỉ", Name ="Chỉnh sửa", Type = typeTimekeeping},
                     new ClaimViewModel{ Id = PermissionKey.MANAGEVACATIONREGISTRATION_DELETE, Group = "Quản lý đăng ký nghỉ", Name ="Xóa", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGEVACATIONREGISTRATION_APPROVE, Group = "Quản lý đăng ký nghỉ", Name ="Phê duyệt", Type = typeTimekeeping},
 
                     new ClaimViewModel{ Id = PermissionKey.MANAGEOVERTIMEREGISTER_VIEW, Group = "Quản lý đăng ký làm thêm giờ", Name ="Xem danh sách", Type = typeTimekeeping},
-                    new ClaimViewModel{ Id = PermissionKey.MANAGEOVERTIMEREGISTER_ADD, Group = "Quản lý đăng ký làm thêm giờ", Name ="Chỉnh sửa", Type = typeTimekeeping},
-                    new ClaimViewModel{ Id = PermissionKey.MANAGEOVERTIMEREGISTER_EDIT, Group = "Quản lý đăng ký làm thêm giờ", Name ="Thêm mới", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGEOVERTIMEREGISTER_ADD, Group = "Quản lý đăng ký làm thêm giờ", Name ="Thêm mới", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGEOVERTIMEREGISTER_EDIT, Group = "Quản lý đăng ký làm thêm giờ", Name ="Chỉnh sửa", Type = typeTimekeeping},
                     new ClaimViewModel{ Id = PermissionKey.MANAGEOVERTIMEREGISTER_DELETE, Group = "Quản lý đăng ký làm thêm giờ", Name ="Xóa", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGEOVERTIMEREGISTER_APPROVE, Group = "Quản lý đăng ký làm thêm giờ", Name ="Phê duyệt", Type = typeTimekeeping},
 
                     new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_VIEW, Group = "Quản lý giải trình chấm công", Name ="Xem danh sách", Type = typeTimekeeping},
-                    new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_ADD, Group ="Quản lý giải trình chấm công" , Name ="Phê duyệt yêu cầu", Type = typeTimekeeping},
-                    new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_EDIT, Group ="Quản lý giải trình chấm công" , Name ="Phê duyệt yêu cầu", Type = typeTimekeeping},
-                    new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_DELETE, Group ="Quản lý giải trình chấm công" , Name ="Phê duyệt yêu cầu", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_ADD, Group ="Quản lý giải trình chấm công" , Name ="Thêm mới", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_EDIT, Group ="Quản lý giải trình chấm công" , Name ="Chỉnh sửa", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_DELETE, Group ="Quản lý giải trình chấm công" , Name ="Xóa", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.MANAGETIMEKEEPINGEXPLANATION_APPROVE, Group ="Quản lý giải trình chấm công" , Name ="Phê duyệt", Type = typeTimekeeping},
 
                     new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGAGGREGATE_VIEW, Group = "Tổng hợp dữ liệu công", Name ="Xem danh sách", Type = typeTimekeeping},
-                    new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGAGGREGATE_DELETE, Group = "Tổng hợp dữ liệu công", Name ="Xóa", Type = typeTimekeeping},
-                    new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGAGGREGATE, Group = "Tổng hợp dữ liệu công", Name ="Tổng hợp công theo toàn đơn vị", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.TIMEKEEPINGAGGREGATE, Group = "Tổng hợp dữ liệu công", Name ="Tổng hợp công", Type = typeTimekeeping},
 
-                    new ClaimViewModel{ Id = PermissionKey.SETUP_TIMEKEEPING, Group = "Thiết lập", Name ="Thiết lập dữ liệu dùng chung", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.OVERTIMEAGGREGATE_VIEW, Group = "Xử lý dữ liệu làm thêm", Name ="Xem danh sách", Type = typeTimekeeping},
+                    new ClaimViewModel{ Id = PermissionKey.OVERTIMEAGGREGATE, Group = "Xử lý dữ liệu làm thêm", Name ="Tổng hợp dữ liệu", Type = typeTimekeeping},
+
+                    new ClaimViewModel{ Id = PermissionKey.SETUP_TIMEKEEPING, Group = "Thiết lập", Name ="Thiết lập quy định chấm công", Type = typeTimekeeping},
                 };
                 claimTemplates.ForEach(c =>
                 {

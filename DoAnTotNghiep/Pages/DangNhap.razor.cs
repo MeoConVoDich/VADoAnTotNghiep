@@ -19,12 +19,15 @@ using Microsoft.AspNetCore.Authentication;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using NHibernate.Mapping;
+using DoAnTotNghiep.SearchModel;
+using FluentNHibernate.Conventions.AcceptanceCriteria;
 
 namespace DoAnTotNghiep.Pages
 {
     public partial class DangNhap : ComponentBase
     {
         [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+        [Inject] PermissionGroupService PermissionGroupService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] ISessionStorageService sessionStorage { get; set; }
         [Inject] NotificationService Notice { get; set; }
@@ -51,16 +54,28 @@ namespace DoAnTotNghiep.Pages
                     else
                     {
                         List<string> claimUsers = new List<string>();
-                        List<string> permissioGroups = new List<string>();
+                        List<string> claimPermissioGroups = new List<string>();
+                        List<string> permissioGroupIds = new List<string>();
                         if (tk.PermissionGroup.IsNotNullOrEmpty())
                         {
-                            permissioGroups = JsonSerializer.Deserialize<List<string>>(tk.PermissionGroup);
+                            permissioGroupIds = JsonSerializer.Deserialize<List<string>>(tk.PermissionGroup);
+                            if (permissioGroupIds.Any())
+                            {
+                                var data = await PermissionGroupService.GetAllWithFilterAsync(new PermissionGroupSearch() { Ids = permissioGroupIds });
+                                var permissioGroups = data.Item1 ?? new List<PermissionGroup>();
+                                foreach (var item in permissioGroups)
+                                {
+                                    claimPermissioGroups.AddRange(JsonSerializer.Deserialize<List<string>>(item.Permission));
+                                }
+                            }
                         }
                         if (tk.Permission.IsNotNullOrEmpty())
                         {
                             claimUsers = JsonSerializer.Deserialize<List<string>>(tk.Permission);
                         }
                         claims.AddRange(claimUsers);
+                        claims.AddRange(claimPermissioGroups);
+                        claims = claims.Distinct().ToList();
                     }
                     PermissionClaim.Claims(claims);
                     NavigationManager.NavigateTo("/ca-nhan/thong-tin-ca-nhan");

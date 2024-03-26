@@ -7,6 +7,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -22,6 +23,7 @@ namespace DoAnTotNghiep.Timekeeping
         [Inject] WorkShiftTableService WorkShiftTableService { get; set; }
         [Inject] TimekeepingShiftService TimekeepingShiftService { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
         List<WorkShiftTable> WorkShiftTables = new List<WorkShiftTable>();
         List<TimekeepingShift> TimekeepingShifts = new List<TimekeepingShift>();
         List<WorkShiftTableViewModel> selectedApproveRows = new();
@@ -43,8 +45,12 @@ namespace DoAnTotNghiep.Timekeeping
                 workShiftTableFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 workShiftTableFilterModel.ReadOnly = true;
                 BuildNameColumn();
-                await LoadDataAsync();
-                await LoadTimekeepingShiftsAsync();
+                if (PermissionClaim.TIMEKEEPINGSHIFTSTAFF_VIEW)
+                {
+                    await LoadDataAsync();
+                    await LoadTimekeepingShiftsAsync();
+                }
+               
             }
             catch (Exception ex)
             {

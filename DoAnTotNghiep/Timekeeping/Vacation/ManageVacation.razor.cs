@@ -7,6 +7,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -22,6 +23,8 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
         [Inject] VacationService VacationService { get; set; }
         [Inject] TimekeepingTypeService TimekeepingTypeService { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
+
         List<Domain.Vacation> Vacations = new List<Domain.Vacation>();
         List<VacationViewModel> selectedApproveRows = new();
         List<TimekeepingType> TimekeepingTypes = new List<TimekeepingType>();
@@ -48,8 +51,12 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
             try
             {
                 vacationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadTimekeepingTypeAsync();
-                await LoadDataAsync();
+                if (PermissionClaim.MANAGEVACATIONREGISTRATION_VIEW)
+                {
+                    await LoadTimekeepingTypeAsync();
+                    await LoadDataAsync();
+                }
+                
             }
             catch (Exception ex)
             {

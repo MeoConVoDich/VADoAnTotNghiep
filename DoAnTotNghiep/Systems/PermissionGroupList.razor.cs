@@ -28,6 +28,8 @@ namespace DoAnTotNghiep.Systems
         [Inject] PermissionGroupService PermissionGroupService { get; set; }
         [Inject] IMapper Mapper { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
+
         List<PermissionGroupViewModel> PermissionGroupViewModels { get; set; }
         List<PermissionGroup> PermissionGroups { get; set; }
         List<string> selectedRowIds = new List<string>();
@@ -46,7 +48,11 @@ namespace DoAnTotNghiep.Systems
             {
                 permissionGroupEditFilterModel = new PermissionGroupFilterEditModel();
                 permissionGroupEditFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadDataAsync();
+                if (PermissionClaim.ROLE_VIEW)
+                {
+                    await LoadDataAsync();
+
+                }
             }
             catch (Exception ex)
             {

@@ -1,5 +1,7 @@
 ﻿@page "/cham-cong/du-lieu-vao-ra"
-<PageHeader Class="site-page-header" Title="Dữ liệu vào ra">
+@if(PermissionClaim.FINGERPRINT_VIEW)
+{
+    <PageHeader Class="site-page-header" Title="Dữ liệu vào ra">
     <PageHeaderExtra>
         <Breadcrumb>
             <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
@@ -14,9 +16,12 @@
             <EditForm Model="fingerprintManagementFilterModel" OnValidSubmit="SearchAsync" Context="context">
                 <Row Gutter="8">
                     <Space>
-                        <SpaceItem>
+                        @if(PermissionClaim.FINGERPRINT_ADD)
+                        {
+                            <SpaceItem>
                             <Button Type="@ButtonType.Primary" OnClick="@ShowModal">Nạp Excel </Button>
                         </SpaceItem>
+                        }
                         <SpaceItem>
                             <Button Icon="file-excel" OnClick="() => ExportExcelAsync()" Type="@ButtonType.Primary" Loading="excelExporting">Xuất Excel</Button>
                         </SpaceItem>
@@ -158,4 +163,5 @@
                 </div>
             </Spin>
     </EditForm>
-</Modal>
+</Modal>    
+}

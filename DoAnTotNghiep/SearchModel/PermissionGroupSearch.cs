@@ -1,6 +1,8 @@
 ﻿using DoAnTotNghiep.Config;
 using DoAnTotNghiep.Domain;
+using FluentNHibernate.Testing.Values;
 using System;
+using System.Collections.Generic;
 
 namespace DoAnTotNghiep.SearchModel
 {
@@ -10,5 +12,6 @@ namespace DoAnTotNghiep.SearchModel
         public string CodeOrName { get; set; }
         public string Code { get; set; }
         public bool? CheckExist { get; set; }
+        public List<string> Ids { get; set; }
     }
 }

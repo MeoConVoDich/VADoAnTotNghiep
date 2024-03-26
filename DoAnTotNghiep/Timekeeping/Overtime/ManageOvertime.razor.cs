@@ -7,6 +7,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -20,6 +21,7 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
     {
         [Inject] IMapper Mapper { get; set; }
         [Inject] OvertimeService OvertimeService { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
         List<Domain.Overtime> Overtimes = new List<Domain.Overtime>();
         List<OvertimeViewModel> selectedApproveRows = new();
@@ -46,7 +48,10 @@ namespace DoAnTotNghiep.Timekeeping.Overtime
             try
             {
                 overtimeFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadDataAsync();
+                if (PermissionClaim.MANAGEOVERTIMEREGISTER_VIEW)
+                {
+                    await LoadDataAsync();
+                }
             }
             catch (Exception ex)
             {

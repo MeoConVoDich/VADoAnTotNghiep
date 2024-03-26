@@ -3,7 +3,7 @@
     <InputWatcher @ref="inputWatcher"></InputWatcher>
     <Row Gutter="8" Justify="end">
         <Space Size="@("small")" Style="margin-right: 10px">
-            @if (editModel.ReadOnly)
+            @if (editModel.ReadOnly && PermissionClaim.DISCIPLINE_BONUS_EDIT)
             {
                 <SpaceItem>
                     <Button Type="@ButtonType.Primary" OnClick="Edit" Class="btn-edit">Sửa</Button>

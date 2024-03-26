@@ -33,6 +33,7 @@ namespace DoAnTotNghiep.Timekeeping
         [Inject] SummaryOfTimekeepingService SummaryOfTimekeepingService { get; set; }
         [Inject] TimekeepingTypeService TimekeepingTypeService { get; set; }
         [Inject] TimekeepingFormulaService TimekeepingFormulaService { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
         [Inject] ModalService ModalService { get; set; }
         TimekeepingAggregateFilterEditModel timekeepingAggregateFilterModel = new TimekeepingAggregateFilterEditModel();
         UsersSearch usersSearch = new UsersSearch();
@@ -62,9 +63,12 @@ namespace DoAnTotNghiep.Timekeeping
                 };
                 usersSearch.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 timekeepingAggregateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadUsersAsync();
-                await LoadTimekeepingTypeAsync();
-                await LoadTimekeepingFormulaAsync();
+                if (PermissionClaim.TIMEKEEPINGAGGREGATE_VIEW)
+                {
+                    await LoadUsersAsync();
+                    await LoadTimekeepingTypeAsync();
+                    await LoadTimekeepingFormulaAsync();
+                }
             }
             catch (Exception ex)
             {

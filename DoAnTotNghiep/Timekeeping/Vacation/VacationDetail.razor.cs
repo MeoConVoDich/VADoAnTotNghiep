@@ -6,6 +6,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace DoAnTotNghiep.Timekeeping.Vacation
         [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] VacationService VacationService { get; set; }
         [Inject] UsersService UsersService { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
         [Inject] ISessionStorageService sessionStorage { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback ValueChanged { get; set; }

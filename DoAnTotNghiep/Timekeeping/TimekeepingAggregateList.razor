@@ -1,108 +1,116 @@
 ﻿@page "/cham-cong/tong-hop-cong-may"
-<PageHeader Class="site-page-header" Title="Tổng hợp công máy">
-    <PageHeaderExtra>
-        <Breadcrumb>
-            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
-            <BreadcrumbItem>Chấm công</BreadcrumbItem>
-            <BreadcrumbItem>Tổng hợp công máy</BreadcrumbItem>
-        </Breadcrumb>
-    </PageHeaderExtra>
-</PageHeader>
-<div class="site-content">
-    <Row Gutter="8" Style="padding-top: 10px">
-        <AntDesign.Col Span="24">
-            <EditForm Model="timekeepingAggregateFilterModel" OnValidSubmit="SearchAsync">
-                <Row Gutter="8">
-                    <Space Size="@("small")">
-                        <SpaceItem>
-                            <Button Type="@ButtonType.Primary" OnClick="ShowSummaryConfirm" Loading=aggregating>Tổng hợp</Button>
-                        </SpaceItem>
-                    </Space>
-                    <AntDesign.Col Span="2">
-                        <Select TItemValue="string" TItem="string"
-                                Value="@timekeepingAggregateFilterModel?.Year"
-                                OnSelectedItemChanged="e => YearChangeAsync(e)">
-                            <SelectOptions>
-                                @foreach (var item in timekeepingAggregateFilterModel.DataSource[timekeepingAggregateFilterModel.Property.NameProperty(c => c.Year)])
-                                {
-                                    <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
-                                }
-                            </SelectOptions>
-                        </Select>
-                    </AntDesign.Col>
-                    <AntDesign.Col Span="2">
-                        <Select TItemValue="string" TItem="string"
-                                Value="@timekeepingAggregateFilterModel?.Month"
-                                OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
-                            <SelectOptions>
-                                @foreach (var item in timekeepingAggregateFilterModel.DataSource[timekeepingAggregateFilterModel.Property.NameProperty(c => c.Month)])
-                                {
-                                    <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
-                                }
-                            </SelectOptions>
-                        </Select>
-                    </AntDesign.Col>
-                    <AntDesign.Col Span="4">
-                        <Input @bind-Value="usersSearch.CodeOrName" Placeholder="Nhập họ tên, mã nhân viên" />
-                    </AntDesign.Col>
-                    <AntDesign.Col>
-                        <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
-                    </AntDesign.Col>
-                </Row>
-            </EditForm>
-        </AntDesign.Col>
-    </Row>
-    <Row Gutter="8" Style="margin-top: 10px">
-        <AntDesign.Col Span="6">
-            <Table TItem="UsersViewModel" DataSource="@UsersViewModels" Class="table-striped"
-                   Total="usersSearch.Page.Total" @ref="table"
-                   Loading="usersLoading" ScrollY="500"
-                   ScrollBarWidth="10px"
-                   PageIndex="usersSearch.Page.PageIndex"
-                   PageSize="usersSearch.Page.PageSize"
-                   OnPageIndexChange="PageIndexStaffChangeAsync"
-                   OnPageSizeChange="PageSizeStaffChangeAsync"
-                   OnRowClick="OnRowClickAsync"
-                   @bind-SelectedRows="selectedRows">
-                <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
-                <Column @bind-Field="@context.Stt" Width="50"></Column>
-                <Column @bind-Field="@context.Code"></Column>
-                <Column @bind-Field="@context.Name"></Column>
-            </Table>
-        </AntDesign.Col>
-        <AntDesign.Col Span="14">
-            <Table TItem="TimekeepingAggregateViewModel" DataSource="@TimekeepingAggregateViewModels"
-                   Class="table-striped" ScrollBarWidth="10px"
-                   Total="timekeepingAggregateFilterModel.Page.Total"
-                   Loading="loading" ScrollX="1150" ScrollY="500"
-                   PageIndex="timekeepingAggregateFilterModel.Page.PageIndex"
-                   PageSize="timekeepingAggregateFilterModel.Page.PageSize"
-                   OnPageIndexChange="PageIndexChange"
-                   OnPageSizeChange="PageSizeChange">
-                <Column @bind-Field="@context.DateOfPhase" Width="150" Format="dd/MM/yyyy" Fixed="left" />
-                <Column @bind-Field="@context.ShiftOfPhase" Width="150"></Column>
-                <Column @bind-Field="@context.CheckinDate" Width="200" Format="HH:mm" Align="ColumnAlign.Center" />
-                <Column @bind-Field="@context.CheckoutDate" Width="200" Format="HH:mm" Align="ColumnAlign.Center" />
-                <Column @bind-Field="@context.TimekeepingCode" Width="150" />
-                <Column @bind-Field="@context.WorkLateMinutes" Width="150" />
-                <Column @bind-Field="@context.LeaveEarlyMinutes" Width="150" />
-            </Table>
-        </AntDesign.Col>
-        <AntDesign.Col Span="4">
-            <AntList Bordered DataSource="@TimekeepingSummaryViewModels" Size="small" Loading="loading">
-                <Header>
-                    <Text Strong>THÔNG TIN TỔNG HỢP</Text>
-                </Header>
-                <ChildContent Context="summary">
-                    <ListItem>
-                        <span><Text Ellipsis>@summary.Name</Text></span>
-                        @summary.Value
-                    </ListItem>
-                </ChildContent>
-            </AntList>
-        </AntDesign.Col>
-    </Row>
-</div>
+@if(PermissionClaim.TIMEKEEPINGAGGREGATE_VIEW)
+{
+    <PageHeader Class="site-page-header" Title="Tổng hợp công máy">
+        <PageHeaderExtra>
+            <Breadcrumb>
+                <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+                <BreadcrumbItem>Chấm công</BreadcrumbItem>
+                <BreadcrumbItem>Tổng hợp công máy</BreadcrumbItem>
+            </Breadcrumb>
+        </PageHeaderExtra>
+    </PageHeader>
+    <div class="site-content">
+        <Row Gutter="8" Style="padding-top: 10px">
+            <AntDesign.Col Span="24">
+                <EditForm Model="timekeepingAggregateFilterModel" OnValidSubmit="SearchAsync">
+                    <Row Gutter="8">
+                        @if (PermissionClaim.TIMEKEEPINGAGGREGATE)
+                        {
+                            <Space Size="@("small")">
+                            <SpaceItem>
+                                <Button Type="@ButtonType.Primary" OnClick="ShowSummaryConfirm" Loading=aggregating>Tổng hợp</Button>
+                            </SpaceItem>
+                        </Space>                            
+                        }
+
+                        <AntDesign.Col Span="2">
+                            <Select TItemValue="string" TItem="string"
+                                    Value="@timekeepingAggregateFilterModel?.Year"
+                                    OnSelectedItemChanged="e => YearChangeAsync(e)">
+                                <SelectOptions>
+                                    @foreach (var item in timekeepingAggregateFilterModel.DataSource[timekeepingAggregateFilterModel.Property.NameProperty(c => c.Year)])
+                                    {
+                                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                    }
+                                </SelectOptions>
+                            </Select>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="2">
+                            <Select TItemValue="string" TItem="string"
+                                    Value="@timekeepingAggregateFilterModel?.Month"
+                                    OnSelectedItemChanged="e => SearchMonthChangedAsync(e)">
+                                <SelectOptions>
+                                    @foreach (var item in timekeepingAggregateFilterModel.DataSource[timekeepingAggregateFilterModel.Property.NameProperty(c => c.Month)])
+                                    {
+                                        <SelectOption TItemValue="string" TItem="string" Value="@item.Key" Label="@item.Value?.GetDisplay()" />
+                                    }
+                                </SelectOptions>
+                            </Select>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="4">
+                            <Input @bind-Value="usersSearch.CodeOrName" Placeholder="Nhập họ tên, mã nhân viên" />
+                        </AntDesign.Col>
+                        <AntDesign.Col>
+                            <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                        </AntDesign.Col>
+                    </Row>
+                </EditForm>
+            </AntDesign.Col>
+        </Row>
+        <Row Gutter="8" Style="margin-top: 10px">
+            <AntDesign.Col Span="6">
+                <Table TItem="UsersViewModel" DataSource="@UsersViewModels" Class="table-striped"
+                       Total="usersSearch.Page.Total" @ref="table"
+                       Loading="usersLoading" ScrollY="500"
+                       ScrollBarWidth="10px"
+                       PageIndex="usersSearch.Page.PageIndex"
+                       PageSize="usersSearch.Page.PageSize"
+                       OnPageIndexChange="PageIndexStaffChangeAsync"
+                       OnPageSizeChange="PageSizeStaffChangeAsync"
+                       OnRowClick="OnRowClickAsync"
+                       @bind-SelectedRows="selectedRows">
+                    <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+                    <Column @bind-Field="@context.Stt" Width="50"></Column>
+                    <Column @bind-Field="@context.Code"></Column>
+                    <Column @bind-Field="@context.Name"></Column>
+                </Table>
+            </AntDesign.Col>
+            <AntDesign.Col Span="14">
+                <Table TItem="TimekeepingAggregateViewModel" DataSource="@TimekeepingAggregateViewModels"
+                       Class="table-striped" ScrollBarWidth="10px"
+                       Total="timekeepingAggregateFilterModel.Page.Total"
+                       Loading="loading" ScrollX="1150" ScrollY="500"
+                       PageIndex="timekeepingAggregateFilterModel.Page.PageIndex"
+                       PageSize="timekeepingAggregateFilterModel.Page.PageSize"
+                       OnPageIndexChange="PageIndexChange"
+                       OnPageSizeChange="PageSizeChange">
+                    <Column @bind-Field="@context.DateOfPhase" Width="150" Format="dd/MM/yyyy" Fixed="left" />
+                    <Column @bind-Field="@context.ShiftOfPhase" Width="150"></Column>
+                    <Column @bind-Field="@context.CheckinDate" Width="200" Format="HH:mm" Align="ColumnAlign.Center" />
+                    <Column @bind-Field="@context.CheckoutDate" Width="200" Format="HH:mm" Align="ColumnAlign.Center" />
+                    <Column @bind-Field="@context.TimekeepingCode" Width="150" />
+                    <Column @bind-Field="@context.WorkLateMinutes" Width="150" />
+                    <Column @bind-Field="@context.LeaveEarlyMinutes" Width="150" />
+                </Table>
+            </AntDesign.Col>
+            <AntDesign.Col Span="4">
+                <AntList Bordered DataSource="@TimekeepingSummaryViewModels" Size="small" Loading="loading">
+                     <Header>
+                         <Text Strong>THÔNG TIN TỔNG HỢP</Text>
+                 </Header>
+                 <ChildContent Context="summary">
+                     <ListItem>
+                         <span><Text Ellipsis>@summary.Name</Text></span>
+                                @summary.Value
+                        </ListItem>
+                    </ChildContent>
+                </AntList>
+            </AntDesign.Col>
+        </Row>
+    </div>
+}
+
 
 @code {
     void ShowSummaryConfirm()

@@ -1,295 +1,312 @@
 ﻿@page "/he-thong/tai-khoan"
-<PageHeader Class="site-page-header" Title="Tài khoản">
-    <PageHeaderExtra>
-        <Breadcrumb>
-            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
-            <BreadcrumbItem>Hệ thống</BreadcrumbItem>
-            <BreadcrumbItem>Tài khoản</BreadcrumbItem>
-        </Breadcrumb>
-    </PageHeaderExtra>
-</PageHeader>
-<div class="site-content" style="padding-top: 4px;">
-    <EditForm Model="usersEditFilterModel" OnSubmit="e => SearchAsync()">
-        <Row Gutter="8" Wrap="false" Style="">
-            <Space Size=@(("8", "8")) Wrap>
-                <SpaceItem>
-                    <Button Icon="plus" OnClick="Add" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
-                </SpaceItem>
-                @if (selectedRows?.Any() == true)
-                {
-                    <SpaceItem>
-                        <Popconfirm Placement="@Placement.BottomRight"
-                                    OnConfirm="() => DeleteAsync()"
-                                    OkText="Đồng ý"
-                                    CancelText="Hủy">
-                            <ChildContent>
-                                <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
-                            </ChildContent>
-                            <TitleTemplate>
-                                Bạn có chắc chắn muốn xóa?
-                            </TitleTemplate>
-                        </Popconfirm>
-                    </SpaceItem>
-                }
-            </Space>
-            <AntDesign.Col Span="4">
-                <Input TValue="string" Value="usersEditFilterModel.UserName"
-                       ValueChanged="e => usersEditFilterModel.Change(nameof(usersEditFilterModel.UserName), e)"
-                       Placeholder="Nhập tên đăng nhập" />
-            </AntDesign.Col>
-            <AntDesign.Col Span="4">
-                <Input TValue="string" Value="usersEditFilterModel.CodeOrName"
-                       ValueChanged="e => usersEditFilterModel.Change(nameof(usersEditFilterModel.CodeOrName), e)"
-                       Placeholder="Nhập họ tên, mã nhân viên" />
-            </AntDesign.Col>
-            <AntDesign.Col Span="2" Class="flex-start-end">
-                <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
-            </AntDesign.Col>
-        </Row>
-    </EditForm>
-    <Row Gutter="8">
-        <Table @ref="table" TItem="UsersViewModel" DataSource="@UsersViewModels" Class="table-striped"
-               Total="usersEditFilterModel.Page.Total"
-               Loading="loading" ScrollY="500px"
-               PageIndex="usersEditFilterModel.Page.PageIndex"
-               PageSize="usersEditFilterModel.Page.PageSize"
-               OnPageSizeChange="PageSizeChangeAsync"
-               OnPageIndexChange="PageIndexChangeAsync"
-               OnRowClick="OnRowClick"
-               @bind-SelectedRows="selectedRows">
-            <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
-            <Column @bind-Field="@context.Stt" Width="50"></Column>
-            <Column @bind-Field="@context.UserName"></Column>
-            <Column @bind-Field="@context.Code"></Column>
-            <Column @bind-Field="@context.Name"></Column>
-            <ActionColumn Title="Thao tác" Class="action-column-center" Width="150">
-                <Space Size=@("small")>
-                    <SpaceItem>
-                        <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
-                            <Icon Type="eye" Theme="fill" OnClick="() => OpenDetail(context)" Class="btn-icon-edit" />
-                        </Tooltip>
-                    </SpaceItem>
-                    <SpaceItem>
+@if (PermissionClaim.ACCOUNT_VIEW)
+{
+    <PageHeader Class="site-page-header" Title="Tài khoản">
+        <PageHeaderExtra>
+            <Breadcrumb>
+                <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+                <BreadcrumbItem>Hệ thống</BreadcrumbItem>
+                <BreadcrumbItem>Tài khoản</BreadcrumbItem>
+            </Breadcrumb>
+        </PageHeaderExtra>
+    </PageHeader>
+    <div class="site-content" style="padding-top: 4px;">
+        <EditForm Model="usersEditFilterModel" OnSubmit="e => SearchAsync()">
+            <Row Gutter="8" Wrap="false" Style="">
+                <Space Size=@(("8", "8")) Wrap>
+                 @if (PermissionClaim.ACCOUNT_ADD)
+                    {
+                        <SpaceItem>
+                            <Button Icon="plus" OnClick="Add" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
+                        </SpaceItem>
+                    }
+                    @if (PermissionClaim.ACCOUNT_DELETE)
+                    {
+                        @if (selectedRows?.Any() == true)
+                        {
+                            <SpaceItem>
+                                <Popconfirm Placement="@Placement.BottomRight"
+                                            OnConfirm="() => DeleteAsync()"
+                                            OkText="Đồng ý"
+                                            CancelText="Hủy">
+                                    <ChildContent>
+                                        <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                                 </ChildContent>
+                                 <TitleTemplate>
+                                     Bạn có chắc chắn muốn xóa?
+                                 </TitleTemplate>
+                             </Popconfirm>
+                         </SpaceItem>
+                        }
+                    }
+                </Space>
+                <AntDesign.Col Span="4">
+                    <Input TValue="string" Value="usersEditFilterModel.UserName"
+                           ValueChanged="e => usersEditFilterModel.Change(nameof(usersEditFilterModel.UserName), e)"
+                           Placeholder="Nhập tên đăng nhập" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="4">
+                    <Input TValue="string" Value="usersEditFilterModel.CodeOrName"
+                           ValueChanged="e => usersEditFilterModel.Change(nameof(usersEditFilterModel.CodeOrName), e)"
+                           Placeholder="Nhập họ tên, mã nhân viên" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="2" Class="flex-start-end">
+                    <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                </AntDesign.Col>
+            </Row>
+        </EditForm>
+        <Row Gutter="8">
+            <Table @ref="table" TItem="UsersViewModel" DataSource="@UsersViewModels" Class="table-striped"
+                   Total="usersEditFilterModel.Page.Total"
+                   Loading="loading" ScrollY="500px"
+                   PageIndex="usersEditFilterModel.Page.PageIndex"
+                   PageSize="usersEditFilterModel.Page.PageSize"
+                   OnPageSizeChange="PageSizeChangeAsync"
+                   OnPageIndexChange="PageIndexChangeAsync"
+                   OnRowClick="OnRowClick"
+                   @bind-SelectedRows="selectedRows">
+                <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+                <Column @bind-Field="@context.Stt" Width="50"></Column>
+                <Column @bind-Field="@context.UserName"></Column>
+                <Column @bind-Field="@context.Code"></Column>
+                <Column @bind-Field="@context.Name"></Column>
+                <ActionColumn Title="Thao tác" Class="action-column-center" Width="150">
+                    <Space Size=@("small")>
+                        <SpaceItem>
+                            <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">
+                                <Icon Type="eye" Theme="fill" OnClick="() => OpenDetail(context)" Class="btn-icon-edit" />
+                            </Tooltip>
+                        </SpaceItem>
                         @if (PermissionClaim?.ACCOUNT_SETROLE == true)
                         {
-                            <Tooltip Placement="@Placement.Top" Title="Gán nhóm tài khoản">
-                                <Icon Type="tool" Theme="fill" OnClick="() => OpenSetPermissionGroupAsync(context)" Class="btn-icon-edit" />
-                            </Tooltip>
+                            <SpaceItem>
+
+                                <Tooltip Placement="@Placement.Top" Title="Gán nhóm tài khoản">
+                                    <Icon Type="tool" Theme="fill" OnClick="() => OpenSetPermissionGroupAsync(context)" Class="btn-icon-edit" />
+                                </Tooltip>
+                            </SpaceItem>
                         }
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Tooltip Placement="@Placement.Top" Title="Phân quyền">
-                            <Icon Type="control" Theme="fill" OnClick="() => OpenSetClaim(context)" Class="btn-icon-edit" />
-                        </Tooltip>
-                    </SpaceItem>
-                    <SpaceItem>
+                        @if (PermissionClaim?.ACCOUNT_SETCLAIM == true)
+                        {
+                            <SpaceItem>
+                                <Tooltip Placement="@Placement.Top" Title="Phân quyền">
+                                    <Icon Type="control" Theme="fill" OnClick="() => OpenSetClaim(context)" Class="btn-icon-edit" />
+                                </Tooltip>
+                            </SpaceItem>
+                        }
                         @if (PermissionClaim?.ACCOUNT_CHANGEPASSWORD == true)
                         {
-                            <Tooltip Placement="@Placement.Top" Title="Đổi mật khẩu">
-                                <Icon Type="interaction" Theme="fill" OnClick="() => OpenChangePasswordForm(context)" Class="btn-icon-edit" />
-                            </Tooltip>
-                        }
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Tooltip Placement="@Placement.Top" Title="Xóa">
-                            <Popconfirm Placement="@Placement.LeftBottom"
-                                        OnConfirm="() => DeleteAsync(context)"
-                                        OkText="Đồng ý"
-                                        CancelText="Huỷ">
-                                <ChildContent>
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete"></Icon>
-                                </ChildContent>
-                                <TitleTemplate>
-                                    Bạn có chắc chắn muốn xóa?
-                                </TitleTemplate>
-                            </Popconfirm>
-                        </Tooltip>
-                    </SpaceItem>
-                </Space>
-            </ActionColumn>
-        </Table>
-    </Row>
-</div>
+                            <SpaceItem>
 
-<Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
-        Width="500"
-        Placement="right" BodyStyle="padding-top:0px"
-        Title="@("Thông tin tài khoản")" OnClose="CancelClick">
-    <Template>
-        <EditForm Model="editModel">
-            <DataAnnotationsValidator />
-            <InputWatcher @ref="inputWatcher"></InputWatcher>
-            <Row Gutter="8" Justify="end">
-                <Space Size="@("small")" Style="margin-right: 10px">
-                    <SpaceItem>
-                        @if (!editModel.ReadOnly)
-                        {
-                            <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7" Class="btn-add-new">Lưu</Button>
+                                <Tooltip Placement="@Placement.Top" Title="Đổi mật khẩu">
+                                    <Icon Type="interaction" Theme="fill" OnClick="() => OpenChangePasswordForm(context)" Class="btn-icon-edit" />
+                                </Tooltip>
+                            </SpaceItem>
                         }
-                    </SpaceItem>
-                    <SpaceItem>
+                        @if (PermissionClaim?.ACCOUNT_DELETE == true)
+                        {
+                            <SpaceItem>
+                                <Tooltip Placement="@Placement.Top" Title="Xóa">
+                                    <Popconfirm Placement="@Placement.LeftBottom"
+                                                OnConfirm="() => DeleteAsync(context)"
+                                                OkText="Đồng ý"
+                                                CancelText="Huỷ">
+                                        <ChildContent>
+                                            <Icon Type="delete" Theme="fill" Class="btn-icon-delete"></Icon>
+                                        </ChildContent>
+                                        <TitleTemplate>
+                                            Bạn có chắc chắn muốn xóa?
+                                        </TitleTemplate>
+                                    </Popconfirm>
+                                </Tooltip>
+                            </SpaceItem>
+                        }
+                    </Space>
+                </ActionColumn>
+            </Table>
+        </Row>
+    </div>
+
+    <Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
+            Width="500"
+            Placement="right" BodyStyle="padding-top:0px"
+            Title="@("Thông tin tài khoản")" OnClose="CancelClick">
+        <Template>
+            <EditForm Model="editModel">
+                <DataAnnotationsValidator />
+                <InputWatcher @ref="inputWatcher"></InputWatcher>
+                <Row Gutter="8" Justify="end">
+                    <Space Size="@("small")" Style="margin-right: 10px">
+                        <SpaceItem>
+                            @if (!editModel.ReadOnly)
+                            {
+                                <Button Type="@ButtonType.Primary" OnClick="SaveAsync" Color="@Color.Green7" Class="btn-add-new">Lưu</Button>
+                            }
+                        </SpaceItem>
+                        <SpaceItem>
+                            @if (!editModel.ReadOnly)
+                            {
+                                <Popconfirm OnConfirm="() => CancelClick()"
+                                            OkText="Đồng ý"
+                                            CancelText="Hủy">
+                                    <ChildContent>
+                                        <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                                 </ChildContent>
+                                 <TitleTemplate>
+                                     Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                                 </TitleTemplate>
+                             </Popconfirm>
+                            }
+                        </SpaceItem>
+                    </Space>
+                </Row>
+                <Row Gutter="8">
+                    <AntDesign.Col Span="24">
+                        <LabelFor For="() => editModel.UserName"></LabelFor>
+                        <Input @bind-Value="editModel.UserName" Disabled="editModel.ReadOnly" />
+                        <ValidationMessage For="() => editModel.UserName"></ValidationMessage>
+                    </AntDesign.Col>
+                    @if (!editModel.ReadOnly)
+                    {
+                        <AntDesign.Col Span="24">
+                            <LabelFor For="() => editModel.Password"></LabelFor>
+                            <InputPassword @bind-Value="editModel.Password" Disabled="editModel.ReadOnly" />
+                            <ValidationMessage For="() => editModel.Password"></ValidationMessage>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="24">
+                            <LabelFor For="() => editModel.RePassword"></LabelFor>
+                            <InputPassword @bind-Value="editModel.RePassword" Disabled="editModel.ReadOnly" />
+                            <ValidationMessage For="() => editModel.RePassword"></ValidationMessage>
+                        </AntDesign.Col>
+                    }
+                    <AntDesign.Col Span="24">
+                        <LabelFor For="() => editModel.Name" HasRequired="true"></LabelFor>
                         @if (!editModel.ReadOnly)
                         {
-                            <Popconfirm OnConfirm="() => CancelClick()"
+                            <Select DataSource="@StaffSearchDatas"
+                                    LabelName="@nameof(Users.Name)"
+                                    ValueName="@nameof(Users.Id)"
+                                    TItemValue="string" TItem="Users" Placeholder="Tìm kiếm"
+                                    Value="@editModel.Id" EnableSearch EnableVirtualization="true"
+                                     OnSearch="e => OnStaffSearch(e)"
+                                     ValueChanged="e => StaffChange(e)">
+                                 <ItemTemplate Context="selectedContext">
+                                     <StaffProfileOption Model="selectedContext" />
+                                 </ItemTemplate>
+                             </Select>
+                        }
+                        else
+                        {
+                            <Input Value="editModel.Name" Disabled />
+                        }
+                        <ValidationMessage For="() => editModel.Name"></ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="24">
+                        <LabelFor For="() => editModel.Code" HasRequired="true"></LabelFor>
+                        <Input @bind-Value="editModel.Code" Disabled />
+                         <ValidationMessage For="() => editModel.Code"></ValidationMessage>
+                     </AntDesign.Col>
+                 </Row>
+             </EditForm>
+         </Template>
+     </Drawer>
+
+    <Drawer Closable="true" MaskClosable="false" Visible="changedPassVisible"
+            Width="500"
+            Placement="right" BodyStyle="padding-top:0px"
+            Title="@("Đổi mật khẩu")" OnClose="CloseDetail">
+        <Template>
+            <EditForm Model="editModelChangePass">
+                <DataAnnotationsValidator />
+                <InputWatcher @ref="inputWatcher"></InputWatcher>
+                <Row Gutter="8" Justify="end">
+                    <Space Size="@("small")" Style="margin-right: 10px">
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" OnClick="SaveChangePassAsync" Color="@Color.Green7" Class="btn-add-new">Lưu</Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Popconfirm OnConfirm="() => CloseDetail()"
                                         OkText="Đồng ý"
                                         CancelText="Hủy">
                                 <ChildContent>
                                     <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
-                                </ChildContent>
-                                <TitleTemplate>
-                                    Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
-                                </TitleTemplate>
-                            </Popconfirm>
-                        }
-                    </SpaceItem>
-                </Space>
-            </Row>
-            <Row Gutter="8">
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModel.UserName"></LabelFor>
-                    <Input @bind-Value="editModel.UserName" Disabled="editModel.ReadOnly" />
-                    <ValidationMessage For="() => editModel.UserName"></ValidationMessage>
-                </AntDesign.Col>
-                @if (!editModel.ReadOnly)
+                             </ChildContent>
+                             <TitleTemplate>
+                                 Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
+                             </TitleTemplate>
+                         </Popconfirm>
+                     </SpaceItem>
+                 </Space>
+             </Row>
+             <Row Gutter="8">
+                 <AntDesign.Col Span="24">
+                     <LabelFor For="() => editModelChangePass.UserName"></LabelFor>
+                     <Input @bind-Value="editModelChangePass.UserName" Disabled="true" />
+                     <ValidationMessage For="() => editModelChangePass.UserName"></ValidationMessage>
+                 </AntDesign.Col>
+                 <AntDesign.Col Span="24">
+                     <LabelFor For="() => editModelChangePass.ChangePassword"></LabelFor>
+                     <InputPassword @bind-Value="editModelChangePass.ChangePassword" />
+                     <ValidationMessage For="() => editModelChangePass.ChangePassword"></ValidationMessage>
+                 </AntDesign.Col>
+                 <AntDesign.Col Span="24">
+                     <LabelFor For="() => editModelChangePass.ReChangePassword"></LabelFor>
+                     <InputPassword @bind-Value="editModelChangePass.ReChangePassword" />
+                     <ValidationMessage For="() => editModelChangePass.ReChangePassword"></ValidationMessage>
+                 </AntDesign.Col>
+                 <AntDesign.Col Span="24">
+                     <LabelFor For="() => editModelChangePass.Name" HasRequired="true"></LabelFor>
+                     <Input Value="editModelChangePass.Name" Disabled />
+                         <ValidationMessage For="() => editModelChangePass.Name"></ValidationMessage>
+                     </AntDesign.Col>
+                     <AntDesign.Col Span="24">
+                         <LabelFor For="() => editModelChangePass.Code" HasRequired="true"></LabelFor>
+                         <Input @bind-Value="editModelChangePass.Code" Disabled />
+                         <ValidationMessage For="() => editModelChangePass.Code"></ValidationMessage>
+                     </AntDesign.Col>
+                 </Row>
+             </EditForm>
+         </Template>
+     </Drawer>
+
+    <Drawer Closable="true" MaskClosable="false" Visible="setClaimVisible"
+            Width="1200"
+            Placement="right" BodyStyle="padding-top:0px"
+            Title="@("Cài đặt quyền cho tài khoản")" OnClose="CloseSetClaim">
+        <Template>
+            <SetClaim @ref="setClaimComponent" SetClaimType="SetClaimType.Users" OnCancel="CloseSetClaim" ValueChanged="ClaimChangedAsync" />
+        </Template>
+    </Drawer>
+
+    <Drawer Closable="true" MaskClosable="false" Visible="setPermissionGroupVisible"
+            Width="1200"
+            Placement="right" BodyStyle="padding-top:0px"
+            Title="@("Gán nhóm quyền cho tài khoản")" OnClose="CloseSetPermissionGroup">
+        <Template>
+            <Row Gutter="16">
+                @foreach (var item in PermissionGroups)
                 {
-                    <AntDesign.Col Span="24">
-                        <LabelFor For="() => editModel.Password"></LabelFor>
-                        <InputPassword @bind-Value="editModel.Password" Disabled="editModel.ReadOnly" />
-                        <ValidationMessage For="() => editModel.Password"></ValidationMessage>
-                    </AntDesign.Col>
-                    <AntDesign.Col Span="24">
-                        <LabelFor For="() => editModel.RePassword"></LabelFor>
-                        <InputPassword @bind-Value="editModel.RePassword" Disabled="editModel.ReadOnly" />
-                        <ValidationMessage For="() => editModel.RePassword"></ValidationMessage>
+                    <AntDesign.Col Span="4">
+                        <Checkbox Checked="@permissionGroupIds.Contains(item.Id)" CheckedChange=" e => CheckChanged(e, item)" Disabled="isAdmin">Tất cả</Checkbox>
                     </AntDesign.Col>
                 }
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModel.Name" HasRequired="true"></LabelFor>
-                    @if (!editModel.ReadOnly)
-                    {
-                        <Select DataSource="@StaffSearchDatas"
-                                LabelName="@nameof(Users.Name)"
-                                ValueName="@nameof(Users.Id)"
-                                TItemValue="string" TItem="Users" Placeholder="Tìm kiếm"
-                                Value="@editModel.Id" EnableSearch EnableVirtualization="true"
-                                OnSearch="e => OnStaffSearch(e)"
-                                ValueChanged="e => StaffChange(e)">
-                            <ItemTemplate Context="selectedContext">
-                                <StaffProfileOption Model="selectedContext" />
-                            </ItemTemplate>
-                        </Select>
-                    }
-                    else
-                    {
-                        <Input Value="editModel.Name" Disabled />
-                    }
-                    <ValidationMessage For="() => editModel.Name"></ValidationMessage>
-                </AntDesign.Col>
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModel.Code" HasRequired="true"></LabelFor>
-                    <Input @bind-Value="editModel.Code" Disabled />
-                    <ValidationMessage For="() => editModel.Code"></ValidationMessage>
-                </AntDesign.Col>
-            </Row>
-        </EditForm>
-    </Template>
-</Drawer>
-
-<Drawer Closable="true" MaskClosable="false" Visible="changedPassVisible"
-        Width="500"
-        Placement="right" BodyStyle="padding-top:0px"
-        Title="@("Đổi mật khẩu")" OnClose="CloseDetail">
-    <Template>
-        <EditForm Model="editModelChangePass">
-            <DataAnnotationsValidator />
-            <InputWatcher @ref="inputWatcher"></InputWatcher>
-            <Row Gutter="8" Justify="end">
-                <Space Size="@("small")" Style="margin-right: 10px">
-                    <SpaceItem>
-                        <Button Type="@ButtonType.Primary" OnClick="SaveChangePassAsync" Color="@Color.Green7" Class="btn-add-new">Lưu</Button>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Popconfirm OnConfirm="() => CloseDetail()"
-                                    OkText="Đồng ý"
-                                    CancelText="Hủy">
-                            <ChildContent>
-                                <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
-                            </ChildContent>
-                            <TitleTemplate>
-                                Bạn có chắc chắn muốn hủy thao tác, các dữ liệu có thể sẽ không được lưu?
-                            </TitleTemplate>
-                        </Popconfirm>
-                    </SpaceItem>
-                </Space>
-            </Row>
-            <Row Gutter="8">
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModelChangePass.UserName"></LabelFor>
-                    <Input @bind-Value="editModelChangePass.UserName" Disabled="true" />
-                    <ValidationMessage For="() => editModelChangePass.UserName"></ValidationMessage>
-                </AntDesign.Col>
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModelChangePass.ChangePassword"></LabelFor>
-                    <InputPassword @bind-Value="editModelChangePass.ChangePassword" />
-                    <ValidationMessage For="() => editModelChangePass.ChangePassword"></ValidationMessage>
-                </AntDesign.Col>
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModelChangePass.ReChangePassword"></LabelFor>
-                    <InputPassword @bind-Value="editModelChangePass.ReChangePassword" />
-                    <ValidationMessage For="() => editModelChangePass.ReChangePassword"></ValidationMessage>
-                </AntDesign.Col>
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModelChangePass.Name" HasRequired="true"></LabelFor>
-                    <Input Value="editModelChangePass.Name" Disabled />
-                    <ValidationMessage For="() => editModelChangePass.Name"></ValidationMessage>
-                </AntDesign.Col>
-                <AntDesign.Col Span="24">
-                    <LabelFor For="() => editModelChangePass.Code" HasRequired="true"></LabelFor>
-                    <Input @bind-Value="editModelChangePass.Code" Disabled />
-                    <ValidationMessage For="() => editModelChangePass.Code"></ValidationMessage>
-                </AntDesign.Col>
-            </Row>
-        </EditForm>
-    </Template>
-</Drawer>
-
-<Drawer Closable="true" MaskClosable="false" Visible="setClaimVisible"
-        Width="1200"
-        Placement="right" BodyStyle="padding-top:0px"
-        Title="@("Cài đặt quyền cho tài khoản")" OnClose="CloseSetClaim">
-    <Template>
-        <SetClaim @ref="setClaimComponent" SetClaimType="SetClaimType.Users" OnCancel="CloseSetClaim" ValueChanged="ClaimChangedAsync" />
-    </Template>
-</Drawer>
-
-<Drawer Closable="true" MaskClosable="false" Visible="setPermissionGroupVisible"
-        Width="1200"
-        Placement="right" BodyStyle="padding-top:0px"
-        Title="@("Gán nhóm quyền cho tài khoản")" OnClose="CloseSetPermissionGroup">
-    <Template>
-        <Row Gutter="16">
-            @foreach (var item in PermissionGroups)
-            {
-                <AntDesign.Col Span="4">
-                    <Checkbox Checked="@permissionGroupIds.Contains(item.Id)" CheckedChange=" e => CheckChanged(e, item)" Disabled="isAdmin">Tất cả</Checkbox>
-                </AntDesign.Col>
-            }
-            <div style="display:flex;">
-                <Space Size=@("small")>
-                    @if (!isAdmin)
-                    {
+                <div style="display:flex;">
+                    <Space Size=@("small")>
+                        @if (!isAdmin)
+                        {
+                            <SpaceItem>
+                                <Button Type="@ButtonType.Primary" Icon="save" HtmlType="button"
+                                        @onclick="SavePermissionGroupAsync" Class="btn-add-new">
+                                    Lưu
+                                </Button>
+                            </SpaceItem>
+                        }
                         <SpaceItem>
-                            <Button Type="@ButtonType.Primary" Icon="save" HtmlType="button"
-                                    @onclick="SavePermissionGroupAsync" Class="btn-add-new">
-                                Lưu
-                            </Button>
-                        </SpaceItem>
-                    }
-                    <SpaceItem>
-                        <Button Icon="cancel" HtmlType="button" @onclick="CloseSetPermissionGroup" Type="@ButtonType.Primary" Danger>Đóng</Button>
-                    </SpaceItem>
-                </Space>
-            </div>
-        </Row>
-    </Template>
-</Drawer>
+                            <Button Icon="cancel" HtmlType="button" @onclick="CloseSetPermissionGroup" Type="@ButtonType.Primary" Danger>Đóng</Button>
+                     </SpaceItem>
+                 </Space>
+             </div>
+         </Row>
+     </Template>
+ </Drawer>
+}

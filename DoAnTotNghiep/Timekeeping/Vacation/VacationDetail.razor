@@ -33,7 +33,7 @@ else
 {
     <Row Gutter="8" Justify="end">
         <Space Size="@("small")" Style="margin-left: 10px">
-            @if (editModel.CreatorObject == CreatorObject.HRStaff)
+            @if (editModel.CreatorObject == CreatorObject.HRStaff && PermissionClaim.MANAGEVACATIONREGISTRATION_EDIT)
             {
                 @if (editModel.ReadOnly)
                 {
@@ -61,7 +61,7 @@ else
                     </Popconfirm>
                 </SpaceItem>
             }
-            @if (editModel.ReadOnly)
+            @if (editModel.ReadOnly && PermissionClaim.MANAGEVACATIONREGISTRATION_APPROVE)
             {
                 @if (editModel.ApprovalStatus == ApprovalStatus.Pending)
                 {

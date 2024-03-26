@@ -62,9 +62,12 @@ namespace DoAnTotNghiep.Systems
                 usersEditFilterModel = new UsersFilterEditModel();
                 usersEditFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 usersId = await sessionStorage.GetItemAsync<string>("UsersId");
-                await LoadDataAsync();
-                await LoadStaffDataAsync();
-                await LoadPermissionGroupAsync();
+                if (PermissionClaim.ACCOUNT_VIEW)
+                {
+                    await LoadDataAsync();
+                    await LoadStaffDataAsync();
+                    await LoadPermissionGroupAsync();
+                }
             }
             catch (Exception ex)
             {

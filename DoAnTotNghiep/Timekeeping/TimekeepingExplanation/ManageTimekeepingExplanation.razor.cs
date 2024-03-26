@@ -7,6 +7,7 @@ using DoAnTotNghiep.Domain;
 using DoAnTotNghiep.EditModel;
 using DoAnTotNghiep.SearchModel;
 using DoAnTotNghiep.Service;
+using DoAnTotNghiep.Shared;
 using DoAnTotNghiep.ViewModel;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -22,6 +23,7 @@ namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
         [Inject] TimekeepingExplanationService TimekeepingExplanationService { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
         [Inject] TimekeepingTypeService TimekeepingTypeService { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
 
         List<Domain.TimekeepingExplanation> Vacations = new List<Domain.TimekeepingExplanation>();
         List<TimekeepingExplanationViewModel> selectedApproveRows = new();
@@ -49,8 +51,11 @@ namespace DoAnTotNghiep.Timekeeping.TimekeepingExplanation
             try
             {
                 timekeepingExplanationFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadTimekeepingTypeAsync();
-                await LoadDataAsync();
+                if (PermissionClaim.MANAGETIMEKEEPINGEXPLANATION_VIEW)
+                {
+                    await LoadTimekeepingTypeAsync();
+                    await LoadDataAsync();
+                }
             }
             catch (Exception ex)
             {

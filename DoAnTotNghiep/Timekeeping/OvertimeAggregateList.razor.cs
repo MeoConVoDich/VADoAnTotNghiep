@@ -31,6 +31,7 @@ namespace DoAnTotNghiep.Timekeeping
         [Inject] UsersService UsersService { get; set; }
         [Inject] OvertimeAggregateService OvertimeAggregateService { get; set; }
         [Inject] ModalService ModalService { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
         OvertimeAggregateFilterEditModel overtimeAggregateFilterModel = new OvertimeAggregateFilterEditModel();
         UsersSearch usersSearch = new UsersSearch();
         List<Users> ListUsers = new List<Users>();
@@ -56,7 +57,10 @@ namespace DoAnTotNghiep.Timekeeping
                 };
                 usersSearch.Page = new Page() { PageIndex = 1, PageSize = 15 };
                 overtimeAggregateFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
-                await LoadUsersAsync();
+                if (PermissionClaim.OVERTIMEAGGREGATE_VIEW)
+                {
+                    await LoadUsersAsync();
+                }
             }
             catch (Exception ex)
             {
