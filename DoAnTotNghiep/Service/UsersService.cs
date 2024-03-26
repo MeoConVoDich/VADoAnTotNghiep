@@ -83,7 +83,7 @@ namespace DoAnTotNghiep.Service
             }
             if (model.GetOnlyNoUserName == true)
             {
-                query = query.Where(c => c.UserName.IsNotNullOrEmpty());
+                query = query.Where(c => c.UserName != null && c.UserName != "");
             }
             return query;
         }
@@ -189,6 +189,30 @@ namespace DoAnTotNghiep.Service
                     try
                     {
                         await session.UpdateAsync(model);
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdateListAsync(List<Users> updates)
+        {
+            using (var session = _session.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var item in updates)
+                        {
+                            await session.UpdateAsync(item);
+                        }
                         transaction.Commit();
                         return true;
                     }

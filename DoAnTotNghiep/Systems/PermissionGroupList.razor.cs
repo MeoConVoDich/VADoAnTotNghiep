@@ -28,7 +28,6 @@ namespace DoAnTotNghiep.Systems
         [Inject] PermissionGroupService PermissionGroupService { get; set; }
         [Inject] IMapper Mapper { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
-
         List<PermissionGroupViewModel> PermissionGroupViewModels { get; set; }
         List<PermissionGroup> PermissionGroups { get; set; }
         List<string> selectedRowIds = new List<string>();

@@ -9,7 +9,7 @@
     </PageHeaderExtra>
 </PageHeader>
 <div class="site-content" style="padding-top: 4px;">
-    <Row Wrap="false" Style="">
+    <Row Wrap="false" Gutter="8" Style="">
         <Space Size=@(("8", "8")) Wrap>
             <SpaceItem>
                 <Button Icon="plus" OnClick="Add" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
@@ -35,7 +35,7 @@
             <Search Placeholder="Nhập tên, mã nhóm tài khoản" OnChange="SearchAsync" EnterButton="true" Value="@permissionGroupEditFilterModel.CodeOrName" DebounceMilliseconds="500" AllowClear />
          </AntDesign.Col>
     </Row>
-    <Row Gutter="8" Style="padding-top:10px">
+    <Row Gutter="8">
         <Table @ref="table" TItem="PermissionGroupViewModel" DataSource="@PermissionGroupViewModels" Class="table-striped"
                Total="permissionGroupEditFilterModel.Page.Total"
                Loading="loading" ScrollY="500px"

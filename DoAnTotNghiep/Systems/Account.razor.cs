@@ -20,17 +20,22 @@ using AntDesign.TableModels;
 using System.Linq;
 using DoAnTotNghiep.Config;
 using System.Text.Json;
+using Blazored.SessionStorage;
 
 namespace DoAnTotNghiep.Systems
 {
     public partial class Account : ComponentBase
     {
         [Inject] UsersService UsersService { get; set; }
+        [Inject] PermissionGroupService PermissionGroupService { get; set; }
         [Inject] IMapper Mapper { get; set; }
         [Inject] CustomNotificationManager Notice { get; set; }
+        [Inject] PermissionClaim PermissionClaim { get; set; }
+        [Inject] ISessionStorageService sessionStorage { get; set; }
 
         List<UsersViewModel> UsersViewModels { get; set; }
         List<Users> Userss { get; set; }
+        List<PermissionGroup> PermissionGroups { get; set; } = new List<PermissionGroup>();
         List<string> selectedRowIds = new List<string>();
         List<Users> StaffDatas = new List<Users>();
         List<Users> StaffSearchDatas = new List<Users>();
@@ -38,19 +43,28 @@ namespace DoAnTotNghiep.Systems
         IEnumerable<UsersViewModel> selectedRows;
         Table<UsersViewModel> table;
         CreateUsers editModel = new CreateUsers();
+        ChangePass editModelChangePass = new ChangePass();
         SetClaim setClaimComponent;
         InputWatcher inputWatcher;
+        List<string> permissionGroupIds = new List<string>();
+        Users select = new Users();
         bool detailVisible;
+        bool changedPassVisible;
         bool loading;
         bool setClaimVisible;
+        bool isAdmin;
+        bool setPermissionGroupVisible;
+        string usersId;
         protected override async Task OnInitializedAsync()
         {
             try
             {
                 usersEditFilterModel = new UsersFilterEditModel();
                 usersEditFilterModel.Page = new Page() { PageIndex = 1, PageSize = 15 };
+                usersId = await sessionStorage.GetItemAsync<string>("UsersId");
                 await LoadDataAsync();
                 await LoadStaffDataAsync();
+                await LoadPermissionGroupAsync();
             }
             catch (Exception ex)
             {
@@ -66,6 +80,7 @@ namespace DoAnTotNghiep.Systems
                 selectedRows = null;
                 StateHasChanged();
                 var search = Mapper.Map<UsersSearch>(usersEditFilterModel);
+                search.GetOnlyNoUserName = true;
                 var data = await UsersService.GetPageWithFilterAsync(search);
                 Userss = data.Item1 ?? new List<Users>();
                 usersEditFilterModel.Page.Total = data.Item2;
@@ -75,6 +90,23 @@ namespace DoAnTotNghiep.Systems
                 {
                     c.Stt = stt++;
                 });
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            loading = false;
+        }
+
+        async Task LoadPermissionGroupAsync()
+        {
+            try
+            {
+                loading = true;
+                selectedRows = null;
+                StateHasChanged();
+                var data = await PermissionGroupService.GetAllWithFilterAsync(new PermissionGroupSearch());
+                PermissionGroups = data.Item1 ?? new List<PermissionGroup>();
             }
             catch (Exception ex)
             {
@@ -151,13 +183,13 @@ namespace DoAnTotNghiep.Systems
             }
         }
 
-        void OpenDetail(UsersViewModel usersViewModel, bool edit)
+        void OpenDetail(UsersViewModel usersViewModel)
         {
             try
             {
                 var users = Userss.FirstOrDefault(c => c.Id == usersViewModel.Id);
                 editModel = Mapper.Map<CreateUsers>(users);
-                editModel.ReadOnly = edit;
+                editModel.ReadOnly = true;
                 detailVisible = true;
             }
             catch (Exception ex)
@@ -183,7 +215,7 @@ namespace DoAnTotNghiep.Systems
         {
             try
             {
-                detailVisible = false;
+                changedPassVisible = false;
             }
             catch (Exception ex)
             {
@@ -195,7 +227,6 @@ namespace DoAnTotNghiep.Systems
         {
             try
             {
-                bool result = new();
                 var errorMessageStore = editModel.ValidateAll();
                 if (!inputWatcher.Validate() || errorMessageStore.Any())
                 {
@@ -206,26 +237,93 @@ namespace DoAnTotNghiep.Systems
                     Notice.NotiWarning("Dữ liệu còn thiếu hoặc không hợp lệ!");
                     return;
                 }
+
                 var existData = await UsersService.GetAllWithFilterAsync(new UsersSearch()
                 {
                     UserName = editModel.UserName,
                     CheckExist = true
                 });
+
                 if (existData.Item1?.Any(c => c.Id != editModel.Id) == true)
                 {
                     Notice.NotiWarning("Tên đăng nhập đã được sử dụng!");
                     return;
                 }
 
-                var Users = Mapper.Map<Users>(editModel);
-                if (Users.Id.IsNotNullOrEmpty())
+                var data = await UsersService.GetAllWithFilterAsync(new UsersSearch()
                 {
-                    result = await UsersService.UpdateAsync(Users);
+                    Id = editModel.Id,
+                });
+
+                var users = data.Item1.FirstOrDefault();
+                if (users != null)
+                {
+                    users.UserName = editModel.UserName;
+                    users.Password = editModel.Password;
                 }
+                else
+                {
+                    Notice.NotiWarning("Không tìm thấy nhân viên!");
+                    return;
+                }
+                var result = await UsersService.UpdateAsync(users);
                 if (result)
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
                     detailVisible = false;
+                    await LoadDataAsync();
+                }
+                else
+                {
+                    Notice.NotiError("Cập nhật dữ liệu thất bại!");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        async Task SaveChangePassAsync()
+        {
+            try
+            {
+                bool result = new();
+                var errorMessageStore = editModelChangePass.ValidateAll();
+                if (!inputWatcher.Validate() || errorMessageStore.Any())
+                {
+                    if (errorMessageStore.Any())
+                    {
+                        inputWatcher.NotifyFieldChanged(errorMessageStore.First().Key, errorMessageStore);
+                    }
+                    Notice.NotiWarning("Dữ liệu còn thiếu hoặc không hợp lệ!");
+                    return;
+                }
+
+                var data = await UsersService.GetAllWithFilterAsync(new UsersSearch()
+                {
+                    Id = editModelChangePass.Id,
+                });
+
+                var users = data.Item1.FirstOrDefault();
+                if (users != null)
+                {
+                    users.Password = editModelChangePass.ChangePassword;
+                }
+                else
+                {
+                    Notice.NotiWarning("Không tìm thấy nhân viên!");
+                    return;
+                }
+
+                if (users.Id.IsNotNullOrEmpty())
+                {
+                    result = await UsersService.UpdateAsync(users);
+                }
+                if (result)
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
+                    changedPassVisible = false;
                     await LoadDataAsync();
                 }
                 else
@@ -257,11 +355,22 @@ namespace DoAnTotNghiep.Systems
         {
             try
             {
+
                 bool result = new();
                 if (model != null)
                 {
+                    if (model.Id == usersId)
+                    {
+                        Notice.NotiError("Không thể tài khoản của chính bạn!");
+                        return;
+                    }
                     var deleteModel = Userss.FirstOrDefault(c => c.Id == model.Id);
-                    result = await UsersService.DeleteAsync(deleteModel);
+                    deleteModel.Password = null;
+                    deleteModel.UserName = null;
+                    deleteModel.IsAdmin = false;
+                    deleteModel.PermissionGroup = null;
+                    deleteModel.Permission = null;
+                    result = await UsersService.UpdateAsync(deleteModel);
                 }
                 else
                 {
@@ -270,8 +379,21 @@ namespace DoAnTotNghiep.Systems
                         Notice.NotiError("Không có nhóm tài khoản được chọn!");
                         return;
                     }
+                    if (selectedRowIds.Contains(usersId))
+                    {
+                        Notice.NotiError("Không thể tài khoản của chính bạn!");
+                        return;
+                    }
                     var deleteList = Userss.Where(c => selectedRowIds.Contains(c.Id)).ToList();
-                    result = await UsersService.DeleteListAsync(deleteList);
+                    deleteList.ForEach(c =>
+                    {
+                        c.Password = null;
+                        c.UserName = null;
+                        c.IsAdmin = false;
+                        c.PermissionGroup = null;
+                        c.Permission = null;
+                    });
+                    result = await UsersService.UpdateListAsync(deleteList);
                 }
                 if (result)
                 {
@@ -307,11 +429,6 @@ namespace DoAnTotNghiep.Systems
             {
                 throw;
             }
-        }
-
-        void Edit()
-        {
-            editModel.ReadOnly = false;
         }
 
         void CancelClick()
@@ -358,6 +475,92 @@ namespace DoAnTotNghiep.Systems
                 var dataStaff = await UsersService.GetAllWithFilterAsync(new UsersSearch());
                 StaffDatas = dataStaff.Item1 ?? new();
                 StaffSearchDatas = StaffDatas.Take(5).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void OpenChangePasswordForm(UsersViewModel usersViewModel)
+        {
+            try
+            {
+                var users = Userss.FirstOrDefault(c => c.Id == usersViewModel.Id);
+                editModel = Mapper.Map<CreateUsers>(users);
+                changedPassVisible = true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void OpenSetPermissionGroupAsync(UsersViewModel usersViewModel)
+        {
+            try
+            {
+                select = Userss.FirstOrDefault(c => c.Id == usersViewModel.Id);
+                permissionGroupIds = JsonSerializer.Deserialize<List<string>>(select.PermissionGroup ?? "[]");
+                setPermissionGroupVisible = true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void CheckChanged(bool value, PermissionGroup permissionGroup)
+        {
+            try
+            {
+                if (isAdmin)
+                {
+                    return;
+                }
+                if (value)
+                {
+                    permissionGroupIds.Add(permissionGroup.Id);
+                }
+                else
+                {
+                    permissionGroupIds.Remove(permissionGroup.Id);
+                }
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        void CloseSetPermissionGroup()
+        {
+            setPermissionGroupVisible = false;
+        }
+
+        async Task SavePermissionGroupAsync()
+        {
+            try
+            {
+                if(select.Id == usersId)
+                {
+                    Notice.NotiError("Không thế gán nhóm quyền cho chính bạn!");
+                    return;
+                }
+
+                select.PermissionGroup = JsonSerializer.Serialize(permissionGroupIds);
+                var result = await UsersService.UpdateAsync(select);
+                if (result)
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
+                    setPermissionGroupVisible = false;
+                    await LoadDataAsync();
+                }
+                else
+                {
+                    Notice.NotiError("Cập nhật dữ liệu thất bại!");
+                }
             }
             catch (Exception ex)
             {

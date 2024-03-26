@@ -26,7 +26,7 @@ namespace DoAnTotNghiep.Config
         {
             var cfg = new Configuration();
 
-            string connectionString = "Data Source=DESKTOP-F75INI6;Initial Catalog=VAHRM;Integrated Security=True";
+            string connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=VAHRM;Integrated Security=True";
             cfg.DataBaseIntegration(db =>
             {
                 db.ConnectionString = connectionString;

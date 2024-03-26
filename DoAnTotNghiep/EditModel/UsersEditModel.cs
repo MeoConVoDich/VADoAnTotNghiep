@@ -52,6 +52,69 @@ namespace DoAnTotNghiep.EditModel
 
         public CreateUsers(bool isEdit = true)
         {
+            InputFields.Add<CreateUsers>(c => c.RePassword);
+            InputFields.Add<CreateUsers>(c => c.Password);
+        }
+        public override Dictionary<string, List<string>> Validate(string nameProperty)
+        {
+            var Errors = new Dictionary<string, List<string>>();
+            if (nameProperty == Property.NameProperty(c => c.RePassword) || nameProperty == Property.NameProperty(c => c.Password))
+            {
+                if (RePassword.IsNotNullOrEmpty() && Password.IsNotNullOrEmpty() && RePassword != Password)
+                {
+                    Errors.AddExist(nameProperty, "Mật khẩu ko giống nhau!");
+                }
+            }
+            return Errors;
+        }
+    }
+
+    public class ChangePass : EditBaseModel
+    {
+        public string Id { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Tên đăng nhập")]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Mật khẩu")]
+        [DataType(DataType.Password)]
+        public string ChangePassword { get; set; }
+
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [Display(Name = "Nhập lại mật khẩu")]
+        [DataType(DataType.Password)]
+        public string ReChangePassword { get; set; }
+
+        [Display(Name = "Tên nhân viên")]
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [MaxLength(255, ErrorMessage = "{0} không được dài hơn {1} ký tự")]
+        public string Name { get; set; }
+
+        [Display(Name = "Mã nhân viên")]
+        [Required(ErrorMessage = "Dữ liệu bắt buộc nhập!")]
+        [MaxLength(20, ErrorMessage = "{0} không được dài hơn {1} ký tự")]
+        public string Code { get; set; }
+
+        public Property<ChangePass> Property { get; set; } = new Property<ChangePass>();
+
+        public ChangePass(bool isEdit = true)
+        {
+            InputFields.Add<ChangePass>(c => c.ChangePassword);
+            InputFields.Add<ChangePass>(c => c.ReChangePassword);
+        }
+        public override Dictionary<string, List<string>> Validate(string nameProperty)
+        {
+            var Errors = new Dictionary<string, List<string>>();
+            if (nameProperty == Property.NameProperty(c => c.ReChangePassword) || nameProperty == Property.NameProperty(c => c.ChangePassword))
+            {
+                if (ReChangePassword.IsNotNullOrEmpty() && ChangePassword.IsNotNullOrEmpty() && ReChangePassword != ChangePassword)
+                {
+                    Errors.AddExist(nameProperty, "Mật khẩu ko giống nhau!");
+                }
+            }
+            return Errors;
         }
     }
 

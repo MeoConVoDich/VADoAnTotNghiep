@@ -13,112 +13,112 @@ namespace DoAnTotNghiep.Shared
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 1 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 2 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 3 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 4 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 5 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 6 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 7 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 8 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 9 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using DoAnTotNghiep;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 10 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using DoAnTotNghiep.Shared;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 11 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 11 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using AntDesign;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 12 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 12 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using DoAnTotNghiep.Components;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 13 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 13 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using DoAnTotNghiep.Config;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 14 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 14 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using DoAnTotNghiep.EditModel;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 15 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 15 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using DoAnTotNghiep.Domain;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 16 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
+#line 16 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\_Imports.razor"
 using DoAnTotNghiep.ViewModel;
 
 #line default
@@ -132,7 +132,7 @@ using DoAnTotNghiep.ViewModel;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 66 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\NavMenu.razor"
+#line 66 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\NavMenu.razor"
        
 
     bool collapsed = false;
@@ -150,7 +150,7 @@ using DoAnTotNghiep.ViewModel;
             __builder2.AddMarkupContent(0, "<span b-q2hmxw0bcq>\r\n        <Icon Type=\"user\" Theme=\"outline\" b-q2hmxw0bcq></Icon>\r\n        <span b-q2hmxw0bcq>Tài khoản</span>\r\n    </span>");
         }
 #nullable restore
-#line 77 "C:\Users\Admin\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\NavMenu.razor"
+#line 77 "C:\Users\Win10Pro\Documents\VADoAnTotNghiep\DoAnTotNghiep\Shared\NavMenu.razor"
            ;
 
     void Go(string url)

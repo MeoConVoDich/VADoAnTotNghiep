@@ -187,7 +187,6 @@ namespace DoAnTotNghiep.Staff
             if (editModel.UserName.IsNotNullOrEmpty() && !hasUserName)
             {
                 editModel.Password = "123456aA@";
-                editModel.IsAdmin = true;
             }
             var users = Mapper.Map<Users>(editModel);
             if (users.Id.IsNotNullOrEmpty())

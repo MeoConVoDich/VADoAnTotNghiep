@@ -21,6 +21,7 @@ namespace DoAnTotNghiep.Systems
         [Parameter] public SetClaimType SetClaimType { get; set; } = SetClaimType.PermissionGroup;
         [Parameter] public EventCallback ValueChanged { get; set; }
         [Parameter] public EventCallback OnCancel { get; set; }
+        [Parameter] public string UsersId { get; set; }
         List<ClaimViewModel> claimTemplates;
         List<IGrouping<string, ClaimViewModel>> claimViewModels;
         List<IGrouping<string, ClaimViewModel>> claimTimekeepingViewModels = new();
@@ -142,6 +143,10 @@ namespace DoAnTotNghiep.Systems
                 }
                 else
                 {
+                    if (UsersId == idObject)
+                    {
+                        Notice.NotiError("Không thể cấp quyền cho chính bạn!");
+                    }
                     result = await UsersService.UpdatePermissionAsync(idObject, changedClaims);
                 }
                 if (result)
