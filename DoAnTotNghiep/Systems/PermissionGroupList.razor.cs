@@ -216,7 +216,7 @@ namespace DoAnTotNghiep.Systems
                 });
                 if (existData.Item1?.Any(c => c.Id != editModel.Id) == true)
                 {
-                    Notice.NotiWarning("Mã nhóm tài khoản đã được sử dụng");
+                    Notice.NotiWarning("Mã nhóm quyền đã tồn tại trong hệ thống");
                     return;
                 }
                 var PermissionGroup = Mapper.Map<PermissionGroup>(editModel);

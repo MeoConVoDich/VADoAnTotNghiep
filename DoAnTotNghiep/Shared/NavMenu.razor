@@ -25,12 +25,12 @@
       InlineCollapsed=collapsed>
     @if (PermissionClaim.IsSystemMenuVisible())
     {
-        <MenuItem Key="1" OnClick="@(() => Go("/he-thong/nhom-tai-khoan"))">
+        <MenuItem Key="1" OnClick="@(() => Go("/he-thong/nhom-quyen"))">
             <IconTemplate>
                 <Icon Type="setting" Theme="outline" />
             </IconTemplate>
             <ChildContent>
-                <Button Type="@ButtonType.Text" Style="color: white">Hệ thống</Button>
+                <Button Type="@ButtonType.Text" Style="color: white">Quản lý tài khoản</Button>
             </ChildContent>
         </MenuItem>
     }

@@ -1,11 +1,11 @@
 ﻿@if (PermissionClaim.IsSystemMenuVisible())
 {
     <Menu Theme="MenuTheme.Dark" Class="main_menu" Mode="MenuMode.Horizontal"
-          DefaultSelectedKeys=@(new[] { "/he-thong/nhom-tai-khoan" }) TriggerSubMenuAction="@Trigger.Hover">
+          DefaultSelectedKeys=@(new[] { "/he-thong/nhom-quyen" }) TriggerSubMenuAction="@Trigger.Hover">
         @if (PermissionClaim.ROLE_VIEW)
         {
-            <MenuItem Key="/he-thong/nhom-tai-khoan" RouterLink="/he-thong/nhom-tai-khoan" RouterMatch="NavLinkMatch.All">
-                Nhóm tài khoản
+            <MenuItem Key="/he-thong/nhom-quyen" RouterLink="/he-thong/nhom-quyen" RouterMatch="NavLinkMatch.All">
+                Nhóm quyền
             </MenuItem>
         }
         @if (PermissionClaim.ACCOUNT_VIEW)
