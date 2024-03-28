@@ -149,18 +149,19 @@ namespace DoAnTotNghiep.Systems
                 {
                     if (UsersId == idObject)
                     {
-                        Notice.NotiError("Không thể cấp quyền cho chính bạn!");
+                        Notice.NotiError("Không thể phân quyền cho chính bạn!");
+                        return;
                     }
                     result = await UsersService.UpdatePermissionAsync(idObject, changedClaims);
                 }
                 if (result)
                 {
-                    Notice.NotiSuccess("Cập nhật thành công!");
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công!");
                     await ValueChanged.InvokeAsync(null);
                 }
                 else
                 {
-                    Notice.NotiError("Cập nhật thất bại!");
+                    Notice.NotiError("Cập nhật dữ liệu thất bại!");
                 }
             }
             catch (Exception ex)

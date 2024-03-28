@@ -79,6 +79,7 @@ namespace DoAnTotNghiep.Config
             CreateMap<Overtime, OvertimeAggregate>().ReverseMap();
             CreateMap<SummaryOfTimekeepingSearch, TimekeepingAggregateFilterEditModel>().ReverseMap();
             CreateMap<CreateUsers, Users>().ReverseMap();
+            CreateMap<ChangePass, Users>().ReverseMap();
             CreateMap<SummaryOfTimekeeping, SummaryOfTimekeepingViewModel>()
                 .ForMember(src => src.DataType, dest => dest.MapFrom(c => JsonSerializer.Deserialize<Dictionary<string, string>>(c.DataType, options)))
                 .ForMember(src => src.DataFormula, dest => dest.MapFrom(c => JsonSerializer.Deserialize<Dictionary<string, string>>(c.DataFormula, options)))

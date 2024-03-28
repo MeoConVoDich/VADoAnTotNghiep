@@ -17,7 +17,7 @@
                  @if (PermissionClaim.ACCOUNT_ADD)
                     {
                         <SpaceItem>
-                            <Button Icon="plus" OnClick="Add" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
+                            <Button Icon="plus" OnClick="AddAsync" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
                         </SpaceItem>
                     }
                     @if (PermissionClaim.ACCOUNT_DELETE)
@@ -81,7 +81,7 @@
                         {
                             <SpaceItem>
 
-                                <Tooltip Placement="@Placement.Top" Title="Gán nhóm tài khoản">
+                                <Tooltip Placement="@Placement.Top" Title="Gán nhóm quyền">
                                     <Icon Type="tool" Theme="fill" OnClick="() => OpenSetPermissionGroupAsync(context)" Class="btn-icon-edit" />
                                 </Tooltip>
                             </SpaceItem>
@@ -287,9 +287,11 @@
                 @foreach (var item in PermissionGroups)
                 {
                     <AntDesign.Col Span="4">
-                        <Checkbox Checked="@permissionGroupIds.Contains(item.Id)" CheckedChange=" e => CheckChanged(e, item)" Disabled="isAdmin">Tất cả</Checkbox>
+                        <Checkbox Checked="@permissionGroupIds.Contains(item.Id)" CheckedChange=" e => CheckChanged(e, item)" Disabled="isAdmin">@item.NameGroup</Checkbox>
                     </AntDesign.Col>
                 }
+            </Row>
+            <Row Gutter="16">
                 <div style="display:flex;">
                     <Space Size=@("small")>
                         @if (!isAdmin)
@@ -303,10 +305,10 @@
                         }
                         <SpaceItem>
                             <Button Icon="cancel" HtmlType="button" @onclick="CloseSetPermissionGroup" Type="@ButtonType.Primary" Danger>Đóng</Button>
-                     </SpaceItem>
-                 </Space>
-             </div>
-         </Row>
+                        </SpaceItem>
+                    </Space>
+                </div>
+            </Row>
      </Template>
  </Drawer>
 }

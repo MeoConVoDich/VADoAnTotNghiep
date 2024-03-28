@@ -65,7 +65,6 @@ namespace DoAnTotNghiep.Systems
                 if (PermissionClaim.ACCOUNT_VIEW)
                 {
                     await LoadDataAsync();
-                    await LoadStaffDataAsync();
                     await LoadPermissionGroupAsync();
                 }
             }
@@ -201,11 +200,12 @@ namespace DoAnTotNghiep.Systems
             }
         }
 
-        void Add()
+        async Task AddAsync()
         {
             try
             {
                 editModel = new CreateUsers();
+                await LoadStaffDataAsync();
                 detailVisible = true;
             }
             catch (Exception ex)
@@ -364,7 +364,7 @@ namespace DoAnTotNghiep.Systems
                 {
                     if (model.Id == usersId)
                     {
-                        Notice.NotiError("Không thể tài khoản của chính bạn!");
+                        Notice.NotiError("Không thể xóa tài khoản của chính bạn!");
                         return;
                     }
                     var deleteModel = Userss.FirstOrDefault(c => c.Id == model.Id);
@@ -379,12 +379,12 @@ namespace DoAnTotNghiep.Systems
                 {
                     if (selectedRows.Any() != true)
                     {
-                        Notice.NotiError("Không có nhóm tài khoản được chọn!");
+                        Notice.NotiError("Không có tài khoản được chọn!");
                         return;
                     }
                     if (selectedRowIds.Contains(usersId))
                     {
-                        Notice.NotiError("Không thể tài khoản của chính bạn!");
+                        Notice.NotiError("Không thể xóa tài khoản của chính bạn!");
                         return;
                     }
                     var deleteList = Userss.Where(c => selectedRowIds.Contains(c.Id)).ToList();
@@ -490,7 +490,7 @@ namespace DoAnTotNghiep.Systems
             try
             {
                 var users = Userss.FirstOrDefault(c => c.Id == usersViewModel.Id);
-                editModel = Mapper.Map<CreateUsers>(users);
+                editModelChangePass = Mapper.Map<ChangePass>(users);
                 changedPassVisible = true;
             }
             catch (Exception ex)

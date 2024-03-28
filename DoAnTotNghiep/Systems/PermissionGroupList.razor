@@ -6,7 +6,7 @@
             <Breadcrumb>
                 <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
                 <BreadcrumbItem>Hệ thống</BreadcrumbItem>
-                <BreadcrumbItem>Nhóm tài khoản</BreadcrumbItem>
+                <BreadcrumbItem>Nhóm quyền</BreadcrumbItem>
             </Breadcrumb>
         </PageHeaderExtra>
     </PageHeader>
@@ -109,7 +109,7 @@
     <Drawer Closable="true" MaskClosable="false" Visible="detailVisible"
             Width="500"
             Placement="right" BodyStyle="padding-top:0px"
-            Title="@("Thông tin nhóm tài khoản")" OnClose="CloseDetail">
+            Title="@("Thông tin nhóm quyền")" OnClose="CloseDetail">
         <Template>
             <EditForm Model="editModel">
                 <DataAnnotationsValidator />
@@ -172,7 +172,7 @@
     <Drawer Closable="true" MaskClosable="false" Visible="setClaimVisible"
             Width="1200"
             Placement="right" BodyStyle="padding-top:0px"
-            Title="@("Cài đặt quyền cho nhóm tài khoản")" OnClose="CloseSetClaim">
+            Title="@("Cài đặt quyền cho nhóm quyền")" OnClose="CloseSetClaim">
         <Template>
             <SetClaim @ref="setClaimComponent" SetClaimType="SetClaimType.PermissionGroup" OnCancel="CloseSetClaim" ValueChanged="ClaimChangedAsync" />
         </Template>
