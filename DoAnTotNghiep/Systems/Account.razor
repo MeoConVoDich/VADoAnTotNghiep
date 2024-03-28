@@ -58,7 +58,7 @@
         <Row Gutter="8">
             <Table @ref="table" TItem="UsersViewModel" DataSource="@UsersViewModels" Class="table-striped"
                    Total="usersEditFilterModel.Page.Total"
-                   Loading="loading" ScrollY="500px"
+                   Loading="loading" ScrollY="500px" ScrollBarWidth="10px"
                    PageIndex="usersEditFilterModel.Page.PageIndex"
                    PageSize="usersEditFilterModel.Page.PageSize"
                    OnPageSizeChange="PageSizeChangeAsync"

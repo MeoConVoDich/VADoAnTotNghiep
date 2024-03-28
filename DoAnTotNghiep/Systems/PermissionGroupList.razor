@@ -46,7 +46,7 @@
          <Row Gutter="8">
              <Table @ref="table" TItem="PermissionGroupViewModel" DataSource="@PermissionGroupViewModels" Class="table-striped"
                     Total="permissionGroupEditFilterModel.Page.Total"
-                    Loading="loading" ScrollY="500px"
+                    Loading="loading" ScrollY="500px" ScrollBarWidth="10px"
                     PageIndex="permissionGroupEditFilterModel.Page.PageIndex"
                     PageSize="permissionGroupEditFilterModel.Page.PageSize"
                     OnPageSizeChange="PageSizeChangeAsync"
@@ -58,7 +58,7 @@
                  <Column @bind-Field="@context.CodeGroup"></Column>
                  <Column @bind-Field="@context.NameGroup"></Column>
                  <Column @bind-Field="@context.Note"></Column>
-                 <ActionColumn Title="Thao tác" Class="action-column-center" Width="100">
+                 <ActionColumn Title="Thao tác" Class="action-column-center" Width="150">
                      <Space Size=@("small")>
                          <SpaceItem>
                              <Tooltip Placement="@Placement.Top" Title="Xem chi tiết">

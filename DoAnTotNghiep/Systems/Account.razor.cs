@@ -249,7 +249,7 @@ namespace DoAnTotNghiep.Systems
 
                 if (existData.Item1?.Any(c => c.Id != editModel.Id) == true)
                 {
-                    Notice.NotiWarning("Tên đăng nhập đã được sử dụng!");
+                    Notice.NotiWarning("Tên đăng nhập đã tồn tại trong hệ thống!");
                     return;
                 }
 
